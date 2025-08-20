@@ -1,0 +1,7 @@
+{
+  "name": "SAF",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
