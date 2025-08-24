@@ -18,6 +18,33 @@
     </ion-card>
   </div>
 
+  <!-- Carga manual de facturas -->
+  <ion-card style="margin-bottom: 16px;">
+    <ion-card-content>
+      <form (submit)="onSubmitFactura($event)">
+        <ion-item lines="none">
+          <ion-label position="stacked">Cargar factura (PDF, XML, imagen):</ion-label>
+          <input type="file" (change)="onFileSelected($event)" accept=".pdf,.xml,image/*" required />
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Cliente</ion-label>
+          <input type="text" [(ngModel)]="nuevaFactura.cliente" name="cliente" required />
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Monto</ion-label>
+          <input type="number" [(ngModel)]="nuevaFactura.monto" name="monto" required />
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Detalles</ion-label>
+          <input type="text" [(ngModel)]="nuevaFactura.detalles" name="detalles" />
+        </ion-item>
+        <ion-button expand="block" type="submit" color="primary" style="margin-top: 12px;">Agregar factura</ion-button>
+        <ion-text color="danger" *ngIf="errorCarga">{{ errorCarga }}</ion-text>
+        <ion-text color="success" *ngIf="exitoCarga">{{ exitoCarga }}</ion-text>
+      </form>
+    </ion-card-content>
+  </ion-card>
+
   <!-- Lista de facturas filtradas -->
   <ion-list *ngIf="getFacturasFiltradas().length > 0">
     <ion-item *ngFor="let factura of getFacturasFiltradas()" (click)="abrirDetalles(factura)">
@@ -67,6 +94,53 @@
             <ion-label><strong>Detalles:</strong> {{ facturaSeleccionada.detalles }}</ion-label>
           </ion-item>
         </ion-list>
+        <!-- Visualización de archivo adjunto -->
+        <ion-card *ngIf="facturaSeleccionada.archivo" style="margin-top: 12px;">
+          <ion-card-header>
+            <ion-card-title>Archivo adjunto</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ng-container [ngSwitch]="((facturaSeleccionada.archivo && facturaSeleccionada.archivo.split('.').pop()) || '').toLowerCase()">
+              <ng-container *ngSwitchCase="'pdf'">
+                <iframe [src]="getFacturaFileUrl(facturaSeleccionada)" width="100%" height="400px" style="border: none;"></iframe>
+              </ng-container>
+              <ng-container *ngSwitchCase="'jpg'">
+                <img [src]="getFacturaFileUrl(facturaSeleccionada)" alt="Factura adjunta" style="max-width:100%; max-height:400px;" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'jpeg'"> 
+                <img [src]="getFacturaFileUrl(facturaSeleccionada)" alt="Factura adjunta" style="max-width:100%; max-height:400px;" />
+              </ng-container> 
+              <ng-container *ngSwitchCase="'png'">
+                <img [src]="getFacturaFileUrl(facturaSeleccionada)" alt="Factura adjunta" style="max-width:100%; max-height:400px;" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'xml'">
+                <ion-text color="medium">Archivo XML: {{ facturaSeleccionada.archivo }}</ion-text>
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <ion-text color="medium">Archivo: {{ facturaSeleccionada.archivo }}</ion-text>
+              </ng-container>
+            </ng-container>
+          </ion-card-content>
+        </ion-card>
+        <!-- Bitácora/Auditoría -->
+        <ion-card style="margin: 16px 0 0 0;">
+          <ion-card-header>
+            <ion-card-title>Bitácora / Auditoría</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item *ngFor="let log of facturaSeleccionada.bitacora">
+                <ion-label>
+                  <b>{{ log.usuario }}</b> - {{ log.accion }}<br>
+                  <small>{{ log.fecha | date:'short' }}</small>
+                </ion-label>
+              </ion-item>
+              <ion-item *ngIf="!facturaSeleccionada.bitacora || facturaSeleccionada.bitacora.length === 0">
+                <ion-label color="medium">Sin movimientos registrados.</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
       </ion-content>
     </ng-template>
   </ion-modal>
