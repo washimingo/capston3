@@ -37,6 +37,12 @@
           <ion-label>Vencidas</ion-label>
           <ion-badge slot="end" color="medium">{{ totalVencidas }}</ion-badge>
         </ion-item>
+
+        <ion-item button color="tertiary" (click)="irAFacturasConFiltro('PorVencer')">
+          <ion-icon name="alert-circle-outline" slot="start" color="tertiary"></ion-icon>
+          <ion-label>Por vencer </ion-label>
+          <ion-badge slot="end" color="tertiary">{{ totalPorVencer }}</ion-badge>
+        </ion-item>
       </ion-list>
     </ion-card-content>
   </ion-card>

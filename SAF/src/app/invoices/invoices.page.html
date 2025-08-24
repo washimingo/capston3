@@ -30,7 +30,7 @@
             {{ factura.estado }}
           </ion-badge>
         </p>
-        <p>Fecha: {{ factura.fecha }}</p>
+  <p>Fecha: {{ factura.fecha }}<span *ngIf="getDiasRestantes(factura) !== null"> | Días por vencer: <b>{{ getDiasRestantes(factura) }}</b></span></p>
       </ion-label>
     </ion-item>
   </ion-list>
