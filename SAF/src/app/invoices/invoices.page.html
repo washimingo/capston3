@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Facturas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Resumen ejecutivo -->
+  <div class="resumen-categorias" style="display: flex; gap: 12px; margin: 16px 0;">
+    <ion-card *ngFor="let cat of categoriasResumen"
+      [color]="categoriaSeleccionada === cat.estado ? cat.color : ''"
+      (click)="seleccionarCategoria(cat.estado)"
+      style="flex: 1; cursor: pointer; text-align: center;">
+      <ion-card-content>
+        <div style="font-size: 1.2em; font-weight: bold;">{{ cat.nombre }}</div>
+        <ion-badge [color]="cat.color" style="margin-top: 8px;">{{ getResumenCount(cat.estado) }}</ion-badge>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Lista de facturas filtradas -->
+  <ion-list *ngIf="getFacturasFiltradas().length > 0">
+    <ion-item *ngFor="let factura of getFacturasFiltradas()" (click)="abrirDetalles(factura)">
+      <ion-label>
+        <h2>{{ factura.cliente }}</h2>
+        <p>
+          Monto: ${{ factura.monto }} |
+          Estado:
+          <ion-badge [color]="getColorPorEstado(factura.estado)">
+            {{ factura.estado }}
+          </ion-badge>
+        </p>
+        <p>Fecha: {{ factura.fecha }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <div *ngIf="getFacturasFiltradas().length === 0" style="text-align: center; margin-top: 32px;">
+    <ion-text color="medium">No hay facturas para esta categoría.</ion-text>
+  </div>
+
+  <!-- Modal de detalles -->
+  <ion-modal *ngIf="facturaSeleccionada" [isOpen]="!!facturaSeleccionada" (didDismiss)="cerrarDetalles()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Detalles de Factura</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="cerrarDetalles()">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ion-item>
+            <ion-label><strong>Cliente:</strong> {{ facturaSeleccionada.cliente }}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label><strong>Monto:</strong> ${{ facturaSeleccionada.monto }}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label><strong>Estado:</strong> {{ facturaSeleccionada.estado }}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label><strong>Fecha:</strong> {{ facturaSeleccionada.fecha }}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label><strong>Detalles:</strong> {{ facturaSeleccionada.detalles }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

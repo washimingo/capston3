@@ -6,10 +6,38 @@
     <ion-title>Inicio</ion-title>
   </ion-toolbar>
 </ion-header>
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Resumen Ejecutivo</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item button (click)="irAFacturasConFiltro('')">
+          <ion-label>Facturas totales</ion-label>
+          <ion-badge slot="end" color="primary">{{ totalRecibidas }}</ion-badge>
+        </ion-item>
 
-<ion-content [fullscreen]="true">
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+        <ion-item button (click)="irAFacturasConFiltro('Recibida')">
+          <ion-label>Pendientes</ion-label>
+          <ion-badge slot="end" color="warning">{{ totalPendientes }}</ion-badge>
+        </ion-item>
+
+        <ion-item button (click)="irAFacturasConFiltro('Aceptada')">
+          <ion-label>Aceptadas</ion-label>
+          <ion-badge slot="end" color="success">{{ totalAceptadas }}</ion-badge>
+        </ion-item>
+
+        <ion-item button (click)="irAFacturasConFiltro('Rechazada')">
+          <ion-label>Rechazadas</ion-label>
+          <ion-badge slot="end" color="danger">{{ totalRechazadas }}</ion-badge>
+        </ion-item>
+
+        <ion-item button (click)="irAFacturasConFiltro('Vencida')">
+          <ion-label>Vencidas</ion-label>
+          <ion-badge slot="end" color="medium">{{ totalVencidas }}</ion-badge>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
