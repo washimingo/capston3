@@ -1,15 +1,5 @@
 
 <ion-app>
-  <!-- Toolbar principal siempre visible arriba -->
-  <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-      <ion-title>Panel De inicio</ion-title>
-  <!-- ...sin botón de modo oscuro/claro... -->
-    </ion-toolbar>
-  </ion-header>
 
 
   <!-- Menú lateral -->
@@ -21,7 +11,7 @@
     </ion-header>
     <ion-content>
       <ion-list lines="none" style="margin-top: 16px;">
-        <ion-item routerLink="/home" detail lines="full">
+        <ion-item detail lines="full" routerLink="/home">
           <ion-icon name="home-outline" slot="start" class="menu-icon"></ion-icon>
           <ion-label>Inicio</ion-label>
         </ion-item>

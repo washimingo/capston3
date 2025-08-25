@@ -1,8 +1,8 @@
 import { addIcons } from 'ionicons';
-import { documentTextOutline, timeOutline, checkmarkCircleOutline, closeCircleOutline, calendarOutline, alertCircleOutline, warningOutline, homeOutline, checkmarkDoneOutline, cubeOutline, barChartOutline, peopleOutline, settingsOutline, businessOutline, createOutline, trashOutline, addCircleOutline, listOutline } from 'ionicons/icons';
+import { documentTextOutline, timeOutline, checkmarkCircleOutline, closeCircleOutline, calendarOutline, alertCircleOutline, warningOutline, homeOutline, checkmarkDoneOutline, cubeOutline, barChartOutline, peopleOutline, settingsOutline, businessOutline, createOutline, trashOutline, addCircleOutline, listOutline, closeCircle, searchOutline } from 'ionicons/icons';
 import { Component } from '@angular/core';
 import { DatabaseService } from './services/database.service';
-import { IonApp, IonRouterOutlet, IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonButtons, IonButton, IonIcon, IonMenuButton, IonLabel } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 
 
@@ -22,8 +22,7 @@ import { RouterModule } from '@angular/router';
     IonList,
     IonItem,
     RouterModule,
-    IonButtons,
-  IonMenuButton,
+  // IonButtons y IonMenuButton eliminados porque ya no se usan
   IonLabel,
   IonIcon
   ],
@@ -48,8 +47,9 @@ export class AppComponent {
       createOutline,
       trashOutline,
       addCircleOutline,
-      listOutline
+      listOutline,
+      closeCircle,
+      searchOutline
     });
   }
 }
-

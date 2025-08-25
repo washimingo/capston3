@@ -1,3 +1,4 @@
+// ...existing code...
 import { Component } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
@@ -22,9 +23,13 @@ import {
   IonButtons,
   IonButton,
   IonIcon,
-  // ...existing code...
   IonChip,
-  IonAlert
+  IonAlert,
+  IonRow,
+  IonCol,
+  IonInput,
+  IonSpinner,
+  IonMenuButton
 } from '@ionic/angular/standalone';
 
 interface BitacoraLog {
@@ -57,6 +62,7 @@ interface Factura extends FacturaModel {
     IonToolbar, 
     CommonModule, 
     FormsModule,
+    IonInput,
     IonCard,
     IonCardHeader,
     IonCardTitle,
@@ -65,15 +71,53 @@ interface Factura extends FacturaModel {
     IonList,
     IonItem,
     IonLabel,
-  IonText,
-  IonButtons,
-  IonButton,
-  IonIcon,
-  IonChip,
-  IonAlert
+    IonText,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonChip,
+    IonAlert,
+    IonRow,
+    IonCol,
+    IonSpinner,
+    IonMenuButton
   ]
 })
 export class InvoicesPage {
+  // Loader y autocompletado
+  buscandoFacturas: boolean = false;
+  sugerenciasBusqueda: string[] = [];
+
+  // Método para manejar la búsqueda reactiva desde el campo de búsqueda
+  onBuscarFactura() {
+    this.buscandoFacturas = true;
+    setTimeout(() => {
+      const texto = (this.filtroBusqueda || '').toLowerCase();
+      if (texto.length > 0) {
+        // Usar reduce en vez de flat para compatibilidad
+        const campos = this.facturas
+          .map(f => [f.folio, f.proveedor, f.tipo, f.responsable])
+          .reduce((acc: any[], val) => acc.concat(val), []);
+        this.sugerenciasBusqueda = campos
+          .filter(Boolean)
+          .map((s: any) => String(s))
+          .filter((s: string, i: number, arr: string[]) => s.toLowerCase().includes(texto) && arr.indexOf(s) === i)
+          .slice(0, 6);
+      } else {
+        this.sugerenciasBusqueda = [];
+      }
+      this.buscandoFacturas = false;
+    }, 350);
+  }
+
+  seleccionarSugerencia(sugerencia: string) {
+    this.filtroBusqueda = sugerencia;
+    this.sugerenciasBusqueda = [];
+    this.onBuscarFactura();
+  }
+  campoBusqueda: string = 'todos';
+  filtroBusqueda = '';
+  filtroFecha = '';
   alertEliminarButtons = [
     {
       text: 'Cancelar',
@@ -125,8 +169,8 @@ export class InvoicesPage {
       this.archivoSeleccionado = null;
       return;
     }
-  this.archivoSeleccionado = file;
-  this.errorCarga = '';
+    this.archivoSeleccionado = file;
+    this.errorCarga = '';
   }
 
   async onSubmitFactura(event: Event) {
@@ -242,27 +286,72 @@ export class InvoicesPage {
   mostrarPorVencer: boolean = false;
 
   getFacturasFiltradas(): Factura[] {
+  let facturasFiltradas: Factura[] = [];
+  const hoy = new Date();
+    // 1. Si hay categoría seleccionada, filtrar por estado primero
     if (this.mostrarPorVencer) {
-      // Filtrar facturas por vencer (<=2 días para el plazo de 8 días desde la fecha)
-      const hoy = new Date();
-      return this.facturas.filter(f => {
+      facturasFiltradas = this.facturas.filter(f => {
         if (f.estado && f.estado.toLowerCase() === 'pendiente') {
-          const fechaEmision = f.fecha ? new Date(f.fecha) : new Date();
-          const diffMs = hoy.getTime() - fechaEmision.getTime();
+          const fechaEmision = f.fechaRecepcion || f.fecha || '';
+          if (!fechaEmision) return false;
+          const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
           const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
           const diasRestantes = 8 - diffDias;
           return diasRestantes <= 2 && diasRestantes > 0;
         }
         return false;
       });
+    } else if (this.categoriaSeleccionada) {
+      facturasFiltradas = this.facturas.filter(f =>
+        f.estado.toLowerCase() === this.categoriaSeleccionada!.toLowerCase()
+      );
+    } else {
+      facturasFiltradas = [...this.facturas];
     }
-    if (!this.categoriaSeleccionada) {
-      return this.facturas;
+
+    // 2. Si hay texto de búsqueda, mostrar solo los que coinciden en el campo seleccionado
+    if (this.filtroBusqueda && this.filtroBusqueda.trim() !== '') {
+      const texto = this.filtroBusqueda.trim().toLowerCase();
+      // Expresión regular para coincidencia exacta de palabra (al inicio, final o separada)
+      const regex = new RegExp(`(^|\s|\W)${texto}($|\s|\W)`, 'i');
+      if (this.campoBusqueda === 'folio') {
+        facturasFiltradas = facturasFiltradas.filter(f => f.folio && regex.test(f.folio));
+      } else if (this.campoBusqueda === 'proveedor') {
+        facturasFiltradas = facturasFiltradas.filter(f => f.proveedor && regex.test(f.proveedor));
+      } else if (this.campoBusqueda === 'responsable') {
+        facturasFiltradas = facturasFiltradas.filter(f => f.responsable && regex.test(f.responsable));
+      } else {
+        facturasFiltradas = facturasFiltradas.filter(f =>
+          (f.folio && regex.test(f.folio)) ||
+          (f.proveedor && regex.test(f.proveedor)) ||
+          (f.responsable && regex.test(f.responsable))
+        );
+      }
     }
-    // Filtrado exacto, insensible a mayúsculas/minúsculas
-    return this.facturas.filter(f =>
-      f.estado.toLowerCase() === this.categoriaSeleccionada!.toLowerCase()
-    );
+
+
+    // Ordenar: primero por las que están por vencer (menos días para vencer), luego por fecha de emisión descendente
+    return facturasFiltradas.sort((a, b) => {
+      // Calcular días restantes para cada factura
+      const getDiasRestantes = (factura: Factura) => {
+        const fechaEmision = factura.fechaRecepcion || factura.fecha || '';
+        if (!fechaEmision) return 9999;
+        const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
+        const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        return 8 - diffDias;
+      };
+      const diasA = getDiasRestantes(a);
+      const diasB = getDiasRestantes(b);
+      // Prioridad: por vencer primero (díasRestantes > 0 y <= 2)
+      const aPorVencer = diasA > 0 && diasA <= 2;
+      const bPorVencer = diasB > 0 && diasB <= 2;
+      if (aPorVencer && !bPorVencer) return -1;
+      if (!aPorVencer && bPorVencer) return 1;
+      // Si ambos son por vencer o ninguno, ordenar por fecha de emisión descendente
+      const fechaA = new Date(a.fechaRecepcion || a.fecha || 0).getTime();
+      const fechaB = new Date(b.fechaRecepcion || b.fecha || 0).getTime();
+      return fechaB - fechaA;
+    });
   }
 
   seleccionarCategoria(estado: string) {
@@ -386,11 +475,17 @@ export class InvoicesPage {
     this.mostrarAlertaEliminar = false;
   }
 
-  // Calcula los días restantes para el vencimiento de una factura (8 días desde la fecha)
+  // Calcula los días restantes para el vencimiento de una factura (8 días desde la fecha de emisión o recepción)
   getDiasRestantes(factura: Factura): number | null {
-    if (!factura.fecha) return null;
-  const fechaEmision = factura.fecha ? new Date(factura.fecha) : new Date();
+    // Soporta ambos campos: fechaRecepcion y fecha
+    const fechaBase = factura.fechaRecepcion || factura.fecha || null;
+    if (!fechaBase) return null;
+    const fechaEmision = new Date(fechaBase);
+    if (isNaN(fechaEmision.getTime())) return null;
     const hoy = new Date();
+    // Ignorar la hora para el cálculo de días
+    fechaEmision.setHours(0,0,0,0);
+    hoy.setHours(0,0,0,0);
     const diffMs = hoy.getTime() - fechaEmision.getTime();
     const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     return 8 - diffDias;
