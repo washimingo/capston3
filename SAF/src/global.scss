@@ -1,3 +1,43 @@
+// Forzar color visible en el icono del botón de modo oscuro
+ion-toolbar ion-icon {
+	color: #fff !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	ion-toolbar ion-icon {
+		color: #f4f4f4 !important;
+	}
+}
+// Color empresarial para la toolbar
+ion-toolbar {
+	--background: #7b263a;
+	--color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+		ion-toolbar {
+			--background: #4a1824;
+			--color: #f4f4f4;
+		}
+}
+// Modo claro (por defecto)
+:root {
+	--ion-background-color: #f4f4f4;
+	--ion-text-color: #222;
+	--ion-color-step-50: #f4f4f4;
+	--ion-color-step-100: #e9ecef;
+}
+
+// Modo oscuro automático
+@media (prefers-color-scheme: dark) {
+	:root {
+		--ion-background-color: #181818;
+		--ion-text-color: #f4f4f4;
+		--ion-color-step-50: #232323;
+		--ion-color-step-100: #222326;
+		// Puedes ajustar más variables aquí para personalizar el dark mode
+	}
+}
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
@@ -34,4 +74,4 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* @import '@ionic/angular/css/palettes/dark.system.css'; */

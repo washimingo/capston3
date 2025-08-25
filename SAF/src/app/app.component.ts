@@ -1,6 +1,10 @@
+import { addIcons } from 'ionicons';
+import { documentTextOutline, timeOutline, checkmarkCircleOutline, closeCircleOutline, calendarOutline, alertCircleOutline, warningOutline, homeOutline, checkmarkDoneOutline, cubeOutline, barChartOutline, peopleOutline, settingsOutline, businessOutline, createOutline, trashOutline, addCircleOutline, listOutline } from 'ionicons/icons';
 import { Component } from '@angular/core';
-import { IonApp, IonRouterOutlet, IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem } from '@ionic/angular/standalone';
+import { DatabaseService } from './services/database.service';
+import { IonApp, IonRouterOutlet, IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonButtons, IonButton, IonIcon, IonMenuButton, IonLabel } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-root',
@@ -17,9 +21,35 @@ import { RouterModule } from '@angular/router';
     IonContent,
     IonList,
     IonItem,
-    RouterModule
+    RouterModule,
+    IonButtons,
+  IonMenuButton,
+  IonLabel,
+  IonIcon
   ],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private dbService: DatabaseService) {
+    addIcons({
+      documentTextOutline,
+      timeOutline,
+      checkmarkCircleOutline,
+      closeCircleOutline,
+      calendarOutline,
+      alertCircleOutline,
+      warningOutline,
+      homeOutline,
+      checkmarkDoneOutline,
+      cubeOutline,
+      barChartOutline,
+      peopleOutline,
+      settingsOutline,
+      businessOutline,
+      createOutline,
+      trashOutline,
+      addCircleOutline,
+      listOutline
+    });
+  }
 }
+

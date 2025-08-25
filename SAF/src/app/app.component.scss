@@ -1,0 +1,28 @@
+// Estilos para el menú lateral y toolbar granate
+.menu-icon {
+	color: #7b263a;
+	font-size: 22px;
+}
+
+.menu-divider {
+	height: 1px;
+	background: #e0e0e0;
+	margin: 24px 0;
+}
+
+.menu-footer {
+	text-align: center;
+	color: #888;
+	font-size: 13px;
+	padding-bottom: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.menu-icon-footer {
+	vertical-align: middle;
+	color: #7b263a;
+	margin-right: 6px;
+	font-size: 18px;
+}

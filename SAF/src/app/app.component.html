@@ -1,20 +1,60 @@
+
 <ion-app>
+  <!-- Toolbar principal siempre visible arriba -->
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Panel De inicio</ion-title>
+  <!-- ...sin botón de modo oscuro/claro... -->
+    </ion-toolbar>
+  </ion-header>
+
+
+  <!-- Menú lateral -->
   <ion-menu side="start" menuId="main-menu" contentId="main-content">
     <ion-header>
-      <ion-toolbar color="primary">
+      <ion-toolbar style="--background: #7b263a; --color: #fff;">
         <ion-title>SAF - Menú</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-list>
-        <ion-item routerLink="/home">🏠 Inicio</ion-item>
-        <ion-item routerLink="/invoices">📄 Facturas</ion-item>
-        <ion-item routerLink="/validation">✅ Validación</ion-item>
-        <ion-item routerLink="/purchases">📦 Adquisiciones</ion-item>
-        <ion-item routerLink="/reports">📊 Reportes</ion-item>
-        <ion-item routerLink="/users">👥 Usuarios</ion-item>
-        <ion-item routerLink="/settings">⚙️ Configuración</ion-item>
+      <ion-list lines="none" style="margin-top: 16px;">
+        <ion-item routerLink="/home" detail lines="full">
+          <ion-icon name="home-outline" slot="start" class="menu-icon"></ion-icon>
+          <ion-label>Inicio</ion-label>
+        </ion-item>
+        <ion-item routerLink="/invoices" detail lines="full">
+          <ion-icon name="document-text-outline" slot="start" class="menu-icon"></ion-icon>
+          <ion-label>Facturas</ion-label>
+        </ion-item>
+        <ion-item routerLink="/validation" detail lines="full">
+          <ion-icon name="checkmark-done-outline" slot="start" class="menu-icon"></ion-icon>
+          <ion-label>Validación</ion-label>
+        </ion-item>
+        <ion-item routerLink="/purchases" detail lines="full">
+          <ion-icon name="cube-outline" slot="start" class="menu-icon"></ion-icon>
+          <ion-label>Adquisiciones</ion-label>
+        </ion-item>
+        <ion-item routerLink="/reports" detail lines="full">
+          <ion-icon name="bar-chart-outline" slot="start" class="menu-icon"></ion-icon>
+          <ion-label>Reportes</ion-label>
+        </ion-item>
+        <ion-item routerLink="/users" detail lines="full">
+          <ion-icon name="people-outline" slot="start" class="menu-icon"></ion-icon>
+          <ion-label>Usuarios</ion-label>
+        </ion-item>
+        <ion-item routerLink="/settings" detail lines="full">
+          <ion-icon name="settings-outline" slot="start" class="menu-icon"></ion-icon>
+          <ion-label>Configuración</ion-label>
+        </ion-item>
       </ion-list>
+      <div class="menu-divider"></div>
+      <div class="menu-footer">
+        <ion-icon name="business-outline" class="menu-icon-footer"></ion-icon>
+        <span>SAF Empresarial</span>
+      </div>
     </ion-content>
   </ion-menu>
 

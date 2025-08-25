@@ -1,7 +1,7 @@
-
-
 import { Component } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { DatabaseService } from '../services/database.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -20,7 +20,11 @@ import {
   IonText,
   IonModal,
   IonButtons,
-  IonButton
+  IonButton,
+  IonIcon,
+  // ...existing code...
+  IonChip,
+  IonAlert
 } from '@ionic/angular/standalone';
 
 interface BitacoraLog {
@@ -29,15 +33,16 @@ interface BitacoraLog {
   fecha: Date;
 }
 
-interface Factura {
-  id: number;
-  cliente: string;
-  monto: number;
-  estado: string; // Pendiente, Aceptada, Rechazada, Vencida
-  fecha: string;
+import { Factura as FacturaModel } from '../models/factura.model';
+
+interface Factura extends FacturaModel {
   detalles: string;
   archivo?: string;
+  url_archivo?: string;
+  tipo_archivo?: string;
   bitacora?: BitacoraLog[];
+  cliente?: string;
+  fecha?: string;
 }
 
 @Component({
@@ -60,27 +65,55 @@ interface Factura {
     IonList,
     IonItem,
     IonLabel,
-    IonText,
-    IonModal,
-    IonButtons,
-    IonButton
+  IonText,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonChip,
+  IonAlert
   ]
 })
 export class InvoicesPage {
-  archivoBase64: string | null = null;
-  facturas: Factura[] = [
-    { id: 1, cliente: 'Empresa A', monto: 1000, estado: 'Pendiente', fecha: '2025-08-17', detalles: 'Factura pendiente de pago.', bitacora: [ { usuario: 'admin', accion: 'Creación de factura', fecha: new Date('2025-08-17T10:00:00') } ] },
-    { id: 2, cliente: 'Empresa B', monto: 2000, estado: 'Aceptada', fecha: '2025-07-15', detalles: 'Factura aceptada y pagada.', bitacora: [ { usuario: 'admin', accion: 'Creación de factura', fecha: new Date('2025-07-15T09:00:00') }, { usuario: 'jefe', accion: 'Aceptada', fecha: new Date('2025-07-16T12:00:00') } ] },
-    { id: 3, cliente: 'Empresa C', monto: 1500, estado: 'Rechazada', fecha: '2025-08-17', detalles: 'Factura rechazada por error.', bitacora: [ { usuario: 'admin', accion: 'Creación de factura', fecha: new Date('2025-08-17T11:00:00') }, { usuario: 'auditor', accion: 'Rechazada', fecha: new Date('2025-08-18T14:00:00') } ] },
-    { id: 4, cliente: 'Empresa D', monto: 1800, estado: 'Pendiente', fecha: '2025-08-17', detalles: 'Factura vencida, no pagada.', bitacora: [ { usuario: 'admin', accion: 'Creación de factura', fecha: new Date('2025-08-17T13:00:00') } ] },
-    { id: 5, cliente: 'Empresa E', monto: 1200, estado: 'Pendiente', fecha: '2025-08-10', detalles: 'Factura pendiente de pago.', bitacora: [ { usuario: 'admin', accion: 'Creación de factura', fecha: new Date('2025-08-10T08:00:00') } ] },
-    // ...puedes agregar más facturas aquí...
+  alertEliminarButtons = [
+    {
+      text: 'Cancelar',
+      role: 'cancel',
+      handler: () => this.cancelarEliminar()
+    },
+    {
+      text: 'Eliminar',
+      role: 'destructive',
+      handler: () => this.confirmarEliminar()
+    }
   ];
+  abrirModalCarga: boolean = false;
+  archivoBase64: string | null = null;
+  facturas: Factura[] = [];
   // Carga manual de facturas
-  nuevaFactura: Partial<Factura> = { cliente: '', monto: undefined, detalles: '' };
+  nuevaFactura: Partial<Factura> = {
+    cliente: '',
+    monto: undefined,
+    detalles: '',
+    folio: '',
+    proveedor: '',
+    tipo: '',
+    responsable: '',
+    fechaRecepcion: '',
+    comentario: '',
+    mensajeAlerta: '',
+  };
   archivoSeleccionado: File | null = null;
   errorCarga: string = '';
   exitoCarga: string = '';
+
+  // Control de edición
+  abrirDrawerEditar: boolean = false;
+  editandoFactura: Factura | null = null;
+  facturaEditada: Partial<Factura> = {};
+
+  // Alerta personalizada de eliminación
+  mostrarAlertaEliminar: boolean = false;
+  facturaAEliminar: Factura | null = null;
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
@@ -96,7 +129,7 @@ export class InvoicesPage {
   this.errorCarga = '';
   }
 
-  onSubmitFactura(event: Event) {
+  async onSubmitFactura(event: Event) {
     event.preventDefault();
     this.errorCarga = '';
     this.exitoCarga = '';
@@ -104,51 +137,98 @@ export class InvoicesPage {
       this.errorCarga = 'Debe seleccionar un archivo válido.';
       return;
     }
-    if (!this.nuevaFactura.cliente || !this.nuevaFactura.monto) {
+    if (!this.nuevaFactura.folio || !this.nuevaFactura.proveedor || !this.nuevaFactura.tipo || !this.nuevaFactura.responsable || !this.nuevaFactura.monto || !this.nuevaFactura.fechaRecepcion) {
       this.errorCarga = 'Debe completar los campos obligatorios.';
       return;
     }
-    // Simular guardado (en memoria)
+    // Guardar archivo como base64 (solo para demo, en producción se recomienda guardar la ruta)
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
       this.archivoBase64 = reader.result as string;
-      const id = this.facturas.length + 1;
-      const nueva: Factura = {
-        id,
-        cliente: this.nuevaFactura.cliente!,
+      const nombreArchivo = this.archivoSeleccionado!.name;
+      const tipoArchivo = nombreArchivo.split('.').pop()?.toLowerCase() || '';
+      const nuevaFactura = {
+        folio: this.nuevaFactura.folio!,
+        proveedor: this.nuevaFactura.proveedor!,
+        tipo: this.nuevaFactura.tipo!,
+        responsable: this.nuevaFactura.responsable!,
         monto: this.nuevaFactura.monto!,
+        fechaRecepcion: this.nuevaFactura.fechaRecepcion!,
+        comentario: this.nuevaFactura.comentario || '',
+        mensajeAlerta: this.nuevaFactura.mensajeAlerta || '',
         estado: 'Pendiente',
-        fecha: new Date().toISOString().slice(0, 10),
-        detalles: this.nuevaFactura.detalles || '',
-        archivo: this.archivoSeleccionado!.name,
+        archivo: nombreArchivo,
+        tipo_archivo: tipoArchivo,
+        url_archivo: this.archivoBase64,
+        usuario_creador: 'usuario demo',
+        fecha_subida: new Date().toISOString(),
         bitacora: [
           { usuario: 'usuario demo', accion: 'Carga manual de factura', fecha: new Date() }
         ]
       };
-      this.facturas.unshift(nueva);
-      this.nuevaFactura = { cliente: '', monto: undefined, detalles: '' };
+      try {
+        const id = await this.dbService.addFactura(nuevaFactura);
+        this.exitoCarga = 'Factura cargada exitosamente.';
+        await this.cargarFacturas();
+      } catch (e) {
+        this.errorCarga = 'Error al guardar la factura en la base de datos.';
+      }
+      this.nuevaFactura = {
+        folio: '',
+        proveedor: '',
+        tipo: '',
+        responsable: '',
+        monto: undefined,
+        fechaRecepcion: '',
+        comentario: '',
+        mensajeAlerta: '',
+      };
       this.archivoSeleccionado = null;
-      this.exitoCarga = 'Factura cargada exitosamente.';
       setTimeout(() => this.exitoCarga = '', 2500);
+      this.abrirModalCarga = false;
     };
     reader.readAsDataURL(this.archivoSeleccionado);
   }
 
+  cerrarModalCarga() {
+    this.abrirModalCarga = false;
+    this.nuevaFactura = {
+      folio: '',
+      proveedor: '',
+      tipo: '',
+      responsable: '',
+      monto: undefined,
+      fechaRecepcion: '',
+      comentario: '',
+      mensajeAlerta: '',
+    };
+    this.archivoSeleccionado = null;
+    this.errorCarga = '';
+    this.exitoCarga = '';
+  }
+
   // Devuelve una URL de objeto/base64 para visualizar el archivo adjunto (solo para facturas cargadas en la sesión actual)
-  getFacturaFileUrl(factura: Factura): string | null {
-    if (!factura.archivo) return null;
-    // Si es la última factura cargada manualmente y hay base64, mostrarlo
-    if (this.facturas[0] === factura && this.archivoBase64) {
-      return this.archivoBase64;
+  getFacturaFileUrl(factura: Factura): SafeResourceUrl | null {
+    if (!factura.archivo && !factura.url_archivo) return null;
+    const ext = (factura.archivo?.split('.').pop() || '').toLowerCase();
+    let url = '';
+    if (factura.url_archivo) {
+      if (ext === 'pdf' && !factura.url_archivo.startsWith('data:')) {
+        url = 'data:application/pdf;base64,' + factura.url_archivo.split(',').pop();
+      } else if ((ext === 'jpg' || ext === 'jpeg') && !factura.url_archivo.startsWith('data:')) {
+        url = 'data:image/jpeg;base64,' + factura.url_archivo.split(',').pop();
+      } else if (ext === 'png' && !factura.url_archivo.startsWith('data:')) {
+        url = 'data:image/png;base64,' + factura.url_archivo.split(',').pop();
+      } else {
+        url = factura.url_archivo;
+      }
+      return this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
-    // Si es una factura precargada, buscar en assets/facturas/
-    // Solo para PDF, imágenes, etc.
-    const ext = (factura.archivo.split('.').pop() || '').toLowerCase();
     if (['pdf', 'jpg', 'jpeg', 'png'].includes(ext)) {
-      return `assets/facturas/${factura.archivo}`;
+      url = `assets/facturas/${factura.archivo}`;
+      return this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
-    // Para XML u otros, solo mostrar el nombre
-    return '';
+    return null;
   }
 
   categoriasResumen = [
@@ -167,7 +247,7 @@ export class InvoicesPage {
       const hoy = new Date();
       return this.facturas.filter(f => {
         if (f.estado && f.estado.toLowerCase() === 'pendiente') {
-          const fechaEmision = new Date(f.fecha);
+          const fechaEmision = f.fecha ? new Date(f.fecha) : new Date();
           const diffMs = hoy.getTime() - fechaEmision.getTime();
           const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
           const diasRestantes = 8 - diffDias;
@@ -216,17 +296,108 @@ export class InvoicesPage {
     this.facturaSeleccionada = null;
   }
 
+  // Iniciar edición de factura
+  editarFactura(factura: Factura) {
+    this.editandoFactura = { ...factura };
+    this.facturaEditada = { ...factura };
+    this.archivoSeleccionado = null;
+    this.errorCarga = '';
+    this.exitoCarga = '';
+    this.abrirDrawerEditar = true;
+    this.abrirModalCarga = false;
+  }
+
+  // Guardar cambios de edición
+  async guardarEdicion() {
+    if (!this.editandoFactura) return;
+    try {
+      const id_factura = this.editandoFactura.id;
+      // Si hay un archivo seleccionado, procesar y actualizar campos de archivo
+      if (this.archivoSeleccionado) {
+        const file = this.archivoSeleccionado;
+        const ext = file.name ? (file.name.split('.').pop() || '').toLowerCase() : '';
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const base64 = reader.result as string;
+          const cambios = {
+            ...this.facturaEditada,
+            archivo: file.name,
+            tipo_archivo: ext,
+            url_archivo: base64
+          };
+          await this.dbService.updateFactura(id_factura, cambios);
+          this.editandoFactura = null;
+          this.facturaEditada = {};
+          this.archivoSeleccionado = null;
+          this.abrirDrawerEditar = false;
+          await this.cargarFacturas();
+          this.exitoCarga = 'Factura editada correctamente.';
+          setTimeout(() => this.exitoCarga = '', 2000);
+        };
+        reader.readAsDataURL(file);
+        return;
+      }
+      // Si no hay archivo nuevo, solo actualizar campos de texto
+      const cambios = { ...this.facturaEditada };
+      await this.dbService.updateFactura(id_factura, cambios);
+      this.editandoFactura = null;
+      this.facturaEditada = {};
+      this.archivoSeleccionado = null;
+      this.abrirDrawerEditar = false;
+      await this.cargarFacturas();
+      this.exitoCarga = 'Factura editada correctamente.';
+      setTimeout(() => this.exitoCarga = '', 2000);
+    } catch (e) {
+      this.errorCarga = 'Error al editar la factura.';
+    }
+  }
+
+  cancelarEdicion() {
+    this.editandoFactura = null;
+    this.facturaEditada = {};
+    this.archivoSeleccionado = null;
+    this.abrirDrawerEditar = false;
+    this.errorCarga = '';
+    this.exitoCarga = '';
+  }
+
+  // Eliminar factura
+  eliminarFactura(factura: Factura) {
+    this.facturaAEliminar = factura;
+    this.mostrarAlertaEliminar = true;
+  }
+
+  cancelarEliminar() {
+    this.facturaAEliminar = null;
+    this.mostrarAlertaEliminar = false;
+  }
+
+  async confirmarEliminar() {
+    if (!this.facturaAEliminar) return;
+    try {
+      await this.dbService.deleteFactura(this.facturaAEliminar.id);
+      await this.cargarFacturas();
+      this.exitoCarga = 'Factura eliminada correctamente.';
+      setTimeout(() => this.exitoCarga = '', 2000);
+    } catch (e) {
+      this.errorCarga = 'Error al eliminar la factura.';
+    }
+    this.facturaAEliminar = null;
+    this.mostrarAlertaEliminar = false;
+  }
+
   // Calcula los días restantes para el vencimiento de una factura (8 días desde la fecha)
   getDiasRestantes(factura: Factura): number | null {
     if (!factura.fecha) return null;
-    const fechaEmision = new Date(factura.fecha);
+  const fechaEmision = factura.fecha ? new Date(factura.fecha) : new Date();
     const hoy = new Date();
     const diffMs = hoy.getTime() - fechaEmision.getTime();
     const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     return 8 - diffDias;
   }
 
-  constructor(private route: ActivatedRoute) {
+
+  constructor(private route: ActivatedRoute, private dbService: DatabaseService, private sanitizer: DomSanitizer) {
     // Leer query param para mostrar facturas por vencer
     this.route.queryParams.subscribe(params => {
       if (params['porVencer'] === 'true') {
@@ -234,5 +405,77 @@ export class InvoicesPage {
         this.categoriaSeleccionada = null;
       }
     });
+    this.cargarFacturas();
+  }
+
+
+  async cargarFacturas() {
+    try {
+      const facturasDB = await this.dbService.getFacturas();
+      // Mapear los campos antiguos y nuevos para asegurar compatibilidad y visualización
+      this.facturas = facturasDB.map((f: any) => ({
+        id: f.id_factura ?? f.id,
+        folio: f.folio ?? f.cliente ?? '',
+        proveedor: f.proveedor ?? '',
+        tipo: f.tipo ?? '',
+        responsable: f.responsable ?? '',
+        monto: f.monto ?? 0,
+        fechaRecepcion: f.fechaRecepcion ?? f.fecha ?? '',
+        comentario: f.comentario ?? f.detalles ?? '',
+        mensajeAlerta: f.mensajeAlerta ?? '',
+        estado: f.estado ?? 'Pendiente',
+        archivo: f.archivo,
+        tipo_archivo: f.tipo_archivo,
+        url_archivo: f.url_archivo,
+        bitacora: f.bitacora,
+        detalles: f.detalles ?? '',
+        cliente: f.cliente ?? '',
+        fecha: f.fecha ?? '',
+        diasDesdeRecepcion: f.diasDesdeRecepcion ?? 0,
+      }));
+    } catch (e) {
+      this.facturas = [];
+    }
+  }
+  async mostrarFacturasGuardadas() {
+    try {
+      const facturas = await this.dbService.getFacturas();
+      console.log('Facturas guardadas en SQLite:', facturas);
+      alert('Revisa la consola para ver las facturas guardadas.');
+    } catch (e) {
+      alert('Error al obtener facturas de la base de datos.');
+    }
+  }
+  
+  // Getter para facturas filtradas (para el template)
+  get facturasFiltradas() {
+    return this.getFacturasFiltradas();
+  }
+
+  // Devuelve el icono correspondiente al estado de la factura
+  getIconoEstado(estado: string): string {
+    switch ((estado || '').toLowerCase()) {
+      case 'pendiente': return 'time-outline';
+      case 'aceptada': return 'checkmark-circle-outline';
+      case 'rechazada': return 'close-circle-outline';
+      case 'vencida': return 'warning-outline';
+      default: return 'document-text-outline';
+    }
+  }
+
+  // Devuelve el color correspondiente al estado de la factura
+  getColorEstado(estado: string): string {
+    switch ((estado || '').toLowerCase()) {
+      case 'pendiente': return 'warning';
+      case 'aceptada': return 'success';
+      case 'rechazada': return 'danger';
+      case 'vencida': return 'medium';
+      default: return 'primary';
+    }
+  }
+
+  // Acción para ver detalles de la factura (puedes personalizarla)
+  verFactura(factura: Factura) {
+    this.abrirDetalles(factura);
   }
 }

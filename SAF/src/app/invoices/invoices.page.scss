@@ -1,0 +1,992 @@
+.file-upload-filename {
+	display: block;
+	margin-top: 7px;
+	font-size: 0.97em;
+	color: #7b263a;
+	word-break: break-all;
+	text-align: left;
+}
+@media (prefers-color-scheme: dark) {
+	.file-upload-filename {
+		color: #e0b1c0;
+	}
+}
+.drawer-carga-factura ion-label[position="stacked"] {
+	display: block !important;
+	margin-bottom: 16px !important;
+	padding: 0 !important;
+	min-width: 0 !important;
+	width: 100%;
+}
+.file-upload-item ion-label[position="stacked"] {
+	display: block;
+	margin-bottom: 16px;
+}
+.file-upload-wrapper {
+	margin-bottom: 0;
+}
+.file-upload-item {
+	display: flex;
+	flex-direction: column;
+}
+.file-upload-wrapper {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+}
+.file-upload-wrapper input[type="file"] {
+	opacity: 0;
+	width: 100%;
+	height: 38px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 2;
+	cursor: pointer;
+}
+.file-upload-label {
+	display: inline-block;
+	width: 100%;
+	background: linear-gradient(90deg, #7b263a 60%, #a8325a 100%);
+	color: #fff;
+	border-radius: 7px;
+	padding: 8px 14px;
+	font-size: 1em;
+	font-weight: 500;
+	text-align: center;
+	cursor: pointer;
+	transition: background 0.18s, color 0.18s;
+	border: none;
+}
+.file-upload-wrapper input[type="file"]:focus + .file-upload-label,
+.file-upload-wrapper input[type="file"]:hover + .file-upload-label {
+	background: linear-gradient(90deg, #a8325a 0%, #7b263a 100%);
+	color: #fff;
+}
+@media (prefers-color-scheme: dark) {
+	.file-upload-label {
+		background: #23222a;
+		color: #e0b1c0;
+		border: 1.2px solid #35334a;
+	}
+	.file-upload-wrapper input[type="file"]:focus + .file-upload-label,
+	.file-upload-wrapper input[type="file"]:hover + .file-upload-label {
+		background: #35334a;
+		color: #fff;
+	}
+}
+@media (prefers-color-scheme: dark) {
+	.drawer-carga-factura input[type="file"] {
+		background: transparent !important;
+		color: #e0b1c0 !important;
+		border: none !important;
+		box-shadow: none !important;
+		padding: 7px 0;
+	}
+	.drawer-carga-factura input[type="file"]::-webkit-file-upload-button,
+	.drawer-carga-factura input[type="file"]::file-selector-button,
+	.drawer-carga-factura input[type="file"]::-ms-browse {
+		background: #23222a !important;
+		color: #e0b1c0 !important;
+		border: 1.2px solid #35334a !important;
+		border-radius: 6px;
+		padding: 6px 14px;
+		font-size: 0.98em;
+		font-family: inherit;
+		transition: background 0.18s, color 0.18s;
+		box-shadow: none !important;
+	}
+}
+@media (prefers-color-scheme: dark) {
+	.drawer-carga-factura input[type="file"] {
+		background: #23222a !important;
+		color: #e0b1c0 !important;
+		border: 1.2px solid #35334a !important;
+	}
+	.drawer-carga-factura input[type="file"]::-webkit-file-upload-button {
+		background: #23222a !important;
+		color: #e0b1c0 !important;
+		border: 1.2px solid #35334a !important;
+		border-radius: 6px;
+		padding: 6px 14px;
+		font-size: 0.98em;
+		font-family: inherit;
+		transition: background 0.18s, color 0.18s;
+	}
+	.drawer-carga-factura input[type="file"]::-ms-browse {
+		background: #23222a !important;
+		color: #e0b1c0 !important;
+		border: 1.2px solid #35334a !important;
+		border-radius: 6px;
+		padding: 6px 14px;
+		font-size: 0.98em;
+		font-family: inherit;
+	}
+	.drawer-carga-factura input[type="file"]::file-selector-button {
+		background: #23222a !important;
+		color: #e0b1c0 !important;
+		border: 1.2px solid #35334a !important;
+		border-radius: 6px;
+		padding: 6px 14px;
+		font-size: 0.98em;
+		font-family: inherit;
+		transition: background 0.18s, color 0.18s;
+	}
+}
+	.drawer-carga-factura input[type="file"]::-webkit-file-upload-button {
+		background: #23222a;
+		color: #e0b1c0;
+		border: 1.2px solid #35334a;
+		border-radius: 6px;
+		padding: 6px 14px;
+		font-size: 0.98em;
+		font-family: inherit;
+		transition: background 0.18s, color 0.18s;
+	}
+	.drawer-carga-factura input[type="file"]::-ms-browse {
+		background: #23222a;
+		color: #e0b1c0;
+		border: 1.2px solid #35334a;
+		border-radius: 6px;
+		padding: 6px 14px;
+		font-size: 0.98em;
+		font-family: inherit;
+	}
+	.drawer-carga-factura input[type="file"]::file-selector-button {
+		background: #23222a;
+		color: #e0b1c0;
+		border: 1.2px solid #35334a;
+		border-radius: 6px;
+		padding: 6px 14px;
+		font-size: 0.98em;
+		font-family: inherit;
+		transition: background 0.18s, color 0.18s;
+	}
+// Drawer lateral para carga de factura
+// Drawer lateral para carga de factura
+.drawer-carga-factura {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 1200;
+	display: flex;
+	align-items: stretch;
+	justify-content: flex-end;
+}
+.drawer-carga-factura .drawer-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0,0,0,0.18);
+	z-index: 1;
+}
+.drawer-carga-factura .drawer-panel.drawer-panel-form {
+	position: relative;
+	width: 440px;
+	max-width: 100vw;
+	height: 100vh;
+	background: var(--ion-background-color, #fff);
+	box-shadow: -4px 0 24px #0003;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	border-top-left-radius: 18px;
+	border-bottom-left-radius: 18px;
+	animation: drawer-slide-in 0.22s cubic-bezier(.4,1.3,.6,1) 1;
+	border-right: 1.5px solid var(--ion-color-step-150, #e0e0e0);
+}
+.drawer-carga-factura .drawer-header {
+	border-bottom: 1.5px solid var(--ion-color-step-150, #e0e0e0);
+	background: linear-gradient(90deg, #7b263a 60%, #a8325a 100%);
+	color: #fff;
+}
+.drawer-carga-factura .drawer-header ion-title {
+	color: #fff;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+}
+.drawer-carga-factura .drawer-header ion-button {
+	color: #fff;
+}
+.drawer-carga-factura .drawer-content {
+	flex: 1;
+	overflow-y: auto;
+	padding: 24px 18px 32px 18px;
+	background: var(--ion-background-color, #f8f8fa);
+}
+.drawer-carga-factura form {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+.drawer-carga-factura ion-item {
+	--background: none;
+	--highlight-background: none;
+	--min-height: 48px;
+	border-radius: 8px;
+	margin-bottom: 2px;
+	box-shadow: none;
+	padding: 0;
+	border: none;
+}
+.drawer-carga-factura ion-label[position="stacked"] {
+	font-weight: 500;
+	color: #7b263a;
+	font-size: 1.01em;
+	margin-bottom: 2px;
+}
+.drawer-carga-factura input[type="text"],
+.drawer-carga-factura input[type="number"],
+.drawer-carga-factura input[type="date"],
+.drawer-carga-factura select {
+	border: 1.2px solid var(--ion-color-step-150, #e0e0e0);
+	border-radius: 7px;
+	padding: 7px 10px;
+	font-size: 1em;
+	margin-top: 2px;
+	background: var(--ion-item-background, #fff);
+	color: var(--ion-text-color, #222);
+	transition: border 0.18s, background 0.18s, color 0.18s;
+}
+.drawer-carga-factura input[type="file"] {
+	background: var(--ion-item-background, #f4f4f4);
+	color: var(--ion-text-color, #222);
+}
+@media (prefers-color-scheme: dark) {
+	.drawer-carga-factura .drawer-panel.drawer-panel-form {
+		background: #19171c;
+		box-shadow: -4px 0 24px #0008;
+		border-right: 1.5px solid #23222a;
+	}
+	.drawer-carga-factura .drawer-content {
+		background: #18171b;
+	}
+	.drawer-carga-factura ion-label[position="stacked"] {
+		color: #e0b1c0;
+	}
+	.drawer-carga-factura input[type="text"],
+	.drawer-carga-factura input[type="number"],
+	.drawer-carga-factura input[type="date"],
+	.drawer-carga-factura select {
+		background: #23222a;
+		color: #f8f8fa;
+		border: 1.2px solid #35334a;
+	}
+	.drawer-carga-factura input[type="file"] {
+		background: #23222a;
+		color: #f8f8fa;
+	}
+}
+.drawer-carga-factura input:focus,
+.drawer-carga-factura select:focus {
+	border-color: #a8325a;
+	outline: none;
+}
+.drawer-carga-factura ion-button[type="submit"] {
+	margin-top: 18px;
+	font-weight: 600;
+	font-size: 1.08em;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px #7b263a22;
+	background: linear-gradient(90deg, #7b263a 60%, #a8325a 100%);
+	color: #fff;
+	letter-spacing: 0.01em;
+}
+.drawer-carga-factura ion-button[type="submit"]:hover,
+.drawer-carga-factura ion-button[type="submit"]:focus {
+	background: linear-gradient(90deg, #a8325a 0%, #7b263a 100%);
+	color: #fff;
+}
+.drawer-carga-factura ion-text[color="danger"] {
+	margin-top: 8px;
+	font-size: 0.98em;
+	font-weight: 500;
+}
+.drawer-carga-factura ion-text[color="success"] {
+	margin-top: 8px;
+	font-size: 0.98em;
+	font-weight: 500;
+	color: #2ecc71;
+}
+.drawer-carga-factura input[type="file"] {
+	background: #f4f4f4;
+	border: none;
+	padding: 7px 0;
+	font-size: 0.98em;
+}
+@media (max-width: 600px) {
+	.drawer-carga-factura .drawer-panel.drawer-panel-form {
+		width: 100vw;
+		min-width: 0;
+		max-width: 100vw;
+		border-radius: 0;
+	}
+	.drawer-carga-factura .drawer-content {
+		padding: 16px 6px 24px 6px;
+	}
+}
+.drawer-carga-factura .drawer-header {
+	border-bottom: 1px solid var(--ion-color-step-150, #e0e0e0);
+}
+.drawer-carga-factura .drawer-content {
+	flex: 1;
+	overflow-y: auto;
+	padding-bottom: 24px;
+}
+@media (max-width: 600px) {
+	.drawer-carga-factura .drawer-panel.drawer-panel-form {
+		width: 100vw;
+		min-width: 0;
+		max-width: 100vw;
+	}
+}
+@keyframes drawer-slide-in {
+	from { transform: translateX(100%); }
+	to { transform: translateX(0); }
+}
+.filtros-chips {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 18px;
+	padding: 12px 16px 0 16px;
+	flex-wrap: wrap;
+	background: var(--ion-background-color, #fff);
+}
+.btn-agregar-factura-filtros {
+	font-weight: 600;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px #7b263a22;
+	padding: 0 18px;
+	height: 38px;
+	display: flex;
+	align-items: center;
+	font-size: 1.05em;
+	letter-spacing: 0.01em;
+	margin-right: 8px;
+	background: linear-gradient(90deg, #7b263a 60%, #a8325a 100%);
+	color: #fff;
+	transition: background 0.18s, color 0.18s;
+}
+.btn-agregar-factura-filtros ion-icon {
+	font-size: 1.3em;
+	margin-right: 6px;
+	color: #fff;
+}
+.btn-agregar-factura-filtros:hover,
+.btn-agregar-factura-filtros:focus {
+	background: linear-gradient(90deg, #a8325a 0%, #7b263a 100%);
+	color: #fff;
+}
+.chips-filtros-wrapper {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+	align-items: center;
+}
+@media (max-width: 600px) {
+	.filtros-chips {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 10px;
+	}
+	.btn-agregar-factura-filtros {
+		width: 100%;
+		margin-bottom: 6px;
+	}
+	.chips-filtros-wrapper {
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+}
+@media (prefers-color-scheme: dark) {
+	.filtros-chips {
+		background: #181818;
+	}
+	.btn-agregar-factura-filtros {
+		background: linear-gradient(90deg, #a8325a 60%, #7b263a 100%);
+		color: #fff;
+		box-shadow: 0 2px 8px #0005;
+	}
+	.btn-agregar-factura-filtros ion-icon {
+		color: #fff;
+	}
+}
+.chip-limpiar-filtro {
+	background: #f7e6ec !important;
+	color: #7b263a !important;
+	border: 1.5px solid #e0b7c6 !important;
+	font-weight: 600;
+	box-shadow: 0 1px 4px #7b263a11;
+	transition: background 0.15s, color 0.15s;
+}
+.chip-limpiar-filtro ion-icon {
+	color: #7b263a !important;
+}
+// --- Drawer lateral para detalle de factura ---
+// Drawer lateral siempre por encima
+// Drawer lateral SIEMPRE por encima de todo
+.drawer-detalle-factura {
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 999999 !important;
+	pointer-events: all;
+}
+.drawer-overlay {
+	position: fixed;
+	top: 0; left: 0; right: 0; bottom: 0;
+	background: rgba(0,0,0,0.22);
+	z-index: 1000000 !important;
+	transition: background 0.2s;
+}
+.drawer-panel {
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 420px;
+	max-width: 100vw;
+	height: 100vh;
+	background: var(--ion-background-color, #fff);
+	box-shadow: -4px 0 24px #0003;
+	z-index: 1000001 !important;
+	display: flex;
+	flex-direction: column;
+	animation: drawer-slide-in 0.25s cubic-bezier(.4,1.3,.6,1) 1;
+	will-change: transform;
+}
+@keyframes drawer-slide-in {
+	from { right: -480px; opacity: 0; }
+	to { right: 0; opacity: 1; }
+}
+.drawer-header {
+	border-radius: 0 0 12px 12px;
+	box-shadow: 0 2px 8px #0001;
+}
+.drawer-content {
+	flex: 1;
+	overflow-y: auto;
+	padding-bottom: 24px;
+}
+@media (max-width: 600px) {
+	.drawer-panel {
+		width: 100vw;
+		min-width: 0;
+		border-radius: 0;
+	}
+}
+@media (prefers-color-scheme: dark) {
+	.drawer-panel {
+		background: #23232b !important;
+		box-shadow: -4px 0 24px #0008;
+	}
+}
+// --- Estilos para el modal de detalles de factura ---
+.modal-detalle-content {
+	padding: 0 0 24px 0;
+	background: var(--ion-background-color, #fff);
+}
+.detalle-factura-card {
+// (llave eliminada, error de sintaxis corregido)
+	margin: 18px 16px 12px 16px;
+	border-radius: 18px;
+	box-shadow: 0 2px 12px #0002;
+	background: var(--ion-background-color, #fff);
+	border: 1px solid #ececec;
+}
+.detalle-factura-header {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 8px;
+	padding-bottom: 0;
+}
+.detalle-factura-top {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-bottom: 4px;
+}
+.detalle-estado-icon {
+	font-size: 2.2em;
+	margin-right: 2px;
+}
+.detalle-estado-badge {
+	font-size: 1em;
+	margin-bottom: 2px;
+	font-weight: 600;
+}
+.detalle-factura-id {
+	font-size: 0.95em;
+	color: #888;
+	margin-top: 2px;
+}
+.detalle-factura-cliente {
+	font-size: 1.25em;
+	font-weight: 700;
+	color: #7b263a;
+	margin-bottom: 2px;
+}
+.detalle-factura-monto {
+	font-size: 1.15em;
+	font-weight: 600;
+	color: #1a7f4c;
+	margin-bottom: 6px;
+}
+.detalle-factura-info {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-bottom: 10px;
+	font-size: 1em;
+}
+.detalle-factura-info ion-icon {
+	font-size: 1.1em;
+	margin-right: 4px;
+	color: #7b263a;
+}
+.detalle-factura-archivo {
+	margin-top: 10px;
+	background: #f8f8f8;
+	border-radius: 10px;
+	padding: 10px 12px;
+	box-shadow: 0 1px 4px #0001;
+}
+.archivo-label {
+	font-weight: 600;
+	margin-bottom: 4px;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+.archivo-preview {
+	margin-top: 4px;
+}
+.detalle-factura-bitacora {
+	margin: 18px 16px 0 16px;
+	border-radius: 14px;
+	background: var(--ion-background-color, #fff);
+	box-shadow: 0 1px 8px #0001;
+	border: 1px solid #ececec;
+}
+.detalle-factura-bitacora ion-card-title {
+	color: #7b263a;
+	font-size: 1.1em;
+	font-weight: 700;
+}
+.detalle-factura-bitacora ion-item {
+	font-size: 0.98em;
+	border-radius: 8px;
+	margin-bottom: 4px;
+	background: #f7f7f7;
+}
+.detalle-factura-bitacora ion-label b {
+	color: #1a7f4c;
+}
+.detalle-factura-bitacora ion-label small {
+	color: #888;
+}
+// Soporte modo oscuro
+// (llave eliminada, error de sintaxis corregido)
+@media (prefers-color-scheme: dark) {
+	.modal-detalle-content,
+	.detalle-factura-card,
+	.detalle-factura-bitacora {
+		background: #23232b !important;
+		border-color: #353545 !important;
+		color: #f3f3f3;
+	}
+	.detalle-factura-info ion-icon,
+	.detalle-factura-bitacora ion-card-title {
+		color: #ffb4d0;
+	}
+	.detalle-factura-cliente {
+		color: #ffb4d0;
+	}
+	.detalle-factura-monto {
+		color: #7fffd4;
+	}
+	.detalle-factura-bitacora ion-item {
+		background: #23232b;
+		color: #f3f3f3;
+	}
+	.detalle-factura-archivo {
+		background: #23232b;
+	}
+}
+// Rediseño tabla de facturas, filtros y botones
+.invoices-header {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	background: var(--ion-background-color, #fff);
+}
+.invoices-toolbar {
+	--background: #7b263a;
+	--color: #fff;
+	border-radius: 0 0 12px 12px;
+	box-shadow: 0 2px 8px #0002;
+}
+.btn-agregar-factura {
+	margin-right: 8px;
+	font-weight: 600;
+}
+.btn-console {
+	margin-right: 0;
+}
+.filtros-chips {
+	display: flex;
+	gap: 10px;
+	padding: 12px 16px 0 16px;
+	flex-wrap: wrap;
+	background: var(--ion-background-color, #fff);
+}
+.chip-filtro {
+	font-weight: 500;
+	font-size: 1em;
+}
+.chip-badge {
+	margin-left: 6px;
+	font-size: 0.95em;
+}
+.tabla-facturas-wrapper {
+	overflow-x: auto;
+	margin: 18px 0 0 0;
+}
+// --- Tabla empresarial modo claro ---
+.tabla-facturas {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+	background: #fff;
+	box-shadow: 0 4px 18px #0002, 0 1.5px 0 #7b263a22;
+	border-radius: 14px;
+	overflow: hidden;
+	border: 1.5px solid #e0e0e0;
+	margin-bottom: 18px;
+}
+.tabla-facturas th, .tabla-facturas td {
+	padding: 14px 12px;
+	text-align: left;
+	font-size: 1.04em;
+	border-right: 1px solid #f0e6ea;
+}
+.tabla-facturas th:last-child, .tabla-facturas td:last-child {
+	border-right: none;
+}
+.tabla-facturas th {
+	background: linear-gradient(90deg, #f7e6ec 0%, #f4f4f4 100%);
+	color: #7b263a;
+	font-weight: 700;
+	border-bottom: 2.5px solid #e0e0e0;
+	letter-spacing: 0.02em;
+	font-size: 1.08em;
+}
+.tabla-facturas tr {
+	border-bottom: 1.5px solid #ececec;
+	transition: background 0.15s;
+}
+.tabla-facturas tr:nth-child(even) {
+	background: #faf7fa;
+}
+.tabla-facturas tr:hover {
+	background: #fbe9f1;
+	box-shadow: 0 2px 8px #7b263a11;
+}
+.tabla-facturas td {
+	color: #3a2a2a;
+	font-weight: 500;
+}
+// Icono de estado en la tabla
+.tabla-estado-icon {
+	font-size: 1.3em;
+	vertical-align: middle;
+	margin-right: 4px;
+}
+
+// Acciones de la tabla (botones de acción)
+.tabla-facturas td ion-button {
+	--padding-start: 0;
+	--padding-end: 0;
+	margin: 0 7px;
+}
+.tabla-facturas td ion-icon[slot="icon-only"] {
+	font-size: 1.45em;
+}
+.tabla-estado-badge {
+	font-size: 0.95em;
+	vertical-align: middle;
+}
+.tabla-vacia {
+	text-align: center;
+	color: #888;
+	font-size: 1.1em;
+	padding: 32px 0;
+}
+.tabla-estado-icon {
+	font-size: 1.3em;
+	vertical-align: middle;
+	margin-right: 4px;
+}
+.tabla-estado-badge {
+	font-size: 0.95em;
+	vertical-align: middle;
+}
+.tabla-vacia {
+	text-align: center;
+	color: #888;
+	font-size: 1.1em;
+	padding: 32px 0;
+}
+@media (prefers-color-scheme: dark) {
+	.invoices-header, .filtros-chips {
+		background: #181818;
+	}
+	.invoices-toolbar {
+		--background: #4a1824;
+		--color: #f4f4f4;
+	}
+	.tabla-facturas {
+		background: #232323;
+		color: #f4f4f4;
+		border-color: #353545;
+	}
+	.tabla-facturas th {
+		background: #232323;
+		color: #ffb3c6;
+		border-bottom: 2px solid #3a3a3a;
+	}
+	.tabla-facturas td {
+		color: #f4f4f4;
+		border-right: 1px solid #353545;
+	}
+	.tabla-facturas th:last-child, .tabla-facturas td:last-child {
+		border-right: none;
+	}
+	.tabla-facturas tr {
+		border-bottom: 1px solid #333;
+	}
+	.tabla-facturas tr:nth-child(even) {
+		background: #23232b;
+	}
+	.tabla-facturas tr:hover {
+		background: #3a1e2a;
+	}
+}
+// Rediseño integral de la página de facturas
+.invoices-header {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	background: #fff;
+}
+.invoices-toolbar {
+	--background: #7b263a;
+	--color: #fff;
+	border-radius: 0 0 12px 12px;
+	box-shadow: 0 2px 8px #0002;
+}
+.fab-agregar {
+	margin-right: 8px;
+}
+.fab-console {
+	margin-right: 0;
+}
+.resumen-categorias-sticky {
+	background: #fff;
+	position: sticky;
+	top: 56px;
+	z-index: 99;
+	padding-bottom: 8px;
+}
+.resumen-categorias {
+	display: flex;
+	gap: 12px;
+	margin: 12px 0 0 0;
+}
+.resumen-card {
+	flex: 1;
+	cursor: pointer;
+	text-align: center;
+	transition: box-shadow 0.2s, border 0.2s;
+	border: 2px solid transparent;
+	border-radius: 12px;
+	background: #f8f8f8;
+}
+.resumen-card.selected {
+	border: 2px solid #7b263a;
+	box-shadow: 0 2px 12px #7b263a33;
+	background: #fff3f6;
+}
+.resumen-nombre {
+	font-size: 1.1em;
+	font-weight: bold;
+}
+.resumen-badge {
+	margin-top: 8px;
+	font-size: 1.1em;
+}
+.invoices-content {
+	padding: 18px 0 0 0;
+}
+.facturas-listado {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	margin: 0 12px;
+}
+.factura-card {
+	border-radius: 14px;
+	box-shadow: 0 2px 8px #0001;
+	background: #f8f8f8;
+	color: #222;
+	transition: box-shadow 0.2s;
+}
+.factura-card-header {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding-bottom: 0;
+}
+.factura-estado-icon {
+	font-size: 2em;
+}
+.factura-card-title {
+	flex: 1;
+	font-size: 1.1em;
+	font-weight: 600;
+}
+.factura-estado-badge {
+	font-size: 1em;
+	min-width: 80px;
+	text-align: center;
+}
+.factura-card-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	gap: 12px;
+	padding-top: 0;
+}
+.factura-info {
+	flex: 2;
+	font-size: 1em;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.factura-acciones {
+	flex: 1;
+	display: flex;
+	gap: 6px;
+	justify-content: flex-end;
+}
+.factura-vacia {
+	text-align: center;
+	color: #888;
+	margin: 32px 0 0 0;
+	font-size: 1.1em;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+}
+// Estilos para la página de facturas con tarjetas modernas
+.fab-console {
+	z-index: 100;
+}
+
+.resumen-categorias {
+	display: flex;
+	gap: 12px;
+	margin: 16px 0;
+}
+.resumen-card {
+	flex: 1;
+	cursor: pointer;
+	text-align: center;
+	transition: box-shadow 0.2s, border 0.2s;
+	border: 2px solid transparent;
+}
+.resumen-card.selected {
+	border: 2px solid #7b263a;
+	box-shadow: 0 2px 12px #7b263a33;
+}
+.resumen-nombre {
+	font-size: 1.1em;
+	font-weight: bold;
+}
+.resumen-badge {
+	margin-top: 8px;
+	font-size: 1.1em;
+}
+.btn-agregar-factura {
+	margin-bottom: 18px;
+}
+.facturas-listado {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+.factura-card {
+	border-radius: 14px;
+	box-shadow: 0 2px 8px #0001;
+	background: #f8f8f8;
+	color: #222;
+	transition: box-shadow 0.2s;
+}
+.factura-card-header {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding-bottom: 0;
+}
+.factura-estado-icon {
+	font-size: 2em;
+}
+.factura-card-title {
+	flex: 1;
+	font-size: 1.1em;
+	font-weight: 600;
+}
+.factura-estado-badge {
+	font-size: 1em;
+	min-width: 80px;
+	text-align: center;
+}
+.factura-card-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	gap: 12px;
+	padding-top: 0;
+}
+.factura-info {
+	flex: 2;
+	font-size: 1em;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.factura-acciones {
+	flex: 1;
+	display: flex;
+	gap: 6px;
+	justify-content: flex-end;
+}
+.factura-vacia {
+	text-align: center;
+	color: #888;
+	margin: 32px 0 0 0;
+	font-size: 1.1em;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+}

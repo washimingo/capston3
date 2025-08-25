@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { Router, RouterModule } from '@angular/router';
-import { 
+import {
   IonHeader, 
   IonToolbar, 
   IonTitle, 
@@ -11,12 +11,13 @@ import {
   IonCardHeader, 
   IonCardTitle, 
   IonCardContent, 
-  IonList, 
-  IonItem, 
-  IonLabel, 
   IonBadge, 
   IonIcon, 
-  IonButtons
+  IonButtons, 
+  IonButton, 
+  IonGrid, 
+  IonRow, 
+  IonCol
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 
@@ -37,21 +38,22 @@ interface Factura {
   imports: [
     IonHeader, 
     IonToolbar, 
-    IonTitle, 
-    IonContent, 
-    IonMenuButton, 
-    RouterModule, 
-    CommonModule,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonList,
-    IonItem,
-    IonLabel,
+  IonHeader, 
+  IonToolbar, 
+  IonTitle, 
+  IonContent, 
+  IonMenuButton, 
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
   IonBadge,
   IonIcon,
-  IonButtons
+  IonButtons,
+  IonButton,
+  IonGrid,
+  IonRow,
+  IonCol
   ],
 })
 export class HomePage implements OnInit {
