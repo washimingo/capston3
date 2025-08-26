@@ -8,6 +8,14 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      refreshingSpinner="crescent"
+      pullingText="Desliza para refrescar"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
   <ion-grid fixed class="home-grid">
     <ion-row>
       <!-- Tarjeta grande de totales -->

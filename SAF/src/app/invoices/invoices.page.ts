@@ -1,4 +1,5 @@
-// ...existing code...
+// ...importaciones únicas arriba...
+import * as XLSX from 'xlsx';
 import { Component } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
@@ -29,7 +30,10 @@ import {
   IonCol,
   IonInput,
   IonSpinner,
-  IonMenuButton
+  IonMenuButton,
+  IonRefresher,
+  IonRefresherContent,
+  ToastController
 } from '@ionic/angular/standalone';
 
 interface BitacoraLog {
@@ -80,10 +84,15 @@ interface Factura extends FacturaModel {
     IonRow,
     IonCol,
     IonSpinner,
-    IonMenuButton
+    IonMenuButton,
+    IonRefresher,
+    IonRefresherContent
   ]
 })
 export class InvoicesPage {
+  // Variables para vista previa de Excel
+  excelPreviewData: any[][] | null = null;
+  excelPreviewError: string = '';
   // Loader y autocompletado
   buscandoFacturas: boolean = false;
   sugerenciasBusqueda: string[] = [];
@@ -163,8 +172,8 @@ export class InvoicesPage {
     const file = event.target.files[0];
     if (!file) return;
     const ext = file.name.split('.').pop().toLowerCase();
-    if (!['pdf', 'xml', 'jpg', 'jpeg', 'png'].includes(ext)) {
-      this.errorCarga = 'Solo se permiten archivos PDF, XML o imágenes.';
+    if (!['pdf', 'xml', 'jpg', 'jpeg', 'png', 'xlsx'].includes(ext)) {
+      this.errorCarga = 'Solo se permiten archivos PDF, XML, imágenes o Excel (.xlsx).';
       this.exitoCarga = '';
       this.archivoSeleccionado = null;
       return;
@@ -173,16 +182,44 @@ export class InvoicesPage {
     this.errorCarga = '';
   }
 
+  constructor(
+    private route: ActivatedRoute,
+    private dbService: DatabaseService,
+    private sanitizer: DomSanitizer,
+    private toastController: ToastController
+  ) {
+    // Leer query param para mostrar facturas por vencer
+    this.route.queryParams.subscribe(params => {
+      if (params['porVencer'] === 'true') {
+        this.mostrarPorVencer = true;
+        this.categoriaSeleccionada = null;
+      }
+    });
+    this.cargarFacturas();
+  }
+
+  async mostrarToast(mensaje: string, color: string = 'primary') {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 2000,
+      color,
+      position: 'top'
+    });
+    toast.present();
+  }
+
   async onSubmitFactura(event: Event) {
     event.preventDefault();
     this.errorCarga = '';
     this.exitoCarga = '';
     if (!this.archivoSeleccionado) {
       this.errorCarga = 'Debe seleccionar un archivo válido.';
+      await this.mostrarToast(this.errorCarga, 'danger');
       return;
     }
     if (!this.nuevaFactura.folio || !this.nuevaFactura.proveedor || !this.nuevaFactura.tipo || !this.nuevaFactura.responsable || !this.nuevaFactura.monto || !this.nuevaFactura.fechaRecepcion) {
       this.errorCarga = 'Debe completar los campos obligatorios.';
+      await this.mostrarToast(this.errorCarga, 'danger');
       return;
     }
     // Guardar archivo como base64 (solo para demo, en producción se recomienda guardar la ruta)
@@ -213,9 +250,11 @@ export class InvoicesPage {
       try {
         const id = await this.dbService.addFactura(nuevaFactura);
         this.exitoCarga = 'Factura cargada exitosamente.';
+        await this.mostrarToast(this.exitoCarga, 'success');
         await this.cargarFacturas();
       } catch (e) {
         this.errorCarga = 'Error al guardar la factura en la base de datos.';
+        await this.mostrarToast(this.errorCarga, 'danger');
       }
       this.nuevaFactura = {
         folio: '',
@@ -378,11 +417,36 @@ export class InvoicesPage {
 
   // Modal de detalles
   facturaSeleccionada: Factura | null = null;
-  abrirDetalles(factura: Factura) {
+  async abrirDetalles(factura: Factura) {
     this.facturaSeleccionada = factura;
+    this.excelPreviewData = null;
+    this.excelPreviewError = '';
+    // Si es Excel, intenta mostrar la vista previa
+    if (factura.archivo && factura.archivo.toLowerCase().endsWith('.xlsx') && factura.url_archivo) {
+      try {
+        let base64 = factura.url_archivo;
+        if (base64.startsWith('data:')) {
+          base64 = base64.split(',')[1];
+        }
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        const workbook = XLSX.read(bytes, { type: 'array' });
+        const firstSheet = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[firstSheet];
+        const data: any[][] = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        this.excelPreviewData = data;
+      } catch (e) {
+        this.excelPreviewError = 'No se pudo mostrar la vista previa del Excel.';
+      }
+    }
   }
   cerrarDetalles() {
     this.facturaSeleccionada = null;
+    this.excelPreviewData = null;
+    this.excelPreviewError = '';
   }
 
   // Iniciar edición de factura
@@ -421,6 +485,7 @@ export class InvoicesPage {
           this.abrirDrawerEditar = false;
           await this.cargarFacturas();
           this.exitoCarga = 'Factura editada correctamente.';
+          await this.mostrarToast(this.exitoCarga, 'success');
           setTimeout(() => this.exitoCarga = '', 2000);
         };
         reader.readAsDataURL(file);
@@ -435,9 +500,11 @@ export class InvoicesPage {
       this.abrirDrawerEditar = false;
       await this.cargarFacturas();
       this.exitoCarga = 'Factura editada correctamente.';
+      await this.mostrarToast(this.exitoCarga, 'success');
       setTimeout(() => this.exitoCarga = '', 2000);
     } catch (e) {
       this.errorCarga = 'Error al editar la factura.';
+      await this.mostrarToast(this.errorCarga, 'danger');
     }
   }
 
@@ -467,9 +534,11 @@ export class InvoicesPage {
       await this.dbService.deleteFactura(this.facturaAEliminar.id);
       await this.cargarFacturas();
       this.exitoCarga = 'Factura eliminada correctamente.';
+      await this.mostrarToast(this.exitoCarga, 'success');
       setTimeout(() => this.exitoCarga = '', 2000);
     } catch (e) {
       this.errorCarga = 'Error al eliminar la factura.';
+      await this.mostrarToast(this.errorCarga, 'danger');
     }
     this.facturaAEliminar = null;
     this.mostrarAlertaEliminar = false;
@@ -489,18 +558,6 @@ export class InvoicesPage {
     const diffMs = hoy.getTime() - fechaEmision.getTime();
     const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     return 8 - diffDias;
-  }
-
-
-  constructor(private route: ActivatedRoute, private dbService: DatabaseService, private sanitizer: DomSanitizer) {
-    // Leer query param para mostrar facturas por vencer
-    this.route.queryParams.subscribe(params => {
-      if (params['porVencer'] === 'true') {
-        this.mostrarPorVencer = true;
-        this.categoriaSeleccionada = null;
-      }
-    });
-    this.cargarFacturas();
   }
 
 
@@ -569,8 +626,51 @@ export class InvoicesPage {
     }
   }
 
+
   // Acción para ver detalles de la factura (puedes personalizarla)
   verFactura(factura: Factura) {
     this.abrirDetalles(factura);
+  }
+
+
+  descargarArchivo(factura: Factura) {
+    if (!factura || !factura.archivo || !factura.url_archivo) return;
+    // Extraer el tipo MIME según la extensión
+    const ext = factura.archivo.split('.').pop()?.toLowerCase() || '';
+    let mime = 'application/octet-stream';
+    if (ext === 'pdf') mime = 'application/pdf';
+    else if (ext === 'xml') mime = 'application/xml';
+    else if (ext === 'jpg' || ext === 'jpeg') mime = 'image/jpeg';
+    else if (ext === 'png') mime = 'image/png';
+    else if (ext === 'xlsx') mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    // Obtener base64 puro (sin encabezado data:...)
+    let base64 = factura.url_archivo;
+    if (base64.startsWith('data:')) {
+      base64 = base64.split(',')[1];
+    }
+    // Convertir base64 a blob
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: mime });
+    // Crear enlace de descarga
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = factura.archivo;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }, 100);
+  }
+
+  async refrescar(event: any) {
+    await this.cargarFacturas();
+    event.target.complete();
   }
 }

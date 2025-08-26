@@ -1,2 +1,16 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+
+/* Modo oscuro SAF */
+body.dark {
+  --ion-background-color: #181818;
+  --ion-text-color: #fff;
+  --ion-card-background: #232323;
+  --ion-toolbar-background: #232323;
+  --ion-item-background: #232323;
+  --ion-color-primary: #7b263a;
+  --ion-color-primary-contrast: #fff;
+  --ion-color-secondary: #ffc409;
+  --ion-color-secondary-contrast: #181818;
+  /* Puedes personalizar más variables aquí */
+}

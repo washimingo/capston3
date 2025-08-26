@@ -95,6 +95,14 @@
 
 <!-- =================== CONTENIDO PRINCIPAL =================== -->
 <ion-content class="invoices-content">
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      refreshingSpinner="crescent"
+      pullingText="Desliza para refrescar"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
   <!-- ====== FILTROS Y BUSQUEDA ====== -->
   <div class="filtros-chips filtros-chips-bonitos">
     <form class="form-filtros" (ngSubmit)="$event.preventDefault()">
@@ -162,7 +170,7 @@
           <ion-item lines="none" class="file-upload-item">
             <ion-label position="stacked">Archivo (PDF, XML, imagen):</ion-label>
             <div class="file-upload-wrapper">
-              <input type="file" (change)="onFileSelected($event)" accept=".pdf,.xml,image/*" required />
+              <input type="file" (change)="onFileSelected($event)" accept=".pdf,.xml,.xlsx,image/*" required />
               <span class="file-upload-label">Seleccionar archivo</span>
               <span class="file-upload-filename" *ngIf="archivoSeleccionado">{{ archivoSeleccionado.name }}</span>
             </div>
@@ -335,21 +343,50 @@
                 <ng-container [ngSwitch]="((facturaSeleccionada.archivo && facturaSeleccionada.archivo.split('.').pop()) || '').toLowerCase()">
                   <ng-container *ngSwitchCase="'pdf'">
                     <iframe [src]="getFacturaFileUrl(facturaSeleccionada)" width="100%" height="300px" style="border: none;"></iframe>
+                    <ion-button size="small" color="primary" (click)="descargarArchivo(facturaSeleccionada)">
+                      <ion-icon name="download-outline" slot="start"></ion-icon> Descargar
+                    </ion-button>
                   </ng-container>
                   <ng-container *ngSwitchCase="'jpg'">
                     <img [src]="getFacturaFileUrl(facturaSeleccionada)" alt="Factura adjunta" style="max-width:100%; max-height:300px;" />
+                    <ion-button size="small" color="primary" (click)="descargarArchivo(facturaSeleccionada)">
+                      <ion-icon name="download-outline" slot="start"></ion-icon> Descargar
+                    </ion-button>
                   </ng-container>
                   <ng-container *ngSwitchCase="'jpeg'">
                     <img [src]="getFacturaFileUrl(facturaSeleccionada)" alt="Factura adjunta" style="max-width:100%; max-height:300px;" />
+                    <ion-button size="small" color="primary" (click)="descargarArchivo(facturaSeleccionada)">
+                      <ion-icon name="download-outline" slot="start"></ion-icon> Descargar
+                    </ion-button>
                   </ng-container>
                   <ng-container *ngSwitchCase="'png'">
                     <img [src]="getFacturaFileUrl(facturaSeleccionada)" alt="Factura adjunta" style="max-width:100%; max-height:300px;" />
+                    <ion-button size="small" color="primary" (click)="descargarArchivo(facturaSeleccionada)">
+                      <ion-icon name="download-outline" slot="start"></ion-icon> Descargar
+                    </ion-button>
                   </ng-container>
                   <ng-container *ngSwitchCase="'xml'">
                     <ion-text color="medium">Archivo XML: {{ facturaSeleccionada.archivo }}</ion-text>
                   </ng-container>
+                  <ng-container *ngSwitchCase="'xlsx'">
+                    <ion-text color="medium">Archivo Excel: {{ facturaSeleccionada.archivo }}</ion-text>
+                    <ion-button size="small" color="primary" (click)="descargarArchivo(facturaSeleccionada)">
+                      <ion-icon name="download-outline" slot="start"></ion-icon> Descargar
+                    </ion-button>
+                    <div *ngIf="excelPreviewError" class="excel-preview-error">{{ excelPreviewError }}</div>
+                    <div *ngIf="excelPreviewData && !excelPreviewError" class="excel-preview-table-wrapper">
+                      <table class="excel-preview-table">
+                        <tr *ngFor="let row of excelPreviewData">
+                          <td *ngFor="let cell of row">{{ cell }}</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </ng-container>
                   <ng-container *ngSwitchDefault>
                     <ion-text color="medium">Archivo: {{ facturaSeleccionada.archivo }}</ion-text>
+                    <ion-button size="small" color="primary" (click)="descargarArchivo(facturaSeleccionada)">
+                      <ion-icon name="download-outline" slot="start"></ion-icon> Descargar
+                    </ion-button>
                   </ng-container>
                 </ng-container>
               </div>

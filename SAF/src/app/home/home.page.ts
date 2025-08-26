@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { DatabaseService } from '../services/database.service';
 import {
@@ -18,7 +18,9 @@ import {
   IonButton, 
   IonGrid, 
   IonRow, 
-  IonCol
+  IonCol,
+  IonRefresher,
+  IonRefresherContent
 } from '@ionic/angular/standalone';
 
 interface Factura {
@@ -53,7 +55,9 @@ interface Factura {
   IonButton,
   IonGrid,
   IonRow,
-  IonCol
+  IonCol,
+  IonRefresher,
+  IonRefresherContent
   ],
 })
 export class HomePage implements OnInit {
@@ -67,17 +71,32 @@ export class HomePage implements OnInit {
   totalVencidas = 0;
   totalPorVencer = 0;
 
+  cargando = false;
+
 
   constructor(
     private router: Router,
     private alertController: AlertController,
-    private databaseService: DatabaseService
+    private databaseService: DatabaseService,
+    private loadingController: LoadingController
   ) {}
 
+
   async ngOnInit() {
+    await this.actualizarDatos();
+  }
+
+  async actualizarDatos() {
+    const loading = await this.loadingController.create({
+      message: 'Actualizando datos...',
+      spinner: 'crescent',
+      backdropDismiss: false
+    });
+    await loading.present();
     await this.cargarFacturasReales();
     this.calcularTotales();
     this.mostrarAlertasFacturasPorVencer();
+    await loading.dismiss();
   }
 
   async cargarFacturasReales() {
@@ -142,5 +161,10 @@ export class HomePage implements OnInit {
       });
       await alert.present();
     }
+  }
+
+  async refrescar(event: any) {
+    await this.actualizarDatos();
+    event.target.complete();
   }
 }
