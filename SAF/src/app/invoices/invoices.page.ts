@@ -1,4 +1,3 @@
-// ...importaciones únicas arriba...
 import * as XLSX from 'xlsx';
 import { Component } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -544,9 +543,35 @@ export class InvoicesPage {
     this.mostrarAlertaEliminar = false;
   }
 
+  // Cambia el estado de una factura (aceptar, rechazar, marcar vencida)
+  async cambiarEstadoFactura(
+    factura: Factura,
+    nuevoEstado: 'Aceptada' | 'Rechazada' | 'Vencida',
+    comentario: string = ''
+  ) {
+    try {
+      await this.dbService.cambiarEstadoFactura(factura.id, nuevoEstado, 'usuario demo', comentario);
+      await this.cargarFacturas();
+      let mensaje = '';
+      if (nuevoEstado === 'Aceptada') mensaje = 'Factura aceptada correctamente.';
+      if (nuevoEstado === 'Rechazada') mensaje = 'Factura rechazada correctamente.';
+      if (nuevoEstado === 'Vencida') mensaje = 'Factura marcada como vencida.';
+      await this.mostrarToast(
+        mensaje,
+        nuevoEstado === 'Aceptada'
+          ? 'success'
+          : nuevoEstado === 'Rechazada'
+          ? 'danger'
+          : 'medium'
+      );
+    } catch (e) {
+      await this.mostrarToast('Error al cambiar el estado de la factura.', 'danger');
+    }
+  }
+
   // Calcula los días restantes para el vencimiento de una factura (8 días desde la fecha de emisión o recepción)
-  getDiasRestantes(factura: Factura): number | null {
-    // Soporta ambos campos: fechaRecepcion y fecha
+  getDiasRestantes(factura: Factura | null | undefined): number | null {
+    if (!factura) return null;
     const fechaBase = factura.fechaRecepcion || factura.fecha || null;
     if (!fechaBase) return null;
     const fechaEmision = new Date(fechaBase);
@@ -564,27 +589,48 @@ export class InvoicesPage {
   async cargarFacturas() {
     try {
       const facturasDB = await this.dbService.getFacturas();
-      // Mapear los campos antiguos y nuevos para asegurar compatibilidad y visualización
-      this.facturas = facturasDB.map((f: any) => ({
-        id: f.id_factura ?? f.id,
-        folio: f.folio ?? f.cliente ?? '',
-        proveedor: f.proveedor ?? '',
-        tipo: f.tipo ?? '',
-        responsable: f.responsable ?? '',
-        monto: f.monto ?? 0,
-        fechaRecepcion: f.fechaRecepcion ?? f.fecha ?? '',
-        comentario: f.comentario ?? f.detalles ?? '',
-        mensajeAlerta: f.mensajeAlerta ?? '',
-        estado: f.estado ?? 'Pendiente',
-        archivo: f.archivo,
-        tipo_archivo: f.tipo_archivo,
-        url_archivo: f.url_archivo,
-        bitacora: f.bitacora,
-        detalles: f.detalles ?? '',
-        cliente: f.cliente ?? '',
-        fecha: f.fecha ?? '',
-        diasDesdeRecepcion: f.diasDesdeRecepcion ?? 0,
-      }));
+      const hoy = new Date();
+      // Mapear y actualizar automáticamente las facturas vencidas
+      const actualizaciones: Promise<void>[] = [];
+      this.facturas = facturasDB.map((f: any) => {
+        const fechaBase = f.fechaRecepcion ?? f.fecha ?? '';
+        let estado = f.estado ?? 'Pendiente';
+        if (estado === 'Pendiente' && fechaBase) {
+          const diffMs = hoy.getTime() - new Date(fechaBase).getTime();
+          const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          if (diffDias >= 8) {
+            estado = 'Vencida';
+            // Actualizar en base de datos
+            actualizaciones.push(this.dbService.cambiarEstadoFactura(f.id_factura ?? f.id, 'Vencida', 'sistema', 'Cambio automático por vencimiento de plazo.'));
+          }
+        }
+        return {
+          id: f.id_factura ?? f.id,
+          folio: f.folio ?? f.cliente ?? '',
+          proveedor: f.proveedor ?? '',
+          tipo: f.tipo ?? '',
+          responsable: f.responsable ?? '',
+          monto: f.monto ?? 0,
+          fechaRecepcion: f.fechaRecepcion ?? f.fecha ?? '',
+          comentario: f.comentario ?? f.detalles ?? '',
+          mensajeAlerta: f.mensajeAlerta ?? '',
+          estado,
+          archivo: f.archivo,
+          tipo_archivo: f.tipo_archivo,
+          url_archivo: f.url_archivo,
+          bitacora: f.bitacora,
+          detalles: f.detalles ?? '',
+          cliente: f.cliente ?? '',
+          fecha: f.fecha ?? '',
+          diasDesdeRecepcion: f.diasDesdeRecepcion ?? 0,
+        };
+      });
+      // Esperar a que todas las actualizaciones automáticas terminen
+      if (actualizaciones.length > 0) {
+        await Promise.all(actualizaciones);
+        // Recargar para reflejar los cambios
+        await this.cargarFacturas();
+      }
     } catch (e) {
       this.facturas = [];
     }
@@ -630,6 +676,22 @@ export class InvoicesPage {
   // Acción para ver detalles de la factura (puedes personalizarla)
   verFactura(factura: Factura) {
     this.abrirDetalles(factura);
+  }
+
+  // Acción rápida para aceptar factura
+  aceptarFactura(factura: Factura) {
+    this.cambiarEstadoFactura(factura, 'Aceptada');
+  }
+
+  // Acción rápida para rechazar factura
+  rechazarFactura(factura: Factura) {
+    const motivo = prompt('Ingrese el motivo del rechazo:') || '';
+    this.cambiarEstadoFactura(factura, 'Rechazada', motivo);
+  }
+
+  // Acción para marcar como vencida (puede ser automática, pero también manual)
+  marcarVencida(factura: Factura) {
+    this.cambiarEstadoFactura(factura, 'Vencida');
   }
 
 

@@ -8,29 +8,6 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Reportes</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <!-- Gráfico de barras -->
-  <div style="width: 100%; max-width: 500px; margin: 0 auto 32px auto;">
-    <canvas #barChartCanvas></canvas>
-  </div>
-
-  <!-- Botones de exportar -->
-  <div style="text-align: right; margin-bottom: 8px;">
-    <ion-button color="success" size="small" (click)="exportarExcel()">
-      <ion-icon name="download-outline" slot="start"></ion-icon>
-      Exportar Excel
-    </ion-button>
-    <ion-button color="danger" size="small" (click)="exportarPDF()">
-      <ion-icon name="download-outline" slot="start"></ion-icon>
-      Exportar PDF
-    </ion-button>
-  </div>
-
   <!-- Tabla resumen -->
   <ion-card>
     <ion-card-header>
@@ -53,4 +30,20 @@
       </table>
     </ion-card-content>
   </ion-card>
+
+    <!-- Gráfico de barras -->
+  <div style="width: 100%; max-width: 500px; margin: 0 auto 32px auto;">
+    <canvas #barChartCanvas></canvas>
+  </div>
+    <!-- Botones de exportar -->
+  <div style="text-align: right; margin-bottom: 8px;">
+    <ion-button color="success" size="small" (click)="exportarExcel()">
+      <ion-icon name="download-outline" slot="start"></ion-icon>
+      Exportar Excel
+    </ion-button>
+    <ion-button color="danger" size="small" (click)="exportarPDF()">
+      <ion-icon name="download-outline" slot="start"></ion-icon>
+      Exportar PDF
+    </ion-button>
+  </div>
 </ion-content>

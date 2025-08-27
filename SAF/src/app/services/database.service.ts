@@ -10,6 +10,31 @@ export class DatabaseService {
     this.dbPromise = this.openDB();
   }
 
+
+  // Cambia el estado de una factura y agrega registro en bitácora
+  async cambiarEstadoFactura(id_factura: number, nuevoEstado: string, usuario: string, comentario: string = ''): Promise<void> {
+    const db = await this.dbPromise;
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(['facturas', 'bitacora'], 'readwrite');
+      const facturaStore = tx.objectStore('facturas');
+      const bitacoraStore = tx.objectStore('bitacora');
+      const getReq = facturaStore.get(id_factura);
+      getReq.onsuccess = () => {
+        const factura = { ...getReq.result, estado: nuevoEstado };
+        facturaStore.put(factura);
+        // Registrar en bitácora
+        bitacoraStore.add({
+          id_factura,
+          usuario,
+          accion: `Cambio de estado a ${nuevoEstado}` + (comentario ? `: ${comentario}` : ''),
+          fecha: new Date()
+        });
+        resolve();
+      };
+      getReq.onerror = () => reject(getReq.error);
+    });
+  }
+
   private openDB(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName, this.dbVersion);

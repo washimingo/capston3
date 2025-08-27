@@ -263,6 +263,20 @@
             <ion-button size="small" fill="clear" color="danger" (click)="eliminarFactura(factura)" title="Eliminar">
               <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
             </ion-button>
+            <!-- Botones de acción de estado -->
+            <ion-button *ngIf="factura && factura.estado === 'Pendiente'" size="small" fill="clear" color="success" (click)="aceptarFactura(factura)" title="Aceptar">
+              <ion-icon name="checkmark-circle-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="factura && factura.estado === 'Pendiente'" size="small" fill="clear" color="danger" (click)="rechazarFactura(factura)" title="Rechazar">
+              <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ng-container *ngIf="factura && factura.estado === 'Pendiente'">
+              <ng-container *ngIf="getDiasRestantes(factura) as diasRestantes">
+                <ion-button *ngIf="diasRestantes !== null && diasRestantes <= 0" size="small" fill="clear" color="medium" (click)="marcarVencida(factura)" title="Marcar como vencida">
+                  <ion-icon name="warning-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+              </ng-container>
+            </ng-container>
           </td>
         </tr>
         <tr *ngIf="facturasFiltradas.length === 0">

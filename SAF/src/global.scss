@@ -1,13 +1,3 @@
-// Forzar color visible en el icono del botón de modo oscuro
-ion-toolbar ion-icon {
-	color: #fff !important;
-}
-
-@media (prefers-color-scheme: dark) {
-	ion-toolbar ion-icon {
-		color: #f4f4f4 !important;
-	}
-}
 // Color empresarial para la toolbar
 ion-toolbar {
 	--background: #7b263a;
@@ -37,6 +27,10 @@ ion-toolbar {
 		--ion-color-step-100: #222326;
 		// Puedes ajustar más variables aquí para personalizar el dark mode
 	}
+}
+/* (Optional) This is added to prevent the flashing that happens when toggling between palettes */
+ion-item {
+  --transition: none;
 }
 /*
  * App Global CSS
@@ -73,5 +67,37 @@ ion-toolbar {
  */
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import "@ionic/angular/css/palettes/dark.class.css";
 /* @import '@ionic/angular/css/palettes/dark.system.css'; */
+
+/* Ionic Variables and Theming
+ * ---------------------------------------------------------------
+ * Any overrides to theme variables should be placed in this file.
+ * For more information, please see:
+ * http://ionicframework.com/docs/theming/
+ */
+
+/* This sets a different item border color for the default theme on ios and md */
+:root {
+  --ion-item-border-color: var(--ion-background-color-step-200);
+}
+
+/* This sets a different background and item background for the default theme on ios */
+:root.ios {
+  --ion-background-color: var(--ion-background-color-step-50, #f2f2f6);
+  --ion-toolbar-background: var(--ion-background-color);
+  --ion-item-background: #fff;
+}
+
+/* This sets a different background and item background for the default theme on md */
+:root.md {
+  --ion-background-color: var(--ion-background-color-step-100, #f9f9f9);
+  --ion-toolbar-background: var(--ion-background-color);
+  --ion-item-background: #fff;
+}
+
+/* This sets a different item background when dark mode is enabled on ios and md */
+.ion-palette-dark.ios,
+.ion-palette-dark.md {
+  --ion-item-background: #1c1c1d;
+}
