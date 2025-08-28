@@ -1,9 +1,55 @@
 import { Injectable } from '@angular/core';
 import { Alerta } from '../models/alerta.model';
+import { Factura } from '../models/factura.model';
 
 @Injectable({ providedIn: 'root' })
 export class AlertasService {
   private alertas: Alerta[] = [];
+
+  // Recorre facturas y genera alertas según la lógica de negocio
+  generarAlertasPorFacturas(facturas: Factura[]) {
+    const hoy = new Date();
+    facturas.forEach(factura => {
+      if (factura.estado === 'pendiente') {
+        const fechaRecepcion = new Date(factura.fechaRecepcion);
+        const diasTranscurridos = this.diasTranscurridos(fechaRecepcion, hoy);
+        const diasAlerta = [0, 3, 6, 7, 8];
+        if (diasAlerta.includes(diasTranscurridos)) {
+          const tipo = `D${diasTranscurridos}` as 'D0' | 'D3' | 'D6' | 'D7' | 'D8';
+          // Verifica si ya existe una alerta enviada para este día y factura
+          const yaEnviada = this.alertas.some(a => a.facturaId === factura.id.toString() && a.tipo === tipo);
+          if (!yaEnviada) {
+            // Determina destinatarios
+            let destinatarios = [factura.responsable];
+            if (tipo === 'D7') {
+              destinatarios.push('jefatura'); // Reemplazar por email real de jefatura
+            }
+            if (tipo === 'D8') {
+              destinatarios.push('direccion'); // Reemplazar por email real de dirección
+            }
+            // Crea y registra la alerta
+            const alerta: Alerta = {
+              id: this.generarId(),
+              facturaId: factura.id.toString(),
+              tipo,
+              fechaProgramada: hoy,
+              destinatarios,
+              estadoEnvio: 'pendiente',
+            };
+            this.alertas.push(alerta);
+            this.enviarNotificacion(alerta);
+            if (tipo === 'D8') {
+              this.escalarAlerta(alerta);
+            }
+          }
+        }
+      }
+    });
+  }
+
+  private diasTranscurridos(fechaInicio: Date, fechaFin: Date): number {
+    return Math.floor((fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60 * 24));
+  }
 
   programarAlertasParaFactura(facturaId: string, fechaRecepcion: Date, destinatarios: string[]) {
     const dias = [0, 3, 6, 7, 8];
@@ -38,6 +84,12 @@ export class AlertasService {
   private enviarNotificacion(alerta: Alerta) {
     // Aquí puedes mostrar un toast, enviar email, etc.
     console.log(`Enviando alerta ${alerta.tipo} para factura ${alerta.facturaId}`);
+    this.playAlertaSonora();
+  }
+
+  private playAlertaSonora() {
+    const audio = new Audio('assets/beep.mp3');
+    audio.play().catch(e => console.warn('No se pudo reproducir el sonido de alerta:', e));
   }
 
   private escalarAlerta(alerta: Alerta) {
@@ -52,5 +104,20 @@ export class AlertasService {
 
   private generarId(): string {
     return Math.random().toString(36).substring(2, 10);
+  }
+
+  // Obtiene las alertas pendientes para un usuario específico
+  getAlertasPendientes(usuarioId: string): Alerta[] {
+    return this.alertas.filter(
+      alerta => alerta.destinatarios.includes(usuarioId) && alerta.estadoEnvio === 'pendiente'
+    );
+  }
+
+  // Marca una alerta como enviada/leída
+  marcarAlertaComoEnviada(alertaId: string) {
+    const alerta = this.alertas.find(a => a.id === alertaId);
+    if (alerta) {
+      alerta.estadoEnvio = 'enviada';
+    }
   }
 }

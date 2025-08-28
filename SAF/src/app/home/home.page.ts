@@ -2,35 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { DatabaseService } from '../services/database.service';
+import { AlertasService } from '../services/alertas.service';
+import { Alerta } from '../models/alerta.model';
 import {
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
-  IonContent, 
-  IonMenuButton, 
-  IonCard, 
-  IonCardHeader, 
-  IonCardTitle, 
-  IonCardContent, 
-  IonBadge, 
-  IonIcon, 
-  IonButtons, 
-  IonButton, 
-  IonGrid, 
-  IonRow, 
-  IonCol,
-  IonRefresher,
-  IonRefresherContent
+  IonHeader, IonToolbar, IonTitle, IonContent, IonMenuButton, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonBadge, IonIcon, IonButtons, IonButton, IonGrid, IonRow, IonCol, IonRefresher, IonRefresherContent, IonList, IonItem, IonLabel
 } from '@ionic/angular/standalone';
-
-interface Factura {
-  id: string;
-  folio: string;
-  proveedor: string;
-  fecha_recepcion: string;
-  monto: number;
-  estado: 'Recibida' | 'Aceptada' | 'Rechazada' | 'Vencida' | 'Aceptada tácita';
-}
+import { Factura } from '../models/factura.model';
+import { CommonModule, NgIf, NgFor } from '@angular/common';
+import { FacturasPorEstadoChartComponent } from './facturas-por-estado-chart.component';
 
 @Component({
   selector: 'app-home',
@@ -38,72 +17,75 @@ interface Factura {
   styleUrls: ['home.page.scss'],
   standalone: true,
   imports: [
-    IonHeader, 
-    IonToolbar, 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
-  IonContent, 
-  IonMenuButton, 
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonBadge,
-  IonIcon,
-  IonButtons,
-  IonButton,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonRefresher,
-  IonRefresherContent
+  CommonModule, NgIf, NgFor,
+  IonHeader, IonToolbar, IonTitle, IonContent, IonMenuButton, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonBadge, IonIcon, IonButtons, IonButton, IonGrid, IonRow, IonCol, IonRefresher, IonRefresherContent, IonList, IonItem, IonLabel
   ],
 })
 export class HomePage implements OnInit {
   facturas: Factura[] = [];
   facturasPorVencer: any[] = [];
-
+  alertasPendientes: Alerta[] = [];
+  usuarioActual: string = 'usuario1';
   totalRecibidas = 0;
   totalPendientes = 0;
   totalRechazadas = 0;
   totalAceptadas = 0;
   totalVencidas = 0;
   totalPorVencer = 0;
-
   cargando = false;
-
 
   constructor(
     private router: Router,
     private alertController: AlertController,
     private databaseService: DatabaseService,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private alertasService: AlertasService
   ) {}
 
-
-  async ngOnInit() {
-    await this.actualizarDatos();
+  get datosGraficaPorEstado() {
+    return {
+      Pendiente: this.totalPendientes,
+      Aceptada: this.totalAceptadas,
+      Rechazada: this.totalRechazadas,
+      Vencida: this.totalVencidas,
+      'Por vencer': this.totalPorVencer
+    };
   }
 
-  async actualizarDatos() {
-    const loading = await this.loadingController.create({
-      message: 'Actualizando datos...',
-      spinner: 'crescent',
-      backdropDismiss: false
-    });
-    await loading.present();
+  irAFacturasConFiltro(estado: string) {
+    if (estado === 'PorVencer') {
+      this.router.navigate(['/invoices'], { queryParams: { porVencer: 'true' } });
+    } else if (estado) {
+      this.router.navigate(['/invoices'], { queryParams: { estado } });
+    } else {
+      this.router.navigate(['/invoices']);
+    }
+  }
+
+  async ngOnInit() {
     await this.cargarFacturasReales();
     this.calcularTotales();
     this.mostrarAlertasFacturasPorVencer();
-    await loading.dismiss();
   }
 
   async cargarFacturasReales() {
-    this.facturas = await this.databaseService.getFacturas();
+    const facturasDB = await this.databaseService.getFacturas();
+    this.facturas = facturasDB.map(f => ({
+      id: f.id,
+      folio: f.folio,
+      fechaRecepcion: f.fechaRecepcion || f.fecha_recepcion || '',
+      fecha_recepcion: f.fecha_recepcion || f.fechaRecepcion || '',
+      proveedor: f.proveedor,
+      monto: f.monto,
+      tipo: f.tipo || '',
+      estado: f.estado || '',
+      responsable: f.responsable || 'usuario1',
+      comentario: f.comentario || '',
+      diasDesdeRecepcion: f.diasDesdeRecepcion || 0,
+      mensajeAlerta: f.mensajeAlerta || ''
+    })) as Factura[];
+    this.alertasService.generarAlertasPorFacturas(this.facturas);
   }
-
-  // Eliminar datos simulados. Ahora se usan facturas reales desde la base de datos.
 
   calcularTotales() {
     this.totalRecibidas = this.facturas.length;
@@ -114,23 +96,12 @@ export class HomePage implements OnInit {
     this.facturasPorVencer = this.facturas
       .filter(f => (f.estado || '').toLowerCase() === 'pendiente')
       .map(f => {
-        // Soporta ambos campos: fecha_recepcion y fechaRecepcion
-        const dias = this.diasRestantes(f.fecha_recepcion || (f as any).fechaRecepcion);
+        const dias = this.diasRestantes(f.fechaRecepcion);
         return { ...f, diasRestantes: dias };
       })
       .filter(f => f.diasRestantes <= 2 && f.diasRestantes > 0);
     this.totalPorVencer = this.facturasPorVencer.length;
   }
-
-  irAFacturasConFiltro(estado: string) {
-    if (estado === 'PorVencer') {
-      this.router.navigate(['/invoices'], { queryParams: { porVencer: 'true' } });
-    } else {
-      this.router.navigate(['/invoices'], { queryParams: { estado } });
-    }
-  }
-
-  // mostrarDetalleFacturasPorVencer eliminado, ahora la lógica de filtrado irá en la vista de facturas
 
   diasRestantes(fechaRecepcion: string): number {
     const fechaInicio = new Date(fechaRecepcion);
@@ -138,33 +109,27 @@ export class HomePage implements OnInit {
     const diffMs = hoy.getTime() - fechaInicio.getTime();
     const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     return 8 - diffDias;
-  } 
+  }
 
   async mostrarAlertasFacturasPorVencer() {
     const facturasPorVencer = this.facturas
-      .filter(f => f.estado === 'Recibida')
+      .filter(f => (f.estado || '').toLowerCase() === 'pendiente')
       .map(f => {
-        const dias = this.diasRestantes(f.fecha_recepcion);
+        const dias = this.diasRestantes(f.fechaRecepcion);
         return { ...f, diasRestantes: dias };
       })
       .filter(f => f.diasRestantes <= 2 && f.diasRestantes > 0);
 
     if (facturasPorVencer.length > 0) {
-      let mensaje = '';
-      facturasPorVencer.forEach(f => {
-        mensaje += `Factura ${f.folio} de ${f.proveedor}: ¡Te quedan ${f.diasRestantes} día(s) para que venza!` + '\n';
-      });
-      const alert = await this.alertController.create({
-        header: 'Facturas por vencer',
-        message: mensaje,
-        buttons: ['OK']
-      });
-      await alert.present();
+      const audio = new Audio('assets/beep.mp3');
+      audio.play().catch(e => console.warn('No se pudo reproducir el sonido de alerta:', e));
     }
   }
 
   async refrescar(event: any) {
-    await this.actualizarDatos();
+    await this.cargarFacturasReales();
+    this.calcularTotales();
+    this.mostrarAlertasFacturasPorVencer();
     event.target.complete();
   }
 }

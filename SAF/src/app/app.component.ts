@@ -1,5 +1,5 @@
 import { addIcons } from 'ionicons';
-import { documentTextOutline, timeOutline, checkmarkCircleOutline, closeCircleOutline, calendarOutline, alertCircleOutline, warningOutline, homeOutline, checkmarkDoneOutline, cubeOutline, barChartOutline, peopleOutline, settingsOutline, businessOutline, createOutline, trashOutline, addCircleOutline, listOutline, closeCircle, searchOutline } from 'ionicons/icons';
+import { documentTextOutline, timeOutline, checkmarkCircleOutline, closeCircleOutline, calendarOutline, alertCircleOutline, warningOutline, homeOutline, checkmarkDoneOutline, cubeOutline, barChartOutline, peopleOutline, settingsOutline, businessOutline, createOutline, trashOutline, addCircleOutline, listOutline, closeCircle, searchOutline, documentOutline, downloadOutline } from 'ionicons/icons';
 import { Component } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { IonApp, IonRouterOutlet, IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonIcon } from '@ionic/angular/standalone';
@@ -47,7 +47,9 @@ export class AppComponent {
       addCircleOutline,
       listOutline,
       closeCircle,
-      searchOutline
+      searchOutline,
+      documentOutline,
+      downloadOutline
     });
     // Aplicar modo oscuro si está guardado en localStorage
     const dark = localStorage.getItem('saf-dark-mode');

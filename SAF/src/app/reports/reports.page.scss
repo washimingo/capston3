@@ -1,0 +1,177 @@
+$granite: #7b263a;
+$granite-light: #a03a53;
+$granite-dark: #561a28;
+$background-dark: #18191a; // fondo más neutro, menos azulado
+$surface-dark: #242526; // gris carbón para fondos
+$surface-light-dark: #242526; // gris carbón para tablas y container
+$border-dark: #18191a; // negro sólido para bordes
+$text-light: #e0e6ed;
+$text-mid: #cfd8e3;
+
+ion-content {
+    background: $background-dark;
+    min-height: 100vh;
+}
+
+.desktop-container {
+    max-width: 1200px;
+    margin: 40px auto 0 auto;
+    padding: 32px 40px;
+    background: $surface-light-dark;
+    border-radius: 10px;
+    box-shadow: 0 6px 32px rgba(20, 20, 20, 0.18);
+}
+
+ion-card {
+    box-shadow: 0 4px 16px rgba(20, 20, 20, 0.18);
+    border-radius: 12px;
+    margin-bottom: 40px;
+    border: 1.5px solid $border-dark;
+    padding: 24px 32px;
+    background: $surface-light-dark;
+}
+
+
+ion-card-title {
+    color: $text-light;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 18px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: $surface-light-dark;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(20, 20, 20, 0.10);
+    margin-bottom: 24px;
+    border: 1px solid $border-dark;
+}
+
+
+th,
+td {
+    padding: 18px 20px;
+    text-align: center;
+    font-size: 1.08rem;
+}
+
+th:not(:last-child),
+td:not(:last-child) {
+    border-right: 1px solid $border-dark;
+}
+
+th {
+    background: $granite;
+    color: #fff;
+    font-weight: 700;
+    border-bottom: 2.5px solid $granite-dark;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+tr {
+    transition: background 0.2s;
+}
+
+tbody tr:hover {
+    background: $granite-dark;
+}
+
+td {
+    color: $text-mid;
+    font-size: 1.08rem;
+}
+
+// Gráficos
+canvas {
+    background: $surface-light-dark;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(20, 20, 20, 0.10);
+    padding: 24px;
+    border: 2px solid $granite-dark;
+    margin-bottom: 24px;
+}
+
+
+// Botones de exportación
+.export-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin: 32px 0 8px 0;
+}
+
+ion-button.export-btn-excel {
+    --background: #21c26c;
+    --color: #fff;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 8px rgba(44, 62, 80, 0.10);
+    --border-width: 2px;
+    --border-style: solid;
+    --border-color: #21c26c;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 1.08rem;
+    padding: 0 18px;
+    transition: background 0.2s, color 0.2s;
+}
+
+ion-button.export-btn-excel:hover {
+    --background: #188a4b;
+    --border-color: #188a4b;
+}
+
+ion-button.export-btn-pdf {
+    --background: #e74c3c;
+    --color: #fff;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 8px rgba(44, 62, 80, 0.10);
+    --border-width: 2px;
+    --border-style: solid;
+    --border-color: #e74c3c;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 1.08rem;
+    padding: 0 18px;
+    transition: background 0.2s, color 0.2s;
+}
+
+ion-button.export-btn-pdf:hover {
+    --background: #b93222;
+    --border-color: #b93222;
+}
+
+ion-icon {
+    font-size: 1.3em;
+}
+
+// --- RESPONSIVE SECUNDARIO ---
+@media (max-width: 900px) {
+    .desktop-container {
+        padding: 12px 4px;
+    }
+
+    ion-card {
+        padding: 12px 4px;
+    }
+
+    table,
+    th,
+    td {
+        font-size: 0.98rem;
+        padding: 8px 2px;
+    }
+
+    canvas {
+        padding: 8px;
+    }
+
+    .export-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

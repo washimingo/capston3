@@ -1,3 +1,107 @@
+@media (max-width: 600px) {
+	.facturas-por-vencer-movil {
+		background: #fffbe6;
+		border-radius: 10px;
+		margin: 8px 0 12px 0;
+		padding: 8px 4px 4px 4px;
+		box-shadow: 0 2px 8px #0001;
+	}
+	.titulo-por-vencer-movil {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 1.08em;
+		color: #b8860b;
+		margin-bottom: 4px;
+	}
+	.por-vencer-lista-movil {
+		display: flex;
+		flex-direction: row;
+		overflow-x: auto;
+		gap: 6px;
+		padding-bottom: 4px;
+	}
+	.por-vencer-card-movil {
+		min-width: 170px;
+		max-width: 220px;
+		flex: 0 0 auto;
+		background: #fffbe6;
+		border: 1px solid #ffe58f;
+		box-shadow: none;
+		font-size: 0.98em;
+		cursor: pointer;
+		transition: box-shadow 0.2s;
+	}
+	.por-vencer-card-movil:active {
+		box-shadow: 0 2px 8px #b8860b33;
+	}
+}
+@media (max-width: 600px) {
+	.invoices-content {
+		padding: 2px !important;
+	}
+	ion-card.factura-card, .factura-lista-item {
+		margin: 4px 0 !important;
+		padding: 6px 4px !important;
+		border-radius: 8px !important;
+		font-size: 0.92em !important;
+		min-height: 38px !important;
+		box-shadow: none !important;
+	}
+	.factura-lista-item ion-label, .factura-card ion-label {
+		font-size: 0.95em !important;
+		padding: 0 2px !important;
+	}
+	.factura-lista-item ion-badge, .factura-card ion-badge {
+		font-size: 0.85em !important;
+		padding: 0 4px !important;
+	}
+	.factura-lista-item ion-icon, .factura-card ion-icon {
+		font-size: 1.1em !important;
+	}
+}
+@media (max-width: 600px) {
+	.invoices-content {
+		padding: 4px !important;
+	}
+	.filtros-chips {
+		padding: 4px 0 !important;
+		margin-bottom: 6px !important;
+	}
+	.chips-filtros-wrapper {
+		flex-wrap: wrap;
+		gap: 4px;
+	}
+	.form-filtros ion-item {
+		margin-bottom: 4px !important;
+		font-size: 0.95em;
+	}
+	ion-card {
+		margin: 6px 0 !important;
+		padding: 8px !important;
+		border-radius: 10px !important;
+		font-size: 0.97em;
+	}
+	ion-button, .btn-agregar-factura-filtros {
+		font-size: 0.97em !important;
+		padding: 0 10px !important;
+		min-height: 36px !important;
+	}
+	.archivo-preview, .excel-preview-table-wrapper, .detalle-factura-archivo {
+		margin: 8px 0 !important;
+	}
+	.drawer-carga-factura, .drawer-panel {
+		width: 98vw !important;
+		max-width: 99vw !important;
+		padding: 0 !important;
+	}
+	.modal-detalle-content {
+		padding: 8px !important;
+	}
+}
+html, body, ion-app, ion-content {
+	font-size: 92% !important;
+}
 // Color empresarial para la toolbar
 ion-toolbar {
 	--background: #7b263a;
@@ -67,8 +171,8 @@ ion-item {
  */
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
-@import "@ionic/angular/css/palettes/dark.class.css";
-/* @import '@ionic/angular/css/palettes/dark.system.css'; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import '@ionic/angular/css/palettes/dark.system.css';
 
 /* Ionic Variables and Theming
  * ---------------------------------------------------------------

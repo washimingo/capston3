@@ -5,41 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { DatabaseService } from '../services/database.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonBadge,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonText,
-  IonModal,
-  IonButtons,
-  IonButton,
-  IonIcon,
-  IonChip,
-  IonAlert,
-  IonRow,
-  IonCol,
-  IonInput,
-  IonSpinner,
-  IonMenuButton,
-  IonRefresher,
-  IonRefresherContent,
-  ToastController
-} from '@ionic/angular/standalone';
-
-interface BitacoraLog {
-  usuario: string;
-  accion: string;
-  fecha: Date;
-}
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonBadge, IonList, IonItem, IonLabel, IonText, IonModal, IonButtons, IonButton, IonIcon, IonChip, IonAlert, IonRow, IonCol, IonInput, IonSpinner, IonMenuButton, IonRefresher, IonRefresherContent, ToastController } from '@ionic/angular/standalone';
+import { PorVencerPipe } from './por-vencer.pipe';
 
 import { Factura as FacturaModel } from '../models/factura.model';
 
@@ -48,7 +15,7 @@ interface Factura extends FacturaModel {
   archivo?: string;
   url_archivo?: string;
   tipo_archivo?: string;
-  bitacora?: BitacoraLog[];
+  bitacora?: any[]; // Se agrega como any[] para evitar error en el template
   cliente?: string;
   fecha?: string;
 }
@@ -59,12 +26,12 @@ interface Factura extends FacturaModel {
   styleUrls: ['./invoices.page.scss'],
   standalone: true,
   imports: [
-    IonContent, 
-    IonHeader, 
-    IonTitle, 
-    IonToolbar, 
-    CommonModule, 
+    CommonModule,
     FormsModule,
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
     IonInput,
     IonCard,
     IonCardHeader,
@@ -85,10 +52,35 @@ interface Factura extends FacturaModel {
     IonSpinner,
     IonMenuButton,
     IonRefresher,
-    IonRefresherContent
+    IonRefresherContent,
+    PorVencerPipe
   ]
 })
 export class InvoicesPage {
+  getGoogleDocsViewerUrl(fileUrl: string | SafeResourceUrl | null): string | null {
+    let urlString = '';
+    if (typeof fileUrl === 'string') {
+      urlString = fileUrl;
+    } else {
+      // SafeResourceUrl: extraer el valor interno
+      urlString = (fileUrl as any).changingThisBreaksApplicationSecurity || '';
+    }
+    return 'https://docs.google.com/gview?url=' + encodeURIComponent(urlString) + '&embedded=true';
+  }
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.validarYSeleccionarArchivo(input.files[0]);
+    }
+  }
+  editandoFactura: any = null;
+  facturaEditada: any = {};
+  abrirDrawerEditar: boolean = false;
+  facturaAEliminar: any = null;
+  mostrarAlertaEliminar: boolean = false;
+  errorCarga: string = '';
+  exitoCarga: string = '';
+  archivoSeleccionado: File | null = null;
   // Variables para vista previa de Excel
   excelPreviewData: any[][] | null = null;
   excelPreviewError: string = '';
@@ -142,35 +134,21 @@ export class InvoicesPage {
   archivoBase64: string | null = null;
   facturas: Factura[] = [];
   // Carga manual de facturas
-  nuevaFactura: Partial<Factura> = {
-    cliente: '',
-    monto: undefined,
-    detalles: '',
-    folio: '',
-    proveedor: '',
-    tipo: '',
-    responsable: '',
-    fechaRecepcion: '',
-    comentario: '',
-    mensajeAlerta: '',
-  };
-  archivoSeleccionado: File | null = null;
-  errorCarga: string = '';
-  exitoCarga: string = '';
+  nuevaFactura: Partial<Factura> = {};
 
-  // Control de edición
-  abrirDrawerEditar: boolean = false;
-  editandoFactura: Factura | null = null;
-  facturaEditada: Partial<Factura> = {};
+  // Maneja el drop de archivos en el área drag & drop
+  onDropFile(event: DragEvent) {
+    event.preventDefault();
+    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+      const file = event.dataTransfer.files[0];
+      this.validarYSeleccionarArchivo(file);
+    }
+  }
 
-  // Alerta personalizada de eliminación
-  mostrarAlertaEliminar: boolean = false;
-  facturaAEliminar: Factura | null = null;
-
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const ext = file.name.split('.').pop().toLowerCase();
+  // Valida y selecciona el archivo (usado por input y drag&drop)
+  validarYSeleccionarArchivo(file: File | null) {
+    if (!file || !file.name) return;
+    const ext = file.name.split('.').pop()?.toLowerCase() || '';
     if (!['pdf', 'xml', 'jpg', 'jpeg', 'png', 'xlsx'].includes(ext)) {
       this.errorCarga = 'Solo se permiten archivos PDF, XML, imágenes o Excel (.xlsx).';
       this.exitoCarga = '';
@@ -192,6 +170,17 @@ export class InvoicesPage {
       if (params['porVencer'] === 'true') {
         this.mostrarPorVencer = true;
         this.categoriaSeleccionada = null;
+      } else if (params['estado']) {
+        this.categoriaSeleccionada = params['estado'];
+        this.mostrarPorVencer = false;
+      } else if (params['fecha']) {
+        this.filtroFecha = params['fecha'];
+        this.categoriaSeleccionada = null;
+        this.mostrarPorVencer = false;
+      } else {
+        this.categoriaSeleccionada = null;
+        this.filtroFecha = '';
+        this.mostrarPorVencer = false;
       }
     });
     this.cargarFacturas();
@@ -324,10 +313,15 @@ export class InvoicesPage {
   mostrarPorVencer: boolean = false;
 
   getFacturasFiltradas(): Factura[] {
-  let facturasFiltradas: Factura[] = [];
-  const hoy = new Date();
-    // 1. Si hay categoría seleccionada, filtrar por estado primero
-    if (this.mostrarPorVencer) {
+    let facturasFiltradas: Factura[] = [];
+    const hoy = new Date();
+    // 1. Si hay filtro de fecha, filtrar por fecha exacta (formato yyyy-MM-dd)
+    if (this.filtroFecha) {
+      facturasFiltradas = this.facturas.filter(f => {
+        const fecha = (f.fechaRecepcion || f.fecha || '').slice(0, 10);
+        return fecha === this.filtroFecha;
+      });
+    } else if (this.mostrarPorVencer) {
       facturasFiltradas = this.facturas.filter(f => {
         if (f.estado && f.estado.toLowerCase() === 'pendiente') {
           const fechaEmision = f.fechaRecepcion || f.fecha || '';
@@ -349,6 +343,10 @@ export class InvoicesPage {
 
     // 2. Si hay texto de búsqueda, mostrar solo los que coinciden en el campo seleccionado
     if (this.filtroBusqueda && this.filtroBusqueda.trim() !== '') {
+      // Si hay filtro de fecha, ignorar búsqueda textual (opcional, para evitar confusión)
+      if (this.filtroFecha) {
+        return facturasFiltradas;
+      }
       const texto = this.filtroBusqueda.trim().toLowerCase();
       // Expresión regular para coincidencia exacta de palabra (al inicio, final o separada)
       const regex = new RegExp(`(^|\s|\W)${texto}($|\s|\W)`, 'i');
