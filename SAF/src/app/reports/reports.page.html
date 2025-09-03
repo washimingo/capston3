@@ -31,11 +31,24 @@
     </ion-card-content>
   </ion-card>
 
-    <!-- Gráfico de barras -->
+  <!-- Gráfico de barras -->
   <div style="width: 100%; max-width: 500px; margin: 0 auto 32px auto;">
     <canvas #barChartCanvas></canvas>
   </div>
-    <!-- Botones de exportar -->
+
+  <!-- Gráfico de barras por día -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Facturas ingresadas por día</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div style="width: 100%; max-width: 700px; margin: 0 auto 32px auto;">
+        <canvas id="barChartPorDia"></canvas>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Botones de exportar -->
   <div style="text-align: right; margin-bottom: 8px;">
     <ion-button color="success" size="small" (click)="exportarExcel()">
       <ion-icon name="download-outline" slot="start"></ion-icon>

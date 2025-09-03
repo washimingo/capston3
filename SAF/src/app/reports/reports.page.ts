@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonButton, IonIcon, IonButtons, IonMenuButton } from '@ionic/angular/standalone';
@@ -24,12 +25,14 @@ export class ReportsPage implements AfterViewInit {
   chart: any;
   resumenEstados: { estado: string, cantidad: number }[] = [];
   facturas: any[] = [];
+  resumenPorDia: { fecha: string, cantidad: number }[] = [];
 
-  constructor(private db: DatabaseService) {}
+  constructor(private db: DatabaseService, private router: Router) {}
 
   async ngAfterViewInit() {
     await this.cargarDatos();
     this.generarGrafico();
+    this.generarGraficoPorDia();
   }
 
   async cargarDatos() {
@@ -39,6 +42,61 @@ export class ReportsPage implements AfterViewInit {
       estado,
       cantidad: this.facturas.filter(f => (f.estado || '').toLowerCase() === estado.toLowerCase()).length
     }));
+    // Agrupar por fecha de recepción
+    const agrupado: { [fecha: string]: number } = {};
+    this.facturas.forEach(f => {
+      const fecha = (f.fechaRecepcion || f.fecha_recepcion || '').slice(0, 10);
+      if (fecha) {
+        agrupado[fecha] = (agrupado[fecha] || 0) + 1;
+      }
+    });
+    this.resumenPorDia = Object.entries(agrupado)
+      .map(([fecha, cantidad]) => ({ fecha, cantidad }))
+      .sort((a, b) => a.fecha.localeCompare(b.fecha));
+  }
+  graficoPorDia: any;
+  generarGraficoPorDia() {
+    if (this.graficoPorDia) {
+      this.graficoPorDia.destroy();
+    }
+    const ctx = document.getElementById('barChartPorDia') as HTMLCanvasElement;
+    if (!ctx) return;
+    const labels = this.resumenPorDia.map(e => e.fecha);
+    const data = this.resumenPorDia.map(e => e.cantidad);
+    this.graficoPorDia = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Facturas ingresadas por día',
+          data,
+          borderColor: '#3dc2ff',
+          backgroundColor: 'rgba(61,194,255,0.2)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 4,
+          pointBackgroundColor: '#3dc2ff',
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          title: { display: true, text: 'Facturas ingresadas por día' }
+        },
+        scales: {
+          x: { title: { display: true, text: 'Fecha' } },
+          y: { beginAtZero: true, title: { display: true, text: 'Cantidad' } }
+        },
+        onClick: (event: any, elements: any[]) => {
+          if (elements && elements.length > 0) {
+            const index = elements[0].index;
+            const fecha = labels[index];
+            this.router.navigate(['/invoices'], { queryParams: { fecha } });
+          }
+        }
+      }
+    });
   }
 
   generarGrafico() {
@@ -67,6 +125,13 @@ export class ReportsPage implements AfterViewInit {
         plugins: {
           legend: { display: false },
           title: { display: true, text: 'Facturas por Estado' }
+        },
+        onClick: (event: any, elements: any[]) => {
+          if (elements && elements.length > 0) {
+            const index = elements[0].index;
+            const estado = labels[index];
+            this.router.navigate(['/invoices'], { queryParams: { estado } });
+          }
         }
       }
     });

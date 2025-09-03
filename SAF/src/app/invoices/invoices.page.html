@@ -1,3 +1,19 @@
+  <!-- ====== FACTURAS POR VENCER (SOLO MÓVIL) ====== -->
+  <div class="facturas-por-vencer-movil" *ngIf="(facturasFiltradas | porVencer).length > 0">
+    <div class="titulo-por-vencer-movil">
+      <ion-icon name="alert" color="warning"></ion-icon>
+      <b>Facturas por vencer</b>
+    </div>
+    <div class="por-vencer-lista-movil">
+      <ion-card *ngFor="let factura of facturasFiltradas | porVencer" class="factura-card por-vencer-card-movil" (click)="verFactura(factura)">
+        <ion-label>
+          <b>{{ factura.folio }}</b> - {{ factura.proveedor }}<br>
+          <small>Vence: {{ factura.fechaVencimiento | date:'dd/MM/yyyy' }}</small>
+        </ion-label>
+        <ion-badge color="warning" style="margin-left:8px;">Por vencer</ion-badge>
+      </ion-card>
+    </div>
+  </div>
 <!-- =================== ALERTA ELIMINAR FACTURA =================== -->
 <ion-alert
   [isOpen]="mostrarAlertaEliminar"
@@ -152,6 +168,55 @@
     </ion-button>
   </div>
 
+    <!-- ====== FILTROS AVANZADOS ====== -->
+    <form class="form-filtros-avanzados" (ngSubmit)="aplicarFiltrosAvanzados()" style="margin: 16px 0;">
+      <ion-row>
+        <ion-col size="12" size-md="3">
+          <ion-item lines="none">
+            <ion-label position="stacked">Fecha inicio</ion-label>
+            <ion-input type="date" [(ngModel)]="filtroFechaInicio" name="filtroFechaInicio"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="12" size-md="3">
+          <ion-item lines="none">
+            <ion-label position="stacked">Fecha fin</ion-label>
+            <ion-input type="date" [(ngModel)]="filtroFechaFin" name="filtroFechaFin"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="12" size-md="2">
+          <ion-item lines="none">
+            <ion-label position="stacked">Monto mínimo</ion-label>
+            <ion-input type="number" [(ngModel)]="filtroMontoMin" name="filtroMontoMin"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="12" size-md="2">
+          <ion-item lines="none">
+            <ion-label position="stacked">Monto máximo</ion-label>
+            <ion-input type="number" [(ngModel)]="filtroMontoMax" name="filtroMontoMax"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="12" size-md="2">
+          <ion-item lines="none">
+            <ion-label position="stacked">Estado</ion-label>
+            <ion-select [(ngModel)]="filtroEstados" name="filtroEstados" multiple="true" okText="Aceptar" cancelText="Cancelar">
+              <option value="Pendiente">Pendiente</option>
+              <option value="Aceptada">Aceptada</option>
+              <option value="Rechazada">Rechazada</option>
+              <option value="Vencida">Vencida</option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row style="margin-top: 8px;">
+        <ion-col size="12" size-md="6">
+          <ion-button expand="block" color="primary" type="submit">Aplicar filtros avanzados</ion-button>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <ion-button expand="block" color="medium" type="button" (click)="limpiarFiltrosAvanzados()">Limpiar filtros</ion-button>
+        </ion-col>
+      </ion-row>
+    </form>
+
   <!-- ====== DRAWER CARGA FACTURA ====== -->
   <div class="drawer-carga-factura" *ngIf="abrirModalCarga">
     <div class="drawer-overlay" (click)="cerrarModalCarga()"></div>
@@ -165,6 +230,18 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="drawer-content modal-detalle-content">
+        <!-- Área de arrastrar y soltar archivos -->
+        <div class="drag-drop-area" 
+             (dragover)="$event.preventDefault()" 
+             (drop)="onDropFile($event)"
+             (dragleave)="$event.preventDefault()"
+             style="border: 2px dashed #888; border-radius: 10px; width: 260px; height: 120px; margin: 0 auto 16px auto; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fafbfc;">
+          <ion-icon name="cloud-upload-outline" size="large" color="granite"></ion-icon>
+          <div style="margin-top: 8px; font-weight: 500; font-size: 16px;">Arrastra un archivo</div>
+          <div *ngIf="archivoSeleccionado" style="margin-top: 8px; color: #333; font-size: 13px;">
+            Archivo seleccionado: <b>{{ archivoSeleccionado.name }}</b>
+          </div>
+        </div>
         <form (submit)="onSubmitFactura($event)" style="padding: 16px;">
           <!-- Campos de carga de factura -->
           <ion-item lines="none" class="file-upload-item">
@@ -245,7 +322,12 @@
               class="tabla-estado-icon"></ion-icon>
             <ion-badge [color]="getColorEstado(factura.estado)" class="tabla-estado-badge">{{ factura.estado }}</ion-badge>
           </td>
-          <td>{{ factura.folio }}</td>
+          <td>
+            {{ factura.folio }}
+            <ion-button *ngIf="factura.archivo" size="small" fill="clear" color="primary" (click)="descargarArchivo(factura)" [title]="'Descargar: ' + factura.archivo">
+              <ion-icon name="attach-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </td>
           <td>{{ factura.proveedor }}</td>
           <td>{{ factura.tipo }}</td>
           <td>{{ factura.responsable }}</td>
@@ -356,7 +438,9 @@
               <div class="archivo-preview">
                 <ng-container [ngSwitch]="((facturaSeleccionada.archivo && facturaSeleccionada.archivo.split('.').pop()) || '').toLowerCase()">
                   <ng-container *ngSwitchCase="'pdf'">
-                    <iframe [src]="getFacturaFileUrl(facturaSeleccionada)" width="100%" height="300px" style="border: none;"></iframe>
+                    <object [data]="getFacturaFileUrl(facturaSeleccionada)" type="application/pdf" width="100%" height="500px">
+                      <p>No se puede mostrar el PDF. <a [href]="getFacturaFileUrl(facturaSeleccionada)" target="_blank">Abrir en otra pestaña</a></p>
+                    </object>
                     <ion-button size="small" color="primary" (click)="descargarArchivo(facturaSeleccionada)">
                       <ion-icon name="download-outline" slot="start"></ion-icon> Descargar
                     </ion-button>
@@ -387,13 +471,13 @@
                     <ion-button size="small" color="primary" (click)="descargarArchivo(facturaSeleccionada)">
                       <ion-icon name="download-outline" slot="start"></ion-icon> Descargar
                     </ion-button>
-                    <div *ngIf="excelPreviewError" class="excel-preview-error">{{ excelPreviewError }}</div>
-                    <div *ngIf="excelPreviewData && !excelPreviewError" class="excel-preview-table-wrapper">
-                      <table class="excel-preview-table">
-                        <tr *ngFor="let row of excelPreviewData">
-                          <td *ngFor="let cell of row">{{ cell }}</td>
-                        </tr>
-                      </table>
+                    <div style="margin: 16px 0;">
+                      <iframe
+                        [src]="getGoogleDocsViewerUrl(getFacturaFileUrl(facturaSeleccionada))"
+                        width="100%" height="500px" frameborder="0"
+                        style="border:1px solid #ccc;"
+                        allowfullscreen>
+                      </iframe>
                     </div>
                   </ng-container>
                   <ng-container *ngSwitchDefault>

@@ -5,52 +5,21 @@ import { ActivatedRoute } from '@angular/router';
 import { DatabaseService } from '../services/database.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonBadge,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonText,
-  IonModal,
-  IonButtons,
-  IonButton,
-  IonIcon,
-  IonChip,
-  IonAlert,
-  IonRow,
-  IonCol,
-  IonInput,
-  IonSpinner,
-  IonMenuButton,
-  IonRefresher,
-  IonRefresherContent,
-  ToastController
-} from '@ionic/angular/standalone';
-
-interface BitacoraLog {
-  usuario: string;
-  accion: string;
-  fecha: Date;
-}
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonBadge, IonList, IonItem, IonLabel, IonText, IonModal, IonButtons, IonButton, IonIcon, IonChip, IonAlert, IonRow, IonCol, IonInput, IonSpinner, IonMenuButton, IonRefresher, IonRefresherContent, ToastController } from '@ionic/angular/standalone';
+import { AlertController } from '@ionic/angular';
+import { PorVencerPipe } from './por-vencer.pipe';
 
 import { Factura as FacturaModel } from '../models/factura.model';
 
-interface Factura extends FacturaModel {
+export interface Factura extends FacturaModel {
   detalles: string;
   archivo?: string;
   url_archivo?: string;
   tipo_archivo?: string;
-  bitacora?: BitacoraLog[];
+  bitacora?: any[]; // Se agrega como any[] para evitar error en el template
   cliente?: string;
   fecha?: string;
+  motivoRechazo?: string;
 }
 
 @Component({
@@ -59,12 +28,12 @@ interface Factura extends FacturaModel {
   styleUrls: ['./invoices.page.scss'],
   standalone: true,
   imports: [
-    IonContent, 
-    IonHeader, 
-    IonTitle, 
-    IonToolbar, 
-    CommonModule, 
+    CommonModule,
     FormsModule,
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
     IonInput,
     IonCard,
     IonCardHeader,
@@ -85,10 +54,53 @@ interface Factura extends FacturaModel {
     IonSpinner,
     IonMenuButton,
     IonRefresher,
-    IonRefresherContent
+    IonRefresherContent,
+    PorVencerPipe
   ]
 })
 export class InvoicesPage {
+  // Filtros avanzados
+  filtroFechaInicio: string = '';
+  filtroFechaFin: string = '';
+  filtroMontoMin: number | null = null;
+  filtroMontoMax: number | null = null;
+  filtroEstados: string[] = [];
+
+  aplicarFiltrosAvanzados() {
+    // Solo refresca la vista, el filtrado se hace en getFacturasFiltradas
+  }
+
+  limpiarFiltrosAvanzados() {
+    this.filtroFechaInicio = '';
+    this.filtroFechaFin = '';
+    this.filtroMontoMin = null;
+    this.filtroMontoMax = null;
+    this.filtroEstados = [];
+  }
+  getGoogleDocsViewerUrl(fileUrl: string | SafeResourceUrl | null): string | null {
+    let urlString = '';
+    if (typeof fileUrl === 'string') {
+      urlString = fileUrl;
+    } else {
+      // SafeResourceUrl: extraer el valor interno
+      urlString = (fileUrl as any).changingThisBreaksApplicationSecurity || '';
+    }
+    return 'https://docs.google.com/gview?url=' + encodeURIComponent(urlString) + '&embedded=true';
+  }
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.validarYSeleccionarArchivo(input.files[0]);
+    }
+  }
+  editandoFactura: any = null;
+  facturaEditada: any = {};
+  abrirDrawerEditar: boolean = false;
+  facturaAEliminar: any = null;
+  mostrarAlertaEliminar: boolean = false;
+  errorCarga: string = '';
+  exitoCarga: string = '';
+  archivoSeleccionado: File | null = null;
   // Variables para vista previa de Excel
   excelPreviewData: any[][] | null = null;
   excelPreviewError: string = '';
@@ -142,35 +154,21 @@ export class InvoicesPage {
   archivoBase64: string | null = null;
   facturas: Factura[] = [];
   // Carga manual de facturas
-  nuevaFactura: Partial<Factura> = {
-    cliente: '',
-    monto: undefined,
-    detalles: '',
-    folio: '',
-    proveedor: '',
-    tipo: '',
-    responsable: '',
-    fechaRecepcion: '',
-    comentario: '',
-    mensajeAlerta: '',
-  };
-  archivoSeleccionado: File | null = null;
-  errorCarga: string = '';
-  exitoCarga: string = '';
+  nuevaFactura: Partial<Factura> = {};
 
-  // Control de edición
-  abrirDrawerEditar: boolean = false;
-  editandoFactura: Factura | null = null;
-  facturaEditada: Partial<Factura> = {};
+  // Maneja el drop de archivos en el área drag & drop
+  onDropFile(event: DragEvent) {
+    event.preventDefault();
+    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+      const file = event.dataTransfer.files[0];
+      this.validarYSeleccionarArchivo(file);
+    }
+  }
 
-  // Alerta personalizada de eliminación
-  mostrarAlertaEliminar: boolean = false;
-  facturaAEliminar: Factura | null = null;
-
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const ext = file.name.split('.').pop().toLowerCase();
+  // Valida y selecciona el archivo (usado por input y drag&drop)
+  validarYSeleccionarArchivo(file: File | null) {
+    if (!file || !file.name) return;
+    const ext = file.name.split('.').pop()?.toLowerCase() || '';
     if (!['pdf', 'xml', 'jpg', 'jpeg', 'png', 'xlsx'].includes(ext)) {
       this.errorCarga = 'Solo se permiten archivos PDF, XML, imágenes o Excel (.xlsx).';
       this.exitoCarga = '';
@@ -185,13 +183,25 @@ export class InvoicesPage {
     private route: ActivatedRoute,
     private dbService: DatabaseService,
     private sanitizer: DomSanitizer,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private alertController: AlertController
   ) {
     // Leer query param para mostrar facturas por vencer
     this.route.queryParams.subscribe(params => {
       if (params['porVencer'] === 'true') {
         this.mostrarPorVencer = true;
         this.categoriaSeleccionada = null;
+      } else if (params['estado']) {
+        this.categoriaSeleccionada = params['estado'];
+        this.mostrarPorVencer = false;
+      } else if (params['fecha']) {
+        this.filtroFecha = params['fecha'];
+        this.categoriaSeleccionada = null;
+        this.mostrarPorVencer = false;
+      } else {
+        this.categoriaSeleccionada = null;
+        this.filtroFecha = '';
+        this.mostrarPorVencer = false;
       }
     });
     this.cargarFacturas();
@@ -324,76 +334,109 @@ export class InvoicesPage {
   mostrarPorVencer: boolean = false;
 
   getFacturasFiltradas(): Factura[] {
-  let facturasFiltradas: Factura[] = [];
-  const hoy = new Date();
-    // 1. Si hay categoría seleccionada, filtrar por estado primero
-    if (this.mostrarPorVencer) {
-      facturasFiltradas = this.facturas.filter(f => {
-        if (f.estado && f.estado.toLowerCase() === 'pendiente') {
-          const fechaEmision = f.fechaRecepcion || f.fecha || '';
-          if (!fechaEmision) return false;
-          const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
-          const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-          const diasRestantes = 8 - diffDias;
-          return diasRestantes <= 2 && diasRestantes > 0;
-        }
-        return false;
-      });
-    } else if (this.categoriaSeleccionada) {
-      facturasFiltradas = this.facturas.filter(f =>
-        f.estado.toLowerCase() === this.categoriaSeleccionada!.toLowerCase()
-      );
-    } else {
-      facturasFiltradas = [...this.facturas];
-    }
+      let facturasFiltradas: Factura[] = [...this.facturas];
+      const hoy = new Date();
 
-    // 2. Si hay texto de búsqueda, mostrar solo los que coinciden en el campo seleccionado
-    if (this.filtroBusqueda && this.filtroBusqueda.trim() !== '') {
-      const texto = this.filtroBusqueda.trim().toLowerCase();
-      // Expresión regular para coincidencia exacta de palabra (al inicio, final o separada)
-      const regex = new RegExp(`(^|\s|\W)${texto}($|\s|\W)`, 'i');
-      if (this.campoBusqueda === 'folio') {
-        facturasFiltradas = facturasFiltradas.filter(f => f.folio && regex.test(f.folio));
-      } else if (this.campoBusqueda === 'proveedor') {
-        facturasFiltradas = facturasFiltradas.filter(f => f.proveedor && regex.test(f.proveedor));
-      } else if (this.campoBusqueda === 'responsable') {
-        facturasFiltradas = facturasFiltradas.filter(f => f.responsable && regex.test(f.responsable));
-      } else {
+      // Filtro por fecha exacta (legacy)
+      if (this.filtroFecha) {
+        facturasFiltradas = facturasFiltradas.filter(f => {
+          const fecha = (f.fechaRecepcion || f.fecha || '').slice(0, 10);
+          return fecha === this.filtroFecha;
+        });
+      }
+
+      // Filtro avanzado: rango de fechas
+      if (this.filtroFechaInicio) {
+        facturasFiltradas = facturasFiltradas.filter(f => {
+          const fecha = (f.fechaRecepcion || f.fecha || '').slice(0, 10);
+          return fecha >= this.filtroFechaInicio;
+        });
+      }
+      if (this.filtroFechaFin) {
+        facturasFiltradas = facturasFiltradas.filter(f => {
+          const fecha = (f.fechaRecepcion || f.fecha || '').slice(0, 10);
+          return fecha <= this.filtroFechaFin;
+        });
+      }
+
+      // Filtro avanzado: monto mínimo/máximo
+      if (this.filtroMontoMin !== null && this.filtroMontoMin !== undefined) {
+        facturasFiltradas = facturasFiltradas.filter(f => f.monto >= this.filtroMontoMin!);
+      }
+      if (this.filtroMontoMax !== null && this.filtroMontoMax !== undefined) {
+        facturasFiltradas = facturasFiltradas.filter(f => f.monto <= this.filtroMontoMax!);
+      }
+
+      // Filtro avanzado: estado múltiple
+      if (this.filtroEstados && this.filtroEstados.length > 0) {
+        facturasFiltradas = facturasFiltradas.filter(f => this.filtroEstados.includes(f.estado));
+      }
+
+      // Filtro por categoría seleccionada
+      if (this.categoriaSeleccionada) {
         facturasFiltradas = facturasFiltradas.filter(f =>
-          (f.folio && regex.test(f.folio)) ||
-          (f.proveedor && regex.test(f.proveedor)) ||
-          (f.responsable && regex.test(f.responsable))
+          f.estado.toLowerCase() === this.categoriaSeleccionada!.toLowerCase()
         );
       }
-    }
 
+      // Filtro por facturas por vencer
+      if (this.mostrarPorVencer) {
+        facturasFiltradas = facturasFiltradas.filter(f => {
+          if (f.estado && f.estado.toLowerCase() === 'pendiente') {
+            const fechaEmision = f.fechaRecepcion || f.fecha || '';
+            if (!fechaEmision) return false;
+            const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
+            const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diasRestantes = 8 - diffDias;
+            return diasRestantes <= 2 && diasRestantes > 0;
+          }
+          return false;
+        });
+      }
 
-    // Ordenar: primero por las que están por vencer (menos días para vencer), luego por fecha de emisión descendente
-    return facturasFiltradas.sort((a, b) => {
-      // Calcular días restantes para cada factura
-      const getDiasRestantes = (factura: Factura) => {
-        const fechaEmision = factura.fechaRecepcion || factura.fecha || '';
-        if (!fechaEmision) return 9999;
-        const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
-        const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        return 8 - diffDias;
-      };
-      const diasA = getDiasRestantes(a);
-      const diasB = getDiasRestantes(b);
-      // Prioridad: por vencer primero (díasRestantes > 0 y <= 2)
-      const aPorVencer = diasA > 0 && diasA <= 2;
-      const bPorVencer = diasB > 0 && diasB <= 2;
-      if (aPorVencer && !bPorVencer) return -1;
-      if (!aPorVencer && bPorVencer) return 1;
-      // Si ambos son por vencer o ninguno, ordenar por fecha de emisión descendente
-      const fechaA = new Date(a.fechaRecepcion || a.fecha || 0).getTime();
-      const fechaB = new Date(b.fechaRecepcion || b.fecha || 0).getTime();
-      return fechaB - fechaA;
-    });
+      // Filtro por búsqueda textual
+      if (this.filtroBusqueda && this.filtroBusqueda.trim() !== '') {
+        const texto = this.filtroBusqueda.trim().toLowerCase();
+        const regex = new RegExp(`(^|\s|\W)${texto}($|\s|\W)`, 'i');
+        if (this.campoBusqueda === 'folio') {
+          facturasFiltradas = facturasFiltradas.filter(f => f.folio && regex.test(f.folio));
+        } else if (this.campoBusqueda === 'proveedor') {
+          facturasFiltradas = facturasFiltradas.filter(f => f.proveedor && regex.test(f.proveedor));
+        } else if (this.campoBusqueda === 'responsable') {
+          facturasFiltradas = facturasFiltradas.filter(f => f.responsable && regex.test(f.responsable));
+        } else {
+          facturasFiltradas = facturasFiltradas.filter(f =>
+            (f.folio && regex.test(f.folio)) ||
+            (f.proveedor && regex.test(f.proveedor)) ||
+            (f.responsable && regex.test(f.responsable))
+          );
+        }
+      }
+
+      // Ordenar: primero por las que están por vencer (menos días para vencer), luego por fecha de emisión descendente
+      return facturasFiltradas.sort((a, b) => {
+        const getDiasRestantes = (factura: Factura) => {
+          const fechaEmision = factura.fechaRecepcion || factura.fecha || '';
+          if (!fechaEmision) return 9999;
+          const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
+          const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          return 8 - diffDias;
+        };
+        const diasA = getDiasRestantes(a);
+        const diasB = getDiasRestantes(b);
+        const aPorVencer = diasA > 0 && diasA <= 2;
+        const bPorVencer = diasB > 0 && diasB <= 2;
+        if (aPorVencer && !bPorVencer) return -1;
+        if (!aPorVencer && bPorVencer) return 1;
+        const fechaA = new Date(a.fechaRecepcion || a.fecha || 0).getTime();
+        const fechaB = new Date(b.fechaRecepcion || b.fecha || 0).getTime();
+        return fechaB - fechaA;
+      });
   }
 
   seleccionarCategoria(estado: string) {
     this.mostrarPorVencer = false;
+    this.filtroFecha = '';
     if (this.categoriaSeleccionada === estado) {
       this.categoriaSeleccionada = null; // Quitar filtro si se vuelve a hacer click
     } else {
@@ -529,12 +572,31 @@ export class InvoicesPage {
 
   async confirmarEliminar() {
     if (!this.facturaAEliminar) return;
+    const facturaEliminada = { ...this.facturaAEliminar };
     try {
       await this.dbService.deleteFactura(this.facturaAEliminar.id);
       await this.cargarFacturas();
-      this.exitoCarga = 'Factura eliminada correctamente.';
-      await this.mostrarToast(this.exitoCarga, 'success');
-      setTimeout(() => this.exitoCarga = '', 2000);
+      this.exitoCarga = 'Factura eliminada. <b>Deshacer</b>';
+      const toast = await this.toastController.create({
+        message: 'Factura eliminada',
+        color: 'danger',
+        duration: 4000,
+        position: 'top',
+        buttons: [
+          {
+            text: 'Deshacer',
+            role: 'cancel',
+            handler: async () => {
+              // Restaurar la factura eliminada
+              await this.dbService.addFactura(facturaEliminada);
+              await this.cargarFacturas();
+              await this.mostrarToast('Factura restaurada', 'success');
+            }
+          }
+        ]
+      });
+      await toast.present();
+      setTimeout(() => this.exitoCarga = '', 4000);
     } catch (e) {
       this.errorCarga = 'Error al eliminar la factura.';
       await this.mostrarToast(this.errorCarga, 'danger');
@@ -684,14 +746,55 @@ export class InvoicesPage {
   }
 
   // Acción rápida para rechazar factura
-  rechazarFactura(factura: Factura) {
-    const motivo = prompt('Ingrese el motivo del rechazo:') || '';
-    this.cambiarEstadoFactura(factura, 'Rechazada', motivo);
+  async rechazarFactura(factura: Factura) {
+    const alert = await this.alertController.create({
+      header: 'Rechazar factura',
+      message: 'Ingrese el motivo del rechazo:',
+      inputs: [
+        {
+          name: 'motivo',
+          type: 'text',
+          placeholder: 'Motivo'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Aceptar',
+          handler: async (data: { motivo: string }) => {
+            if (data.motivo && data.motivo.trim() !== '') {
+              factura.estado = 'Rechazada';
+              factura.motivoRechazo = data.motivo;
+              await this.actualizarFactura(factura);
+            }
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   // Acción para marcar como vencida (puede ser automática, pero también manual)
   marcarVencida(factura: Factura) {
     this.cambiarEstadoFactura(factura, 'Vencida');
+  }
+
+  // Método para actualizar una factura (usado en rechazarFactura)
+  async actualizarFactura(factura: Factura) {
+    try {
+      await this.dbService.updateFactura(factura.id, factura);
+      await this.cargarFacturas();
+      this.exitoCarga = 'Factura actualizada correctamente.';
+      await this.mostrarToast(this.exitoCarga, 'success');
+      setTimeout(() => this.exitoCarga = '', 2000);
+    } catch (e) {
+      this.errorCarga = 'Error al actualizar la factura.';
+      await this.mostrarToast(this.errorCarga, 'danger');
+    }
   }
 
 
@@ -734,5 +837,15 @@ export class InvoicesPage {
   async refrescar(event: any) {
     await this.cargarFacturas();
     event.target.complete();
+  }
+
+  facturaSeleccionadaTabla: Factura | null = null;
+
+  seleccionarFacturaTabla(factura: Factura) {
+    if (this.facturaSeleccionadaTabla && this.facturaSeleccionadaTabla.id === factura.id) {
+      this.facturaSeleccionadaTabla = null;
+    } else {
+      this.facturaSeleccionadaTabla = factura;
+    }
   }
 }

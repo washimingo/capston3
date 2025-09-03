@@ -1,0 +1,57 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+        <ion-buttons slot="start">
+      <ion-menu-button id="tour-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>apitest</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <button class="ver-datos-btn" *ngIf="rawData" (click)="showModal = true">Ver datos crudos</button>
+  <ion-spinner class="spinner-center" *ngIf="cargando" name="crescent"></ion-spinner>
+  <div *ngIf="!cargando">
+    <table *ngIf="facturas.length > 0" class="facturas-table">
+      <thead>
+        <tr>
+          <th>Folio</th>
+          <th>RUT Emisor</th>
+          <th>Razón Social</th>
+          <th>Monto Total</th>
+          <th>Fecha Emisión</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+  <tr *ngFor="let factura of facturas" [hidden]="factura.estado !== 'emitida'">
+          <td>{{ factura.folio }}</td>
+          <td>{{ factura.rutEmisor }}</td>
+          <td>{{ factura.razonSocialEmisor }}</td>
+          <td>{{ factura.montoTotal | currency:'CLP' }}</td>
+          <td>{{ factura.fechaEmision }}</td>
+          <td>
+            <span [ngClass]="{
+              'estado-emitida': factura.estado === 'emitida',
+              'estado-anulada': factura.estado === 'anulada',
+              'estado-recibida': factura.estado === 'recibida'
+            }">{{ factura.estado }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="facturas.length === 0" style="text-align:center;margin-top:20px;">
+      No hay facturas disponibles.
+    </div>
+    <div *ngIf="error" style="color:red; margin-top:20px;">
+      <strong>Error:</strong>
+      <pre>{{ error | json }}</pre>
+    </div>
+    <div *ngIf="showModal" class="modal-bg">
+      <div class="modal-content">
+        <button class="close-btn" (click)="showModal = false">Cerrar</button>
+        <strong>Datos crudos de la API:</strong>
+        <pre>{{ rawData | json }}</pre>
+      </div>
+    </div>
+  </div>
+</ion-content>

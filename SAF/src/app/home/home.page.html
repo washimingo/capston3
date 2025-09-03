@@ -1,13 +1,30 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-menu-button id="tour-menu"></ion-menu-button>
     </ion-buttons>
     <ion-title>Panel de Inicio</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+  <!-- Alertas in-app -->
+  <div *ngIf="alertasPendientes.length > 0" class="alertas-inapp">
+    <ion-card color="warning">
+      <ion-card-header>
+        <ion-card-title>Alertas Pendientes</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let alerta of alertasPendientes">
+            <ion-label>
+              <strong>{{ alerta.tipo }}</strong> para factura <strong>{{ alerta.facturaId }}</strong>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </div>
   <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
     <ion-refresher-content
       pullingIcon="arrow-dropdown"
@@ -20,14 +37,14 @@
     <ion-row>
       <!-- Tarjeta grande de totales -->
       <ion-col size="12" size-md="6" size-lg="5">
-        <ion-card class="home-card home-card-totales">
+        <ion-card class="home-card home-card-totales" id="tour-dashboard">
           <ion-card-header class="home-card-header">
             <ion-icon name="document-text-outline" color="primary"></ion-icon>
             <ion-card-title class="home-card-title">Facturas Totales</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <h2 class="home-total">{{ totalRecibidas }}</h2>
-            <ion-button expand="block" fill="clear" color="primary" (click)="irAFacturasConFiltro('')">Ver todas</ion-button>
+            <ion-button expand="block" fill="clear" color="primary" (click)="irAFacturasConFiltro('')" id="tour-ver-todas">Ver todas</ion-button>
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -35,7 +52,7 @@
       <ion-col size="12" size-md="6" size-lg="4">
         <ion-row>
           <ion-col size="12" size-md="6">
-            <ion-card class="home-card">
+            <ion-card class="home-card" (click)="irAFacturasConFiltro('Pendiente')" style="cursor:pointer;">
               <ion-card-header class="home-card-header">
                 <ion-icon name="time-outline" color="warning"></ion-icon>
                 <ion-card-title class="home-card-title">Pendientes</ion-card-title>
@@ -46,7 +63,7 @@
             </ion-card>
           </ion-col>
           <ion-col size="12" size-md="6">
-            <ion-card class="home-card">
+            <ion-card class="home-card" (click)="irAFacturasConFiltro('Aceptada')" style="cursor:pointer;">
               <ion-card-header class="home-card-header">
                 <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
                 <ion-card-title class="home-card-title">Aceptadas</ion-card-title>
@@ -57,7 +74,7 @@
             </ion-card>
           </ion-col>
           <ion-col size="12" size-md="6">
-            <ion-card class="home-card">
+            <ion-card class="home-card" (click)="irAFacturasConFiltro('Rechazada')" style="cursor:pointer;">
               <ion-card-header class="home-card-header">
                 <ion-icon name="close-circle-outline" color="danger"></ion-icon>
                 <ion-card-title class="home-card-title">Rechazadas</ion-card-title>
@@ -68,7 +85,7 @@
             </ion-card>
           </ion-col>
           <ion-col size="12" size-md="6">
-            <ion-card class="home-card">
+            <ion-card class="home-card" (click)="irAFacturasConFiltro('Vencida')" style="cursor:pointer;">
               <ion-card-header class="home-card-header">
                 <ion-icon name="warning-outline" color="medium"></ion-icon>
                 <ion-card-title class="home-card-title">Vencidas</ion-card-title>
@@ -82,7 +99,7 @@
       </ion-col>
       <!-- Tarjeta de prioridad separada -->
       <ion-col size="12" size-md="12" size-lg="3">
-        <ion-card class="home-card home-card-prioridad">
+  <ion-card class="home-card home-card-prioridad" id="tour-por-vencer" (click)="irAFacturasConFiltro('PorVencer')" style="cursor:pointer;">
           <ion-card-header class="home-card-header">
             <ion-icon name="alert-circle-outline" color="warning"></ion-icon>
             <ion-card-title class="home-card-title home-card-title-prioridad">Por vencer</ion-card-title>

@@ -31,8 +31,20 @@ export const routes: Routes = [
     loadComponent: () => import('./alerts/alerts.page').then( m => m.AlertsPage)
   },
   {
+    path: 'dashboard',
+    loadComponent: () => import('./dashboard/dashboard.page').then( m => m.DashboardPage)
+  },
+  {
     path: 'facturas-por-vencer',
     loadComponent: () => import('./invoices/facturas-por-vencer/facturas-por-vencer.page').then( m => m.FacturasPorVencerPage)
   },
+  {
+    path: 'tips',
+    loadComponent: () => import('./tips/tips.page').then(m => m.TipsPage)
+  },  {
+    path: 'apitest',
+    loadComponent: () => import('./apitest/apitest.page').then( m => m.ApitestPage)
+  },
+
 
 ];

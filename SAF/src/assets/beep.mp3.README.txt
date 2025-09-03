@@ -1,0 +1,2 @@
+// Coloca aquí tu archivo de sonido beep.mp3 o cualquier otro sonido corto que desees usar para la alerta.
+// Puedes descargar un sonido libre de derechos desde https://freesound.org o similar y guardarlo como beep.mp3 en esta carpeta.
