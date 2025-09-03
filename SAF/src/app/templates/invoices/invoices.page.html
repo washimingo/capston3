@@ -1,0 +1,283 @@
+  <!-- ====== FACTURAS POR VENCER (SOLO MÓVIL) ====== -->
+  <div *ngIf="(facturasFiltradas | porVencer).length > 0">
+  <div>
+      <ion-icon name="alert" color="warning"></ion-icon>
+      <b>Facturas por vencer</b>
+    </div>
+    <div class="por-vencer-lista-movil">
+  <ion-card *ngFor="let factura of facturasFiltradas | porVencer" (click)="verFactura(factura)">
+        <ion-label>
+          <b>{{ factura.folio }}</b> - {{ factura.proveedor }}<br>
+          <small>Vence: {{ factura.fechaVencimiento | date:'dd/MM/yyyy' }}</small>
+        </ion-label>
+  <ion-badge color="warning">Por vencer</ion-badge>
+      </ion-card>
+    </div>
+  </div>
+<!-- =================== ALERTA ELIMINAR FACTURA =================== -->
+<ion-alert
+  [isOpen]="mostrarAlertaEliminar"
+  header="¿Eliminar factura?"
+  message="¿Seguro que deseas eliminar esta factura? Esta acción no se puede deshacer."
+  [buttons]="alertEliminarButtons"
+  (didDismiss)="mostrarAlertaEliminar = false">
+</ion-alert>
+
+<!-- =================== MODAL EDICIÓN FACTURA =================== -->
+<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="abrirDrawerEditar" style="background:rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+  <div class="modal-header">
+        <h5 class="modal-title">Editar factura</h5>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="cancelarEdicion()"></button>
+      </div>
+      <div class="modal-body">
+        <form (submit)="guardarEdicion(); $event.preventDefault();">
+          <div class="mb-3">
+            <label class="form-label">Folio / N° Factura</label>
+            <input type="number" class="form-control" [(ngModel)]="facturaEditada.folio" name="folioEdit" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">RUT Emisor</label>
+            <input type="text" class="form-control" [(ngModel)]="facturaEditada.rutEmisor" name="rutEmisorEdit" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Razón Social Emisor</label>
+            <input type="text" class="form-control" [(ngModel)]="facturaEditada.razonSocialEmisor" name="razonSocialEmisorEdit" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Monto Total</label>
+            <input type="number" class="form-control" [(ngModel)]="facturaEditada.montoTotal" name="montoTotalEdit" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Fecha de Emisión</label>
+            <input type="date" class="form-control" [(ngModel)]="facturaEditada.fechaEmision" name="fechaEmisionEdit" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Estado</label>
+            <input type="text" class="form-control" [(ngModel)]="facturaEditada.estado" name="estadoEdit" required />
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Guardar cambios</button>
+          <div class="text-danger mt-2" *ngIf="errorCarga">{{ errorCarga }}</div>
+          <div class="text-success mt-2" *ngIf="exitoCarga">{{ exitoCarga }}</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- =================== MODAL DETALLE FACTURA =================== -->
+  <div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="facturaSeleccionada" style="background:rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+  <div class="modal-header">
+          <h5 class="modal-title">Detalle de Factura</h5>
+          <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrarDetalles()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="card mb-3">
+            <div class="card-header d-flex align-items-center gap-3">
+              <ion-icon [name]="getIconoEstado(facturaSeleccionada.estado)" [color]="getColorEstado(facturaSeleccionada.estado)"></ion-icon>
+              <span class="badge bg-primary">{{ facturaSeleccionada.estado }}</span>
+              <span>Factura #{{ facturaSeleccionada.folio }}</span>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{ facturaSeleccionada.razonSocialEmisor }}</h5>
+              <div class="mb-2">${{ facturaSeleccionada.montoTotal | number:'1.2-2' }}</div>
+              <div><b>Fecha emisión:</b> {{ facturaSeleccionada.fechaEmision | date:'dd/MM/yyyy' }}</div>
+              <div><b>RUT Emisor:</b> {{ facturaSeleccionada.rutEmisor }}</div>
+              <div><b>Razón Social Emisor:</b> {{ facturaSeleccionada.razonSocialEmisor }}</div>
+              <div><b>Estado:</b> {{ facturaSeleccionada.estado }}</div>
+              <ng-container *ngIf="facturaSeleccionada as f">
+                <ng-container *ngIf="getDiasRestantes(f) as diasRestantes">
+                  <div *ngIf="diasRestantes !== null">
+                    <ng-container [ngSwitch]="true">
+                      <div *ngSwitchCase="diasRestantes <= 0" class="alert alert-danger mt-2">
+                        <ion-icon name="warning-outline" color="danger"></ion-icon>
+                        <b>¡Factura vencida!</b>
+                        <span>El plazo de 8 días ha expirado.</span>
+                      </div>
+                      <div *ngSwitchCase="diasRestantes <= 2 && diasRestantes > 0" class="alert alert-warning mt-2">
+                        <ion-icon name="alert-circle-outline" color="warning"></ion-icon>
+                        <b>¡Atención!</b>
+                        <span>Solo quedan {{ diasRestantes }} día{{ diasRestantes === 1 ? '' : 's' }} para que venza.</span>
+                        <div>¡Aún estás a tiempo de gestionarla!</div>
+                      </div>
+                      <div *ngSwitchDefault class="alert alert-success mt-2">
+                        <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+                        <b>¡Factura al día!</b>
+                        <span>Quedan {{ diasRestantes }} días para el vencimiento.</span>
+                        <div>¡Sigue así, tu gestión es excelente!</div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- =================== MODAL CARGA FACTURA =================== -->
+<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="abrirModalCarga" style="background:rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+  <div class="modal-header">
+        <h5 class="modal-title">Cargar factura</h5>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrarModalCarga()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3 text-center">
+          <ion-icon name="cloud-upload-outline" size="large" color="granite"></ion-icon>
+          <div>Arrastra un archivo</div>
+          <div *ngIf="archivoSeleccionado">
+            Archivo seleccionado: <b>{{ archivoSeleccionado.name }}</b>
+          </div>
+        </div>
+        <form (submit)="onSubmitFactura($event)">
+          <div class="mb-3">
+            <label class="form-label">Folio / N° Factura</label>
+            <input type="number" class="form-control" [(ngModel)]="nuevaFactura.folio" name="folio" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">RUT Emisor</label>
+            <input type="text" class="form-control" [(ngModel)]="nuevaFactura.rutEmisor" name="rutEmisor" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Razón Social Emisor</label>
+            <input type="text" class="form-control" [(ngModel)]="nuevaFactura.razonSocialEmisor" name="razonSocialEmisor" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Monto Total</label>
+            <input type="number" class="form-control" [(ngModel)]="nuevaFactura.montoTotal" name="montoTotal" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Fecha de Emisión</label>
+            <input type="date" class="form-control" [(ngModel)]="nuevaFactura.fechaEmision" name="fechaEmision" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Estado</label>
+            <input type="text" class="form-control" [(ngModel)]="nuevaFactura.estado" name="estado" required />
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Subir Factura</button>
+          <div class="text-danger mt-2" *ngIf="errorCarga">{{ errorCarga }}</div>
+          <div class="text-success mt-2" *ngIf="exitoCarga">{{ exitoCarga }}</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== HEADER Y TOOLBAR =================== -->
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Facturación</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="secondary" fill="clear" (click)="mostrarFacturasGuardadas()" class="btn-console">
+        <ion-icon name="list-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<!-- =================== CONTENIDO PRINCIPAL =================== -->
+<ion-content class="invoices-content">
+  <!-- Componente de filtros y búsqueda -->
+  <app-busqueda-filtros
+    [categoriasResumen]="categoriasResumen"
+  [resumenPorEstado]="{ emitida: getResumenCount('Emitida'), recibida: getResumenCount('Recibida'), anulada: getResumenCount('Anulada') }"
+    [categoriaSeleccionada]="categoriaSeleccionada"
+  (seleccionarCategoria)="seleccionarCategoria($event)"
+    [campoBusqueda]="campoBusqueda"
+    [filtroBusqueda]="filtroBusqueda"
+  (buscarFactura)="onBuscarFactura($event)"
+  (cambiarCampoBusqueda)="campoBusqueda = $event; onBuscarFactura()"
+    [sugerenciasBusqueda]="sugerenciasBusqueda"
+  (seleccionarSugerencia)="seleccionarSugerencia($event)"
+    [buscandoFacturas]="buscandoFacturas"
+  (abrirModalCarga)="abrirModalCarga = true"
+    [filtroFechaInicio]="filtroFechaInicio"
+    [filtroFechaFin]="filtroFechaFin"
+    [filtroMontoMin]="filtroMontoMin"
+    [filtroMontoMax]="filtroMontoMax"
+    [filtroEstados]="filtroEstados"
+  (aplicarFiltrosAvanzados)="aplicarFiltrosAvanzados($event)"
+  (limpiarFiltrosAvanzados)="limpiarFiltrosAvanzados()"
+  (exportar)="exportarFacturas()"
+  ></app-busqueda-filtros>
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      refreshingSpinner="crescent"
+      pullingText="Desliza para refrescar"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!-- ====== TABLA DE FACTURAS ====== -->
+  <div>
+  <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Folio</th>
+          <th>RUT Emisor</th>
+          <th>Razón Social Emisor</th>
+          <th>Monto Total</th>
+          <th>Fecha Emisión</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+  <tr *ngFor="let factura of facturasFiltradas" [attr.id]="'row-' + factura.id" [class.selected-row]="facturaSeleccionadaTabla?.id === factura.id" class="table table-hover table-bordered">
+          <td>{{ factura.id }}</td>
+          <td>{{ factura.folio }}</td>
+          <td>{{ factura.rutEmisor }}</td>
+          <td>{{ factura.razonSocialEmisor }}</td>
+          <td>${{ factura.montoTotal | number:'1.2-2' }}</td>
+          <td>{{ factura.fechaEmision | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <ion-icon [name]="getIconoEstado(factura.estado)" [color]="getColorEstado(factura.estado)" class="tabla-estado-icon"></ion-icon>
+            <ion-badge [color]="getColorEstado(factura.estado)" class="tabla-estado-badge">{{ factura.estado }}</ion-badge>
+          </td>
+          <td>
+            <ion-button size="small" fill="clear" (click)="verFactura(factura)" title="Ver detalles">
+              <ion-icon name="alert-circle-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button size="small" fill="clear" (click)="editarFactura(factura)" title="Editar">
+              <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <!-- Botones de acción de estado -->
+            <ion-button *ngIf="factura && factura.estado === 'Pendiente'" size="small" fill="clear" color="success" (click)="aceptarFactura(factura)" title="Aceptar">
+              <ion-icon name="checkmark-circle-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="factura && factura.estado === 'Pendiente'" size="small" fill="clear" color="danger" (click)="rechazarFactura(factura)" title="Rechazar">
+              <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ng-container *ngIf="factura && factura.estado === 'Pendiente'">
+              <ng-container *ngIf="getDiasRestantes(factura) as diasRestantes">
+                <ion-button *ngIf="diasRestantes !== null && diasRestantes <= 0" size="small" fill="clear" color="warning" (click)="marcarVencida(factura)" title="Marcar como vencida">
+                  <ion-icon name="warning-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+              </ng-container>
+            </ng-container>
+          </td>
+        </tr>
+        <tr *ngIf="facturasFiltradas.length === 0">
+          <td colspan="6">
+            <ion-icon name="document-text-outline" size="large" color="medium"></ion-icon>
+            <div>No hay facturas para mostrar.</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ion-content>

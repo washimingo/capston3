@@ -1,0 +1,182 @@
+// Botón principal con Bootstrap
+
+
+// Card de 'Por vencer' con fondo naranja
+ion-card.por-vencer-card {
+	background: linear-gradient(135deg, #ffb347 0%, #ff7f50 100%);
+	color: #fff !important;
+	border: none;
+	box-shadow: 0 4px 16px rgba(255,127,80,0.15);
+}
+
+// Adaptación modo oscuro para el card de 'Por vencer'
+@media (prefers-color-scheme: dark) {
+	ion-card.por-vencer-card {
+		background: linear-gradient(135deg, #ff8c42 0%, #ff5e13 100%);
+		color: #fff !important;
+	}
+}
+
+// Mejorar visualización de títulos y totales
+ion-card-title {
+	font-size: 1.2rem;
+	font-weight: 600;
+	letter-spacing: 0.5px;
+}
+
+.display-6 {
+	font-size: 2.2rem !important;
+	font-weight: 700 !important;
+	color: inherit;
+}
+// Estilos empresariales y adaptativos para los cards
+ion-card {
+	border-radius: 16px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+	background: var(--ion-card-background, #fff);
+	transition: box-shadow 0.2s;
+}
+
+ion-card-header,
+ion-card-title,
+ion-card-content,
+ion-badge {
+	color: var(--ion-text-color, #222);
+}
+
+// Modo oscuro: texto claro en los cards
+@media (prefers-color-scheme: dark) {
+	ion-card {
+		background: var(--ion-card-background, #252121); // Ajusta el color del card en el modo oscuro
+	}
+	ion-card-header,
+	ion-card-title,
+	ion-card-content,
+	ion-badge {
+		color: #fff !important;
+	}
+}
+
+// Card de prioridad: texto rojo siempre visible
+ion-card-content .text-danger {
+	color: #dc3545 !important;
+	font-weight: 600;
+}
+
+// Mejorar visualización de títulos y totales
+ion-card-title {
+	font-size: 1.2rem;
+	font-weight: 600;
+	letter-spacing: 0.5px;
+}
+
+.display-6 {
+	font-size: 2.2rem !important;
+	font-weight: 700 !important;
+	color: inherit;
+}
+// Mejor integración visual con Bootstrap
+.shadow-sm {
+	box-shadow: 0 2px 8px rgba(0,0,0,0.07) !important;
+}
+.fw-bold {
+	font-weight: 600 !important;
+}
+.fs-5 {
+	font-size: 1.25rem !important;
+}
+.display-6 {
+	font-size: 2.2rem !important;
+	font-weight: 700 !important;
+}
+.text-danger {
+	color: #dc3545 !important;
+}
+.bg-warning {
+	background-color: #ffc107 !important;
+}
+.text-white {
+	color: #fff !important;
+}
+.container {
+		max-width: 900px;
+}
+
+// Contenedor más ancho para las listas de últimas 5
+.ultimas-container {
+	max-width: 1200px;
+}
+
+// Asegurar fila única en desktop y ampliar columnas
+@media (min-width: 992px) { // ~lg
+	.ultimas-row {
+		gap: 2rem !important;
+	}
+	.ultimas-row ion-col {
+		flex: 0 0 calc((100% - 4rem) / 3); // tres columnas con gap de 2rem
+		max-width: calc((100% - 4rem) / 3);
+	}
+}
+.my-3 {
+	margin-top: 1rem !important;
+	margin-bottom: 1rem !important;
+}
+.g-4 {
+	gap: 2rem !important;
+}
+
+// Estilos de desktop para "Últimas 5 por estado"
+.ultimas-list {
+	padding: 0;
+}
+
+.ultimas-list ion-item {
+	--inner-padding-start: 0;
+	--inner-padding-end: 0;
+	--padding-start: 0.5rem;
+	--padding-end: 0.5rem;
+	--min-height: 52px;
+	border-radius: 10px;
+	margin: 2px 0;
+	transition: background-color 0.15s ease, transform 0.05s ease;
+}
+
+.ultimas-list ion-item:hover {
+	background: rgba(0, 0, 0, 0.035);
+}
+
+.ultimas-list ion-item:active {
+	transform: translateY(0.5px);
+}
+
+.ultimas-list ion-label {
+	display: block;
+}
+
+.ultimas-list .item-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	font-weight: 600;
+	margin-bottom: 2px;
+}
+
+.ultimas-list ion-badge {
+	font-size: 0.7rem;
+	border-radius: 999px;
+	padding: 0.25rem 0.5rem;
+}
+
+.ultimas-list small {
+	color: var(--ion-color-medium, #6b7280);
+}
+
+@media (prefers-color-scheme: dark) {
+	.ultimas-list ion-item:hover {
+		background: rgba(255, 255, 255, 0.06);
+	}
+	.ultimas-list small {
+		color: #c6c7c8;
+	}
+}

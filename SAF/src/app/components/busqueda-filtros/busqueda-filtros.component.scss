@@ -1,0 +1,111 @@
+// Estilo empresarial y coherente con invoices
+
+:host {
+	display: block;
+}
+
+ion-item[lines="none"] {
+	--background: transparent;
+	--border-color: transparent;
+	border-radius: 8px;
+}
+
+ion-chip {
+	margin-right: 6px;
+	margin-bottom: 6px;
+}
+
+ion-button[fill="clear"] {
+	--padding-start: 8px;
+	--padding-end: 8px;
+	--border-radius: 6px;
+}
+
+.sugerencias-autocompletado {
+	max-height: 260px;
+	overflow-y: auto;
+	border: 1px solid var(--ion-color-step-250, #dee2e6);
+	border-radius: 8px;
+	box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+}
+
+@media (prefers-color-scheme: dark) {
+	.sugerencias-autocompletado {
+		border-color: var(--ion-color-step-400, #3a3a3a);
+		box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+	}
+}
+
+/* Grid espaciamiento */
+ion-row + ion-row {
+	margin-top: 8px;
+}
+
+/* Toolbar de escritorio para filtros y búsqueda */
+.bf-toolbar {
+	display: grid;
+	grid-template-columns: 1fr minmax(360px, 560px) auto;
+	gap: 12px;
+	align-items: start;
+	margin-bottom: 12px;
+	position: sticky;
+	top: 0;
+	z-index: 5;
+	background: var(--ion-background-color);
+	padding: 8px 0;
+}
+
+.bf-chips {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.bf-search .bf-search-item {
+	--background: transparent;
+	--border-color: var(--ion-color-step-250, #dee2e6);
+	border: 1px solid var(--ion-color-step-250, #dee2e6);
+	border-radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+	.bf-search .bf-search-item {
+		--border-color: var(--ion-color-step-400, #3a3a3a);
+		border-color: var(--ion-color-step-400, #3a3a3a);
+	}
+}
+
+.bf-suggestions {
+	max-height: 260px;
+	overflow-y: auto;
+	border: 1px solid var(--ion-color-step-250, #dee2e6);
+	border-radius: 8px;
+	box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+	background: var(--ion-card-background, var(--ion-background-color));
+}
+@media (prefers-color-scheme: dark) {
+	.bf-suggestions {
+		border-color: var(--ion-color-step-400, #3a3a3a);
+		box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+	}
+}
+
+.bf-actions {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+/* Colores por estado para chips (empresarial) */
+ion-chip[color="success"] { --ion-color-base: var(--ion-color-success); }
+ion-chip[color="danger"]  { --ion-color-base: var(--ion-color-danger); }
+ion-chip[color="warning"] { --ion-color-base: var(--ion-color-warning); }
+ion-chip[color="primary"] { --ion-color-base: var(--ion-color-primary); }
+
+/* Responsive */
+@media (max-width: 992px) {
+	.bf-toolbar {
+		grid-template-columns: 1fr;
+		gap: 8px;
+		position: static;
+	}
+}

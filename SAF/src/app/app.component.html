@@ -1,7 +1,5 @@
 
 <ion-app>
-
-
   <!-- Menú lateral -->
   <ion-menu side="start" menuId="main-menu" contentId="main-content">
     <ion-header>
@@ -31,11 +29,11 @@
           <ion-icon name="bar-chart-outline" slot="start" class="menu-icon"></ion-icon>
           <ion-label>Reportes</ion-label>
         </ion-item>
-        <ion-item routerLink="/dashboard" detail lines="full">
+        <ion-item routerLink="/dashboards" detail lines="full">
           <ion-icon name="analytics-outline" slot="start" class="menu-icon"></ion-icon>
           <ion-label>Dashboard de Indicadores</ion-label>
         </ion-item>
-        <ion-item routerLink="/users" detail lines="full">
+        <ion-item routerLink="/usuario" detail lines="full">
           <ion-icon name="people-outline" slot="start" class="menu-icon"></ion-icon>
           <ion-label>Usuarios</ion-label>
         </ion-item>
@@ -43,9 +41,13 @@
           <ion-icon name="settings-outline" slot="start" class="menu-icon"></ion-icon>
           <ion-label>Configuración</ion-label>
         </ion-item>
-        <ion-item routerLink="/tips" detail lines="full">
+        <ion-item routerLink="/tips-ayuda" detail lines="full">
           <ion-icon name="help-circle-outline" slot="start" class="menu-icon"></ion-icon>
           <ion-label>Tips y Tutorial</ion-label>
+        </ion-item>
+        <ion-item routerLink="/test-api" detail lines="full">
+          <ion-icon name="help-circle-outline" slot="start" class="menu-icon"></ion-icon>
+          <ion-label>Test API</ion-label>
         </ion-item>
       </ion-list>
       <div class="menu-divider"></div>
@@ -55,6 +57,5 @@
       </div>
     </ion-content>
   </ion-menu>
-
   <ion-router-outlet id="main-content"></ion-router-outlet>
 </ion-app>

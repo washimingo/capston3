@@ -1,0 +1,124 @@
+<!-- FILTROS Y BÚSQUEDA (barra de herramientas de escritorio) -->
+<div class="bf-toolbar">
+  <div class="bf-chips">
+    <ion-chip [color]="categoriaSeleccionada === 'Emitida' ? 'primary' : 'medium'" [outline]="categoriaSeleccionada !== 'Emitida'" (click)="seleccionarCategoria('Emitida')">
+      <ion-icon [name]="getIconoEstado('Emitida')" slot="start"></ion-icon>
+      Emitidas
+      <ion-badge color="primary">{{ resumenPorEstado['emitida'] || 0 }}</ion-badge>
+    </ion-chip>
+    <ion-chip [color]="categoriaSeleccionada === 'Recibida' ? 'success' : 'medium'" [outline]="categoriaSeleccionada !== 'Recibida'" (click)="seleccionarCategoria('Recibida')">
+      <ion-icon [name]="getIconoEstado('Recibida')" slot="start"></ion-icon>
+      Recibidas
+      <ion-badge color="success">{{ resumenPorEstado['recibida'] || 0 }}</ion-badge>
+    </ion-chip>
+    <ion-chip [color]="categoriaSeleccionada === 'Anulada' ? 'danger' : 'medium'" [outline]="categoriaSeleccionada !== 'Anulada'" (click)="seleccionarCategoria('Anulada')">
+      <ion-icon [name]="getIconoEstado('Anulada')" slot="start"></ion-icon>
+      Anuladas
+      <ion-badge color="danger">{{ resumenPorEstado['anulada'] || 0 }}</ion-badge>
+    </ion-chip>
+    <ion-chip *ngIf="categoriaSeleccionada" color="light" outline (click)="categoriaSeleccionada = null">
+      Limpiar filtro
+      <ion-icon name="close-outline" slot="end"></ion-icon>
+    </ion-chip>
+  </div>
+
+  <div class="bf-search">
+    <ion-item lines="none" class="bf-search-item">
+      <ion-icon name="search-outline" slot="start"></ion-icon>
+      <ion-select interface="popover" size="small" style="max-width: 140px;" [value]="campoBusqueda" (ionChange)="cambiarCampoBusqueda.emit($event.detail.value)" class="me-2" slot="start">
+        <ion-select-option value="folio">Folio</ion-select-option>
+        <ion-select-option value="rutEmisor">RUT</ion-select-option>
+        <ion-select-option value="razonSocialEmisor">Razón Social</ion-select-option>
+      </ion-select>
+  <ion-input [(ngModel)]="filtroBusqueda" name="filtroBusqueda" debounce="300" placeholder="Buscar por {{ campoBusqueda }}" (ionInput)="onBuscarFactura()" (ionFocus)="onFocusBusqueda()" (ionBlur)="onBlurBusqueda()" />
+      <ng-container *ngIf="buscandoFacturas">
+        <ion-spinner name="dots"></ion-spinner>
+      </ng-container>
+      <ion-button *ngIf="filtroBusqueda" fill="clear" size="small" (click)="filtroBusqueda=''; onBuscarFactura();" slot="end" title="Limpiar búsqueda">
+        <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <div *ngIf="mostrarSugerencias && sugerenciasBusqueda.length > 0" class="bf-suggestions">
+      <ion-list>
+        <ion-item button *ngFor="let sugerencia of (sugerenciasBusqueda | slice:0:5)" (click)="seleccionarSugerencia(sugerencia)">
+          <ion-label>{{ sugerencia }}</ion-label>
+        </ion-item>
+        <ion-item *ngIf="sugerenciasBusqueda.length > 5" lines="none">
+          <ion-label class="ion-text-center text-muted">Ver más… refina tu búsqueda</ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
+
+  <div class="bf-actions">
+  <ion-button (click)="abrirModalCarga.emit()">
+      <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+      Subir Factura
+    </ion-button>
+  <ion-button color="secondary" (click)="exportar.emit()">
+      <ion-icon name="document-text-outline" slot="start"></ion-icon>
+      Exportar
+    </ion-button>
+  </div>
+</div>
+
+<ion-accordion-group>
+  <ion-accordion value="filtrosAvanzados">
+    <ion-item slot="header">
+      <ion-icon name="options-outline" slot="start"></ion-icon>
+      <ion-label>Filtros avanzados</ion-label>
+    </ion-item>
+    <div slot="content" class="p-3">
+      <form (ngSubmit)="aplicarFiltrosAvanzados()">
+        <ion-row>
+          <ion-col size="12" size-md="3">
+            <ion-item lines="full">
+              <ion-label position="stacked">Fecha inicio</ion-label>
+              <ion-input type="date" [(ngModel)]="filtroFechaInicio" name="filtroFechaInicio"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="3">
+            <ion-item lines="full">
+              <ion-label position="stacked">Fecha fin</ion-label>
+              <ion-input type="date" [(ngModel)]="filtroFechaFin" name="filtroFechaFin"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="3">
+            <ion-item lines="full">
+              <ion-label position="stacked">Monto mínimo</ion-label>
+              <ion-input type="number" [(ngModel)]="filtroMontoMin" name="filtroMontoMin" placeholder="0"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="3">
+            <ion-item lines="full">
+              <ion-label position="stacked">Monto máximo</ion-label>
+              <ion-input type="number" [(ngModel)]="filtroMontoMax" name="filtroMontoMax" placeholder="0"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-item lines="full">
+              <ion-label position="stacked">Estado</ion-label>
+              <ion-select [(ngModel)]="filtroEstados" name="filtroEstados" multiple="true" okText="Aceptar" cancelText="Cancelar">
+                <ion-select-option value="Emitida">Emitida</ion-select-option>
+                <ion-select-option value="Recibida">Recibida</ion-select-option>
+                <ion-select-option value="Anulada">Anulada</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="6" class="d-flex align-items-end gap-2" style="padding-top: 12px;">
+            <ion-button color="primary" type="submit">
+              <ion-icon name="filter-outline" slot="start"></ion-icon>
+              Aplicar
+            </ion-button>
+            <ion-button color="medium" type="button" (click)="limpiarFiltrosAvanzados()">
+              <ion-icon name="trash-outline" slot="start"></ion-icon>
+              Limpiar
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </form>
+    </div>
+  </ion-accordion>
+</ion-accordion-group>

@@ -1,0 +1,161 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button id="tour-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Panel de Inicio</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- (Opcional) Sección de alertas eliminada al migrar a API -->
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      refreshingSpinner="crescent"
+      pullingText="Desliza para refrescar"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <ion-grid fixed>
+  <ion-row class="g-4">
+  <!-- Tarjeta grande de totales -->
+      <ion-col>
+  <ion-card class="shadow-sm">
+          <ion-card-header>
+            <ion-icon name="document-text-outline" color="primary"></ion-icon>
+            <ion-card-title class="fw-bold">Facturas Totales</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+    <h2 class="display-6">{{ totalFacturas }}</h2>
+            <ion-button expand="block" fill="clear" color="primary" (click)="irAFacturasConFiltro('')">Ver todas</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <!-- Tarjetas pequeñas agrupadas -->
+  <ion-col>
+        <ion-row>
+          <ion-col>
+    <ion-card (click)="irAFacturasConFiltro('Emitida')" class="shadow-sm">
+                <ion-card-header>
+      <ion-icon name="paper-plane-outline" color="primary"></ion-icon>
+      <ion-card-title class="fw-bold">Emitidas</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+        <ion-badge color="primary" class="fs-5">{{ totalEmitidas }}</ion-badge>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+    <ion-card (click)="irAFacturasConFiltro('Recibida')">
+                <ion-card-header>
+      <ion-icon name="download-outline" color="success"></ion-icon>
+      <ion-card-title class="fw-bold">Recibidas</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+        <ion-badge color="success" class="fs-5">{{ totalRecibidas }}</ion-badge>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col>
+    <ion-card (click)="irAFacturasConFiltro('Anulada')">
+                <ion-card-header>
+      <ion-icon name="ban-outline" color="danger"></ion-icon>
+      <ion-card-title class="fw-bold">Anuladas</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+        <ion-badge color="danger" class="fs-5">{{ totalAnuladas }}</ion-badge>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+  <!-- Tarjeta de prioridad (eliminada: no aplica a los estados de la API) -->
+    </ion-row>
+  </ion-grid>
+
+  <!-- Listas de últimas 5 por estado -->
+  <div class="container ultimas-container my-4">
+    <ion-grid fixed>
+      <ion-row class="g-4 ultimas-row">
+        <ion-col size="12" size-md="4" size-lg="4">
+          <ion-card class="shadow-sm">
+            <ion-card-header>
+              <ion-icon name="paper-plane-outline" color="primary"></ion-icon>
+              <ion-card-title class="fw-bold">Últimas 5 Emitidas</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-list *ngIf="ultimasEmitidas.length; else noEmitidas" lines="none" class="ultimas-list">
+                <ion-item *ngFor="let f of ultimasEmitidas" (click)="verFacturaDesdeHome(f)" button detail="true">
+                  <ion-label>
+                    <div class="item-head">
+                      <span>#{{ f.folio }}</span>
+                      <ion-badge [color]="getColorEstado(f.estado)">{{ f.estado }}</ion-badge>
+                    </div>
+                    <small>{{ f.razonSocialEmisor }}</small>
+                    <div><small>{{ f.fechaEmision | date:'dd/MM/yyyy' }}</small></div>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+              <ng-template #noEmitidas>
+                <div class="text-muted">Sin registros</div>
+              </ng-template>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+  <ion-col size="12" size-md="4" size-lg="4">
+          <ion-card class="shadow-sm">
+            <ion-card-header>
+              <ion-icon name="download-outline" color="success"></ion-icon>
+              <ion-card-title class="fw-bold">Últimas 5 Recibidas</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-list *ngIf="ultimasRecibidas.length; else noRecibidas" lines="none" class="ultimas-list">
+                <ion-item *ngFor="let f of ultimasRecibidas" (click)="verFacturaDesdeHome(f)" button detail="true">
+                  <ion-label>
+                    <div class="item-head">
+                      <span>#{{ f.folio }}</span>
+                      <ion-badge [color]="getColorEstado(f.estado)">{{ f.estado }}</ion-badge>
+                    </div>
+                    <small>{{ f.razonSocialEmisor }}</small>
+                    <div><small>{{ f.fechaEmision | date:'dd/MM/yyyy' }}</small></div>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+              <ng-template #noRecibidas>
+                <div class="text-muted">Sin registros</div>
+              </ng-template>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+  <ion-col size="12" size-md="4" size-lg="4">
+          <ion-card class="shadow-sm">
+            <ion-card-header>
+              <ion-icon name="ban-outline" color="danger"></ion-icon>
+              <ion-card-title class="fw-bold">Últimas 5 Anuladas</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-list *ngIf="ultimasAnuladas.length; else noAnuladas" lines="none" class="ultimas-list">
+                <ion-item *ngFor="let f of ultimasAnuladas" (click)="verFacturaDesdeHome(f)" button detail="true">
+                  <ion-label>
+                    <div class="item-head">
+                      <span>#{{ f.folio }}</span>
+                      <ion-badge [color]="getColorEstado(f.estado)">{{ f.estado }}</ion-badge>
+                    </div>
+                    <small>{{ f.razonSocialEmisor }}</small>
+                    <div><small>{{ f.fechaEmision | date:'dd/MM/yyyy' }}</small></div>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+              <ng-template #noAnuladas>
+                <div class="text-muted">Sin registros</div>
+              </ng-template>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

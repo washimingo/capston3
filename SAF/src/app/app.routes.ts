@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: 'home',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+    loadComponent: () => import('./templates/home/home.page').then( m => m.HomePage)
   },
   {
     path: '',
@@ -11,40 +11,31 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'user',
-    loadComponent: () => import('./user/user.page').then( m => m.UserPage)
-  },
-  {
     path: 'settings',
     loadComponent: () => import('./settings/settings.page').then( m => m.SettingsPage)
   },
   {
+    path: 'test-api',
+    loadComponent: () => import('./templates/test-api/test-api.page').then( m => m.TestApiPage)
+  },
+  {
+    path: 'usuario',
+    loadComponent: () => import('./templates/usuario/usuario.page').then( m => m.UsuarioPage)
+  },
+  {
+    path: 'tips-ayuda',
+    loadComponent: () => import('./templates/tips-ayuda/tips-ayuda.page').then( m => m.TipsAyudaPage)
+  },
+  {
     path: 'reports',
-    loadComponent: () => import('./reports/reports.page').then( m => m.ReportsPage)
+    loadComponent: () => import('./templates/reports/reports.page').then( m => m.ReportsPage)
+  },
+  {
+    path: 'dashboards',
+    loadComponent: () => import('./templates/dashboards/dashboards.page').then( m => m.DashboardsPage)
   },
   {
     path: 'invoices',
-    loadComponent: () => import('./invoices/invoices.page').then( m => m.InvoicesPage)
+    loadComponent: () => import('./templates/invoices/invoices.page').then( m => m.InvoicesPage)
   },
-  {
-    path: 'alerts',
-    loadComponent: () => import('./alerts/alerts.page').then( m => m.AlertsPage)
-  },
-  {
-    path: 'dashboard',
-    loadComponent: () => import('./dashboard/dashboard.page').then( m => m.DashboardPage)
-  },
-  {
-    path: 'facturas-por-vencer',
-    loadComponent: () => import('./invoices/facturas-por-vencer/facturas-por-vencer.page').then( m => m.FacturasPorVencerPage)
-  },
-  {
-    path: 'tips',
-    loadComponent: () => import('./tips/tips.page').then(m => m.TipsPage)
-  },  {
-    path: 'apitest',
-    loadComponent: () => import('./apitest/apitest.page').then( m => m.ApitestPage)
-  },
-
-
 ];

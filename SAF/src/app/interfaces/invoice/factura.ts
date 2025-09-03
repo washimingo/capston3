@@ -1,3 +1,4 @@
+// Interfaz de Factura API
 export interface Factura {
     id: string;
     folio: number;

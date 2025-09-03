@@ -32,6 +32,7 @@
     "@ionic/angular": "^8.0.0",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
+    "bootstrap": "^5.3.8",
     "chart.js": "^4.5.0",
     "ionicons": "^8.0.13",
     "jspdf": "^3.0.2",
