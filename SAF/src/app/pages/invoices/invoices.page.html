@@ -1,0 +1,722 @@
+<!-- ====== DRAWER DE DETALLES DE FACTURA ====== -->
+  <!-- Overlay del drawer -->
+  <div *ngIf="drawerVisible" 
+       class="drawer-overlay fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 transition-opacity duration-300"
+       [class.opacity-100]="drawerVisible"
+       (click)="cerrarDetalles()">
+  </div>
+
+  <!-- Drawer deslizante -->
+  <div class="drawer-container fixed top-0 right-0 h-full w-full md:w-[500px] lg:w-[600px] xl:w-[700px] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50"
+       [class.translate-x-0]="drawerVisible"
+       [class.translate-x-full]="!drawerVisible">
+    
+    <!-- Header del drawer -->
+    <div class="drawer-header sticky top-0 text-white px-6 py-4 border-b shadow-lg" 
+         style="background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%);">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-sky-500/90 bg-opacity-20 rounded-full flex items-center justify-center">
+            <ion-icon name="receipt-outline" class="text-xl text-white"></ion-icon>
+          </div>
+          <div>
+            <h2 class="text-lg font-semibold">Detalles de Factura</h2>
+            <p class="text-red-100 text-sm" *ngIf="facturaSeleccionada">
+              {{ facturaSeleccionada.folio || 'Sin folio' }}
+            </p>
+          </div>
+        </div>
+        <button (click)="cerrarDetalles()" 
+                class="w-8 h-8 bg-sky-500/50 bg-opacity-20 hover:bg-opacity-30 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105">
+          <ion-icon name="close-outline" class="text-xl text-white"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenido del drawer -->
+    <div class="drawer-content flex-1 overflow-y-auto p-6 space-y-6" *ngIf="facturaSeleccionada">
+      
+      <!-- Estado destacado -->
+      <div class="status-card bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Estado Actual</h3>
+          <div class="w-2 h-2 rounded-full"
+               [ngClass]="{
+                 'bg-yellow-400': facturaSeleccionada.estado === 'pendiente',
+                 'bg-green-400': facturaSeleccionada.estado === 'aceptada',
+                 'bg-red-400': facturaSeleccionada.estado === 'rechazada',
+                 'bg-gray-400': facturaSeleccionada.estado === 'vencida'
+               }">
+          </div>
+        </div>
+        <div class="flex items-center space-x-3">
+          <div class="status-icon w-12 h-12 rounded-full flex items-center justify-center"
+               [ngClass]="{
+                 'bg-yellow-100 text-yellow-600': facturaSeleccionada.estado === 'pendiente',
+                 'bg-green-100 text-green-600': facturaSeleccionada.estado === 'aceptada',
+                 'bg-red-100 text-red-600': facturaSeleccionada.estado === 'rechazada',
+                 'bg-gray-100 text-gray-600': facturaSeleccionada.estado === 'vencida'
+               }">
+            <ion-icon [name]="getIconoEstado(facturaSeleccionada.estado)" class="text-xl"></ion-icon>
+          </div>
+          <div>
+            <p class="text-lg font-semibold text-gray-900 capitalize">{{ facturaSeleccionada.estado }}</p>
+            <p class="text-sm text-gray-600">
+              Días restantes: 
+              <span [ngClass]="{
+                'text-red-600 font-semibold': getDiasRestantes(facturaSeleccionada)! <= 2,
+                'text-orange-600 font-medium': getDiasRestantes(facturaSeleccionada)! > 2 && getDiasRestantes(facturaSeleccionada)! <= 5,
+                'text-green-600': getDiasRestantes(facturaSeleccionada)! > 5,
+                'text-gray-400': getDiasRestantes(facturaSeleccionada) === null
+              }">
+                {{ getDiasRestantes(facturaSeleccionada) !== null ? getDiasRestantes(facturaSeleccionada) + ' días' : 'N/A' }}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información básica -->
+      <div class="info-section">
+        <h3 class="section-title text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <ion-icon name="document-text-outline" class="text-blue-600 mr-2"></ion-icon>
+          Información Básica
+        </h3>
+        <div class="info-grid space-y-3">
+          <div *ngFor="let header of csvHeaders" class="info-item flex justify-between py-3 border-b border-gray-100 hover:bg-gray-50 px-3 rounded-lg transition-colors">
+            <span class="info-label font-medium text-gray-700 capitalize">{{ header }}:</span>
+            <span class="info-value text-gray-900 font-medium text-right max-w-[60%] break-words">
+              {{ getValorFactura(facturaSeleccionada, header) || 'N/A' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fechas importantes -->
+      <div class="dates-section">
+        <h3 class="section-title text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <ion-icon name="calendar-outline" class="text-green-600 mr-2"></ion-icon>
+          Fechas Importantes
+        </h3>
+        <div class="dates-grid grid grid-cols-1 gap-4">
+          <!-- Fecha de emisión -->
+          <div class="date-card bg-blue-50 rounded-lg p-4 border border-blue-200">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <ion-icon name="calendar-number-outline" class="text-blue-600"></ion-icon>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-blue-700">Fecha de Emisión</p>
+                <p class="text-lg font-semibold text-blue-900">
+                  {{ facturaSeleccionada.fecha || 'N/A' }}
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Fecha de vencimiento -->
+          <div class="date-card bg-orange-50 rounded-lg p-4 border border-orange-200">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                <ion-icon name="time-outline" class="text-orange-600"></ion-icon>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-orange-700">Fecha de Vencimiento</p>
+                <p class="text-lg font-semibold text-orange-900">
+                  {{ calcularFechaVencimiento(facturaSeleccionada) || 'N/A' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progreso visual -->
+      <div class="progress-section" *ngIf="getDiasRestantes(facturaSeleccionada) !== null">
+        <h3 class="section-title text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <ion-icon name="speedometer-outline" class="text-purple-600 mr-2"></ion-icon>
+          Progreso de Vencimiento
+        </h3>
+        <div class="progress-container bg-gray-50 rounded-xl p-4 border border-gray-200">
+          <div class="flex justify-between items-center mb-3">
+            <span class="text-sm font-medium text-gray-700">Días transcurridos</span>
+            <span class="text-sm font-semibold" 
+                  [ngClass]="{
+                    'text-green-600': getDiasRestantes(facturaSeleccionada)! > 5,
+                    'text-orange-600': getDiasRestantes(facturaSeleccionada)! > 2 && getDiasRestantes(facturaSeleccionada)! <= 5,
+                    'text-red-600': getDiasRestantes(facturaSeleccionada)! <= 2
+                  }">
+              {{ 8 - getDiasRestantes(facturaSeleccionada)! }}/8 días
+            </span>
+          </div>
+          <div class="progress-bar-container w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+            <div class="progress-bar h-full rounded-full transition-all duration-500"
+                 [style.width.%]="getProgressWidth(facturaSeleccionada)"
+                 [ngClass]="{
+                   'bg-gradient-to-r from-green-400 to-green-500': getDiasRestantes(facturaSeleccionada)! > 5,
+                   'bg-gradient-to-r from-orange-400 to-orange-500': getDiasRestantes(facturaSeleccionada)! > 2 && getDiasRestantes(facturaSeleccionada)! <= 5,
+                   'bg-gradient-to-r from-red-400 to-red-500': getDiasRestantes(facturaSeleccionada)! <= 2
+                 }">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<!-- =================== HEADER Y TOOLBAR =================== -->
+<ion-header class="shadow-sm">
+  <ion-toolbar style="--background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%); --color: white;">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="text-xl font-bold">
+      <div class="flex items-center">
+        <ion-icon name="receipt-outline" class="mr-2 text-white"></ion-icon>
+        Gestión de Facturas
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!-- =================== CONTENIDO PRINCIPAL =================== -->
+<ion-content class="bg-gray-50">
+  <!-- Refresher -->
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content 
+      pullingIcon="arrow-dropdown" 
+      refreshingSpinner="crescent"
+      pullingText="Desliza para refrescar" 
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <div class="min-h-screen">
+    <div class="max-w-7xl mx-auto p-4 lg:p-6">
+
+      <!-- ====== PANEL DE CONTROL SUPERIOR ====== -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        
+        <!-- Importar CSV -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <ion-icon name="cloud-upload-outline" class="mr-2 text-blue-600"></ion-icon>
+            Importar Facturas CSV
+          </h3>
+          <div class="space-y-4">
+            <div *ngIf="!archivoSeleccionado" class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition-colors">
+              <input type="file" 
+                     (change)="onFileSelected($event)" 
+                     accept=".csv,text/csv,application/csv,text/plain" 
+                     class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+              <p class="text-xs text-gray-500 mt-2">Selecciona un archivo CSV para cargar múltiples facturas</p>
+            </div>
+            <div *ngIf="archivoSeleccionado" class="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-3">
+              <div class="flex items-center">
+                <ion-icon name="document-outline" class="text-green-600 mr-2"></ion-icon>
+                <span class="text-sm font-medium text-green-800">{{ getNombreArchivo() }}</span>
+              </div>
+              <button (click)="quitarArchivo()" 
+                      class="text-red-600 hover:text-red-700 text-sm font-medium transition-colors">
+                Quitar
+              </button>
+            </div>
+            
+            <!-- Mensajes de resultado -->
+            <div *ngIf="exitoCarga" class="p-3 bg-green-50 border border-green-200 rounded-lg">
+              <p class="text-sm text-green-800">{{ exitoCarga }}</p>
+            </div>
+            <div *ngIf="errorCarga" class="p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p class="text-sm text-red-800">{{ errorCarga }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumen de Estados -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <ion-icon name="analytics-outline" class="mr-2 text-blue-600"></ion-icon>
+            Resumen por Estado
+          </h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div *ngFor="let categoria of categoriasResumen" 
+                 class="summary-card"
+                 [attr.data-status]="categoria.estado.toLowerCase()"
+                 [class.active]="categoriaSeleccionada === categoria.estado"
+                 (click)="seleccionarCategoria(categoria.estado)">
+              
+              <!-- Icono del estado -->
+              <div class="summary-icon">
+                <ion-icon [name]="getIconoEstado(categoria.estado)"></ion-icon>
+              </div>
+              
+              <!-- Número y label -->
+              <div class="summary-content">
+                <div class="summary-number">
+                  {{ getResumenCount(categoria.estado) }}
+                </div>
+                <div class="summary-label">
+                  {{ categoria.nombre }}
+                </div>
+              </div>
+              
+              <!-- Indicador de progreso -->
+              <div class="summary-progress">
+                <div class="progress-bar" 
+                     [style.width.%]="getProgressPercentage(categoria.estado)">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== FILTROS Y BÚSQUEDA MODERNOS ====== -->
+      <div class="filters-container modern-filters-card">
+        <!-- Header de filtros -->
+        <div class="filters-header">
+          <div class="filters-title-section">
+            <h3 class="filters-title">
+              <ion-icon name="funnel-outline" class="title-icon"></ion-icon>
+              Filtros y Búsqueda
+            </h3>
+            <div class="filters-stats">
+              <span class="results-count">{{ getFacturasFiltradas().length }}</span>
+              <span class="results-label">resultados</span>
+            </div>
+          </div>
+          <button *ngIf="categoriaSeleccionada || filtroBusqueda || filtroFechaFin" 
+                  (click)="limpiarTodosFiltros()"
+                  class="clear-all-btn">
+            <ion-icon name="refresh-outline" class="mr-1"></ion-icon>
+            Limpiar Todo
+          </button>
+        </div>
+
+        <!-- Filtros rápidos por estado -->
+        <div class="quick-filters-section">
+          <div class="quick-filters-label">
+            <ion-icon name="speedometer-outline" class="mr-1"></ion-icon>
+            Filtros Rápidos
+          </div>
+          <div class="quick-filters-grid">
+            <button *ngFor="let categoria of categoriasResumen"
+                    class="quick-filter-chip"
+                    [class.active]="categoriaSeleccionada === categoria.estado"
+                    [attr.data-status]="categoria.estado.toLowerCase()"
+                    (click)="seleccionarCategoria(categoria.estado)">
+              <div class="chip-icon">
+                <ion-icon [name]="getIconoEstado(categoria.estado || '')"></ion-icon>
+              </div>
+              <div class="chip-content">
+                <span class="chip-label">{{ categoria.nombre }}</span>
+                <span class="chip-count">{{ getResumenCount(categoria.estado) }}</span>
+              </div>
+            </button>
+            
+            <!-- Chip especial para "Por Vencer" -->
+            <button class="quick-filter-chip special-chip"
+                    [class.active]="mostrarPorVencer"
+                    (click)="mostrarPorVencer = !mostrarPorVencer; categoriaSeleccionada = null;">
+              <div class="chip-icon">
+                <ion-icon name="warning-outline"></ion-icon>
+              </div>
+              <div class="chip-content">
+                <span class="chip-label">Por Vencer</span>
+                <span class="chip-count">{{ getFacturasPorVencer() }}</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Búsqueda avanzada -->
+        <div class="advanced-search-section">
+          <div class="search-row">
+            <!-- Campo de búsqueda principal -->
+            <div class="search-field-container">
+              <div class="search-input-wrapper">
+                <div class="search-icon">
+                  <ion-icon name="search-outline"></ion-icon>
+                </div>
+                <input [(ngModel)]="filtroBusqueda" 
+                       (ngModelChange)="onBuscarFactura()"
+                       placeholder="Buscar por folio, RUT emisor, proveedor..."
+                       class="search-input"
+                       autocomplete="off" />
+                <div class="search-actions">
+                  <div *ngIf="buscandoFacturas" class="search-spinner">
+                    <ion-spinner name="dots"></ion-spinner>
+                  </div>
+                  <button *ngIf="filtroBusqueda && !buscandoFacturas" 
+                          (click)="filtroBusqueda=''; onBuscarFactura();"
+                          class="clear-search-btn">
+                    <ion-icon name="close-circle"></ion-icon>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Sugerencias mejoradas -->
+              <div *ngIf="sugerenciasBusqueda.length > 0 && filtroBusqueda && !buscandoFacturas"
+                   class="search-suggestions">
+                <div class="suggestions-header">
+                  <ion-icon name="bulb-outline" class="mr-1"></ion-icon>
+                  Sugerencias
+                </div>
+                <button *ngFor="let sugerencia of sugerenciasBusqueda; let i = index"
+                        (click)="seleccionarSugerencia(sugerencia)"
+                        class="suggestion-item"
+                        [class.highlighted]="i === 0">
+                  <ion-icon name="search-outline" class="suggestion-icon"></ion-icon>
+                  <span class="suggestion-text">{{ sugerencia }}</span>
+                  <ion-icon name="arrow-forward-outline" class="suggestion-arrow"></ion-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- Selector de campo de búsqueda -->
+            <div class="search-scope-container">
+              <label class="field-label">Buscar en</label>
+              <select [(ngModel)]="campoBusqueda" 
+                      class="search-scope-select">
+                <option value="todos">Todos los campos</option>
+                <option value="folio">Solo Folio</option>
+                <option value="rut">Solo RUT Emisor</option>
+                <option value="proveedor">Solo Proveedor</option>
+                <option value="responsable">Solo Responsable</option>
+              </select>
+            </div>
+
+            <!-- Filtro de fecha de vencimiento -->
+            <div class="date-filter-container">
+              <label class="field-label">
+                <ion-icon name="calendar-outline" class="mr-1"></ion-icon>
+                Vencen el día
+              </label>
+              <input type="date" 
+                     [(ngModel)]="filtroFechaFin" 
+                     class="date-input" />
+            </div>
+          </div>
+
+          <!-- Filtros avanzados expandibles -->
+          <div class="advanced-filters-toggle">
+            <button (click)="mostrarFiltrosAvanzados = !mostrarFiltrosAvanzados"
+                    class="toggle-advanced-btn">
+              <ion-icon name="options-outline" class="mr-2"></ion-icon>
+              Filtros Avanzados
+              <ion-icon [name]="mostrarFiltrosAvanzados ? 'chevron-up-outline' : 'chevron-down-outline'" 
+                        class="ml-2 toggle-icon"></ion-icon>
+            </button>
+          </div>
+
+          <!-- Panel de filtros avanzados -->
+          <div *ngIf="mostrarFiltrosAvanzados" class="advanced-filters-panel">
+            <div class="advanced-filters-grid">
+              <!-- Rango de fechas -->
+              <div class="filter-group">
+                <label class="filter-group-label">
+                  <ion-icon name="calendar-number-outline" class="mr-1"></ion-icon>
+                  Rango de Fechas de Recepción
+                </label>
+                <div class="date-range-inputs">
+                  <input type="date" 
+                         [(ngModel)]="filtroFechaInicio" 
+                         placeholder="Desde"
+                         class="date-range-input" />
+                  <span class="date-range-separator">hasta</span>
+                  <input type="date" 
+                         [(ngModel)]="filtroFechaFin" 
+                         placeholder="Hasta"
+                         class="date-range-input" />
+                </div>
+              </div>
+
+              <!-- Rango de montos -->
+              <div class="filter-group">
+                <label class="filter-group-label">
+                  <ion-icon name="cash-outline" class="mr-1"></ion-icon>
+                  Rango de Montos
+                </label>
+                <div class="amount-range-inputs">
+                  <input type="number" 
+                         [(ngModel)]="filtroMontoMin" 
+                         placeholder="Monto mínimo"
+                         class="amount-input" />
+                  <span class="amount-separator">a</span>
+                  <input type="number" 
+                         [(ngModel)]="filtroMontoMax" 
+                         placeholder="Monto máximo"
+                         class="amount-input" />
+                </div>
+              </div>
+
+              <!-- Estados múltiples -->
+              <div class="filter-group">
+                <label class="filter-group-label">
+                  <ion-icon name="flag-outline" class="mr-1"></ion-icon>
+                  Estados (selección múltiple)
+                </label>
+                <div class="multi-select-chips">
+                  <label *ngFor="let categoria of categoriasResumen" 
+                         class="multi-select-chip">
+                    <input type="checkbox" 
+                           [value]="categoria.estado"
+                           [(ngModel)]="categoria.selected"
+                           class="chip-checkbox" />
+                    <span class="chip-checkmark">
+                      <ion-icon [name]="getIconoEstado(categoria.estado)" class="mr-1"></ion-icon>
+                      {{ categoria.nombre }}
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Acciones de filtros avanzados -->
+            <div class="advanced-filters-actions">
+              <button (click)="aplicarFiltrosAvanzados()" 
+                      class="apply-filters-btn">
+                <ion-icon name="checkmark-outline" class="mr-1"></ion-icon>
+                Aplicar Filtros
+              </button>
+              <button (click)="limpiarFiltrosAvanzados()" 
+                      class="clear-filters-btn">
+                <ion-icon name="close-outline" class="mr-1"></ion-icon>
+                Limpiar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filtros activos -->
+        <div *ngIf="tienesFiltrosActivos()" class="active-filters-section">
+          <div class="active-filters-label">
+            <ion-icon name="funnel" class="mr-1"></ion-icon>
+            Filtros Activos
+          </div>
+          <div class="active-filters-list">
+            <div *ngIf="categoriaSeleccionada" class="active-filter-tag">
+              <span>Estado: {{ categoriaSeleccionada }}</span>
+              <button (click)="categoriaSeleccionada = null" class="remove-filter">
+                <ion-icon name="close"></ion-icon>
+              </button>
+            </div>
+            <div *ngIf="filtroBusqueda" class="active-filter-tag">
+              <span>Búsqueda: "{{ filtroBusqueda }}"</span>
+              <button (click)="filtroBusqueda = ''; onBuscarFactura()" class="remove-filter">
+                <ion-icon name="close"></ion-icon>
+              </button>
+            </div>
+            <div *ngIf="filtroFechaFin" class="active-filter-tag">
+              <span>Vencimiento: {{ filtroFechaFin }}</span>
+              <button (click)="filtroFechaFin = ''" class="remove-filter">
+                <ion-icon name="close"></ion-icon>
+              </button>
+            </div>
+            <div *ngIf="mostrarPorVencer" class="active-filter-tag">
+              <span>Mostrando: Por Vencer</span>
+              <button (click)="mostrarPorVencer = false" class="remove-filter">
+                <ion-icon name="close"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== TABLA DE FACTURAS ====== -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-900">
+              Lista de Facturas
+              <span class="ml-2 text-sm font-normal text-gray-500">
+                ({{ getFacturasFiltradas().length }} encontradas)
+              </span>
+            </h3>
+          </div>
+          
+          <!-- Tabla mejorada para escritorio -->
+          <div class="invoice-table-container bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <!-- Header de la tabla con stats -->
+            <div class="table-header px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+              <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                  <h3 class="text-lg font-semibold text-gray-900">Lista de Facturas</h3>
+                  <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+                    {{ getFacturasFiltradas().length }} facturas
+                  </span>
+                </div>
+                <div class="flex space-x-3">
+                  <span class="text-sm text-gray-600">
+                    <ion-icon name="time-outline" class="mr-1"></ion-icon>
+                    Última actualización: {{ getCurrentDateTime() }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabla principal -->
+            <div class="table-wrapper overflow-x-auto">
+              <table class="min-w-full modern-table">
+                <thead class="table-head">
+                  <tr>
+                    <!-- Columnas principales optimizadas -->
+                    <th class="table-th sticky-col">
+                      <div class="th-content">
+                        <ion-icon name="document-text-outline" class="mr-1"></ion-icon>
+                        Folio
+                      </div>
+                    </th>
+                    <th class="table-th">
+                      <div class="th-content">
+                        <ion-icon name="business-outline" class="mr-1"></ion-icon>
+                        RUT Emisor
+                      </div>
+                    </th>
+                    <th class="table-th">
+                      <div class="th-content">
+                        <ion-icon name="calendar-outline" class="mr-1"></ion-icon>
+                        Fecha Docto.
+                      </div>
+                    </th>
+                    <th class="table-th">
+                      <div class="th-content">
+                        <ion-icon name="cash-outline" class="mr-1"></ion-icon>
+                        Monto Total
+                      </div>
+                    </th>
+                    <th class="table-th">
+                      <div class="th-content">
+                        <ion-icon name="calendar-number-outline" class="mr-1"></ion-icon>
+                        Fecha Recep.
+                      </div>
+                    </th>
+                    <th class="table-th">
+                      <div class="th-content">
+                        <ion-icon name="flag-outline" class="mr-1"></ion-icon>
+                        Estado
+                      </div>
+                    </th>
+                    <th class="table-th">
+                      <div class="th-content">
+                        <ion-icon name="hourglass-outline" class="mr-1"></ion-icon>
+                        Días Rest.
+                      </div>
+                    </th>
+                    <th class="table-th text-center">
+                      <div class="th-content">
+                        <ion-icon name="settings-outline" class="mr-1"></ion-icon>
+                        Acciones
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="table-body">
+                  <tr *ngFor="let factura of getFacturasFiltradas(); trackBy: trackByFolio; let i = index"
+                      class="table-row"
+                      [class.priority-row]="getDiasRestantes(factura) !== null && getDiasRestantes(factura)! <= 2"
+                      [class.warning-row]="getDiasRestantes(factura) !== null && getDiasRestantes(factura)! > 2 && getDiasRestantes(factura)! <= 5">
+                    
+                    <!-- Folio (sticky) -->
+                    <td class="table-td sticky-col">
+                      <div class="flex items-center">
+                        <div class="priority-indicator" 
+                             *ngIf="getDiasRestantes(factura) !== null && getDiasRestantes(factura)! <= 2">
+                        </div>
+                        <span class="font-medium text-gray-900">
+                          {{ getValorFactura(factura, 'Folio') || getValorFactura(factura, 'Nro.') || 'N/A' }}
+                        </span>
+                      </div>
+                    </td>
+                    
+                    <!-- RUT Emisor -->
+                    <td class="table-td">
+                      <span class="text-gray-700 font-mono text-sm">
+                        {{ getValorFactura(factura, 'RUT Emisor') || 'N/A' }}
+                      </span>
+                    </td>
+                    
+                    <!-- Fecha Documento -->
+                    <td class="table-td">
+                      <span class="text-gray-600">
+                        {{ getValorFactura(factura, 'Fecha Docto.') || 'N/A' }}
+                      </span>
+                    </td>
+                    
+                    <!-- Monto Total -->
+                    <td class="table-td">
+                      <span class="font-semibold text-gray-900 currency">
+                        {{ getValorFactura(factura, 'Monto Total') | currency:'CLP':'symbol-narrow':'1.0-0' }}
+                      </span>
+                    </td>
+                    
+                    <!-- Fecha Recepción -->
+                    <td class="table-td">
+                      <span class="text-gray-600">
+                        {{ getValorFactura(factura, 'Fecha Recep.') || 'N/A' }}
+                      </span>
+                    </td>
+                    
+                    <!-- Estado mejorado -->
+                    <td class="table-td">
+                      <div class="status-badge" [attr.data-status]="(factura.estado || '').toLowerCase()">
+                        <ion-icon [name]="getIconoEstado(factura.estado)" class="status-icon"></ion-icon>
+                        <span class="status-text">{{ factura.estado || 'Pendiente' }}</span>
+                      </div>
+                    </td>
+                    
+                    <!-- Días restantes mejorado -->
+                    <td class="table-td">
+                      <div class="days-remaining" *ngIf="getDiasRestantes(factura) !== null"
+                           [attr.data-urgency]="getDiasRestantes(factura)! <= 2 ? 'critical' : getDiasRestantes(factura)! <= 5 ? 'warning' : 'normal'">
+                        <span class="days-number">{{ getDiasRestantes(factura) }}</span>
+                        <span class="days-label">días</span>
+                      </div>
+                      <span *ngIf="getDiasRestantes(factura) === null" class="text-gray-400 text-sm">
+                        N/A
+                      </span>
+                    </td>
+                    
+                    <!-- Acciones mejoradas -->
+                    <td class="table-td text-center">
+                      <div class="action-buttons">
+                        <button (click)="verFactura(factura)"
+                                class="action-btn action-btn-primary"
+                                title="Ver detalles">
+                          <ion-icon name="eye-outline"></ion-icon>
+                        </button>
+                        <button *ngIf="getFacturaFileUrl(factura)"
+                                (click)="descargarArchivo(factura)"
+                                class="action-btn action-btn-secondary"
+                                title="Descargar archivo">
+                          <ion-icon name="download-outline"></ion-icon>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  <!-- Estado vacío mejorado -->
+                  <tr *ngIf="getFacturasFiltradas().length === 0" class="empty-state-row">
+                    <td [attr.colspan]="8" class="empty-state">
+                      <div class="empty-state-content">
+                        <div class="empty-state-icon">
+                          <ion-icon name="document-outline"></ion-icon>
+                        </div>
+                        <h3 class="empty-state-title">No se encontraron facturas</h3>
+                        <p class="empty-state-description">
+                          <span *ngIf="!facturas.length">Importa un archivo CSV para comenzar</span>
+                          <span *ngIf="facturas.length">Intenta ajustar los filtros de búsqueda</span>
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

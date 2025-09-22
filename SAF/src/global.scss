@@ -1,37 +1,3 @@
-// Color empresarial para la toolbar
-ion-toolbar {
-	--background: #7b263a;
-	--color: #fff;
-}
-
-@media (prefers-color-scheme: dark) {
-		ion-toolbar {
-			--background: #4a1824;
-			--color: #f4f4f4;
-		}
-}
-// Modo claro (por defecto)
-:root {
-	--ion-background-color: #f4f4f4;
-	--ion-text-color: #222;
-	--ion-color-step-50: #f4f4f4;
-	--ion-color-step-100: #e9ecef;
-}
-
-// Modo oscuro automático
-@media (prefers-color-scheme: dark) {
-	:root {
-		--ion-background-color: #181818;
-		--ion-text-color: #f4f4f4;
-		--ion-color-step-50: #232323;
-		--ion-color-step-100: #222326;
-		// Puedes ajustar más variables aquí para personalizar el dark mode
-	}
-}
-/* (Optional) This is added to prevent the flashing that happens when toggling between palettes */
-ion-item {
-  --transition: none;
-}
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
@@ -42,6 +8,9 @@ ion-item {
  * For more information on global stylesheets, visit the documentation:
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
+
+/* Tailwind CSS */
+@import url('tailwindcss');
 
 /* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
@@ -100,4 +69,84 @@ ion-item {
 .ion-palette-dark.ios,
 .ion-palette-dark.md {
   --ion-item-background: #1c1c1d;
+}
+
+/* Custom styles for better Tailwind + Ionic integration */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Color variables for dynamic theming */
+:root {
+  /* Emerald colors */
+  --emerald-50: #ecfdf5;
+  --emerald-100: #d1fae5;
+  --emerald-200: #a7f3d0;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --emerald-600: #059669;
+  --emerald-700: #047857;
+  --emerald-800: #065f46;
+  
+  /* Blue colors */
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-200: #bfdbfe;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --blue-800: #1e40af;
+  
+  /* Purple colors */
+  --purple-50: #faf5ff;
+  --purple-100: #f3e8ff;
+  --purple-200: #e9d5ff;
+  --purple-400: #c084fc;
+  --purple-500: #a855f7;
+  --purple-600: #9333ea;
+  --purple-700: #7c3aed;
+  --purple-800: #6b21a8;
+  
+  /* Orange colors */
+  --orange-50: #fff7ed;
+  --orange-100: #ffedd5;
+  --orange-200: #fed7aa;
+  --orange-400: #fb923c;
+  --orange-500: #f97316;
+  --orange-600: #ea580c;
+  --orange-700: #c2410c;
+  --orange-800: #9a3412;
+  
+  /* Red colors */
+  --red-50: #fef2f2;
+  --red-100: #fee2e2;
+  --red-200: #fecaca;
+  --red-400: #f87171;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --red-700: #b91c1c;
+  --red-800: #991b1b;
+  
+  /* Teal colors */
+  --teal-50: #f0fdfa;
+  --teal-100: #ccfbf1;
+  --teal-200: #99f6e4;
+  --teal-400: #2dd4bf;
+  --teal-500: #14b8a6;
+  --teal-600: #0d9488;
+  --teal-700: #0f766e;
+  --teal-800: #115e59;
 }

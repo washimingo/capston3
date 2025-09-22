@@ -1,0 +1,1073 @@
+/* Tips Page Specific Styles */
+
+// Hero section enhancements
+.hero-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 50%, #3730a3 100%);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+}
+
+// Quick action cards animations
+.quick-action-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  .action-icon {
+    transition: all 0.3s ease;
+  }
+  
+  &:hover .action-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+// Tutorial cards enhancements
+.tutorial-card {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+  
+  .tutorial-header {
+    position: relative;
+    overflow: hidden;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(0,0,0,0.1) 0%, transparent 50%, rgba(255,255,255,0.1) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    &:hover::after {
+      opacity: 1;
+    }
+  }
+  
+  .difficulty-badge {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+// Search and filter section
+.search-filter-section {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+// Category chips styling
+ion-chip {
+  --background: #f1f5f9;
+  --color: #475569;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    --background: #e2e8f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  &.chip-primary {
+    --background: #3b82f6;
+    --color: white;
+    border-color: #2563eb;
+  }
+}
+
+// Modal enhancements - Redesigned
+ion-modal {
+  --backdrop-opacity: 0.75;
+  --backdrop-filter: blur(8px);
+  
+  .modal-wrapper {
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 
+      0 25px 50px -12px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+  }
+  
+  ion-header {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    
+    ion-toolbar {
+      --background: transparent;
+      --border-width: 0;
+      padding: 0 8px;
+      min-height: 72px;
+      
+      ion-title {
+        font-size: 1.375rem;
+        font-weight: 700;
+        color: #1f2937;
+        text-align: center;
+        padding: 0 60px; // Space for close button
+      }
+      
+      ion-button {
+        --background: #f3f4f6;
+        --background-hover: #e5e7eb;
+        --color: #6b7280;
+        --border-radius: 12px;
+        --padding-start: 12px;
+        --padding-end: 12px;
+        width: 44px;
+        height: 44px;
+        margin: 0 8px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        
+        &:hover {
+          --background: #ef4444;
+          --color: white;
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+  
+  ion-content {
+    --background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    --padding-start: 0;
+    --padding-end: 0;
+    --padding-top: 0;
+    --padding-bottom: 0;
+  }
+  
+  .modal-content-container {
+    padding: 24px;
+    max-width: 5xl;
+    margin: 0 auto;
+    
+    @media (max-width: 768px) {
+      padding: 16px;
+    }
+  }
+  
+  .modal-content-section {
+    background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.15),
+        0 10px 10px -5px rgba(0, 0, 0, 0.1);
+      border-color: rgba(59, 130, 246, 0.2);
+      
+      &::before {
+        opacity: 1;
+      }
+    }
+  }
+  
+  .modal-header-section {
+    .tutorial-icon-container {
+      background: linear-gradient(135deg, var(--icon-bg-from), var(--icon-bg-to));
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 
+        0 8px 16px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+        transform: rotate(45deg);
+        transition: all 0.6s ease;
+        opacity: 0;
+      }
+      
+      &:hover {
+        transform: scale(1.05) rotate(5deg);
+        box-shadow: 
+          0 12px 24px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+          
+        &::after {
+          opacity: 1;
+          animation: shimmer 1.5s ease-in-out;
+        }
+      }
+      
+      ion-icon {
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      }
+    }
+    
+    .tutorial-title {
+      background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+    }
+    
+    .tutorial-description {
+      color: #6b7280;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+    
+    .tutorial-meta {
+      .meta-item {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px 12px;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+          border-color: #3b82f6;
+          transform: translateY(-2px);
+        }
+        
+        ion-icon {
+          color: #6b7280;
+        }
+      }
+      
+      ion-chip {
+        --background: linear-gradient(135deg, var(--chip-bg), var(--chip-bg-secondary));
+        --color: var(--chip-text);
+        border: 2px solid var(--chip-border);
+        font-weight: 600;
+        letter-spacing: 0.025em;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+  
+  .modal-steps-section {
+    .section-header {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      
+      ion-icon {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border-radius: 50%;
+        padding: 4px;
+        color: white;
+        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+      }
+    }
+    
+    .step-item {
+      background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+      border: 1px solid #e5e7eb;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+      }
+      
+      &:hover {
+        background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+        border-color: #3b82f6;
+        transform: translateX(8px);
+        box-shadow: 
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+          
+        &::before {
+          transform: scaleY(1);
+        }
+        
+        .step-number {
+          background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+          transform: scale(1.1);
+          box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+        }
+      }
+      
+      .step-number {
+        background: linear-gradient(135deg, var(--step-color), var(--step-color-dark));
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        box-shadow: 
+          0 4px 8px rgba(0, 0, 0, 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 700;
+      }
+      
+      ion-label {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #374151;
+      }
+    }
+  }
+  
+  .modal-tips-section {
+    .section-header {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      
+      ion-icon {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        border-radius: 50%;
+        padding: 4px;
+        color: white;
+        box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+      }
+    }
+    
+    .tip-item {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border: 1px solid #fbbf24;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+      }
+      
+      &:hover {
+        background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+        border-color: #f59e0b;
+        transform: translateX(8px);
+        box-shadow: 
+          0 10px 15px -3px rgba(245, 158, 11, 0.2),
+          0 4px 6px -2px rgba(245, 158, 11, 0.1);
+          
+        &::before {
+          transform: scaleY(1);
+        }
+        
+        ion-icon {
+          color: #d97706;
+          transform: scale(1.1);
+        }
+      }
+      
+      ion-icon {
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #10b981, #059669);
+        border-radius: 50%;
+        padding: 2px;
+        color: white;
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+      }
+      
+      span {
+        color: #92400e;
+        font-weight: 500;
+        line-height: 1.6;
+      }
+    }
+  }
+  
+  .modal-actions-section {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-top: 3px solid #e2e8f0;
+    
+    ion-button {
+      border-radius: 16px;
+      font-weight: 600;
+      letter-spacing: 0.025em;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      
+      &.primary-action {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-color-dark));
+        position: relative;
+        overflow: hidden;
+        
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+          transition: left 0.6s ease;
+        }
+        
+        &:hover {
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 
+            0 10px 15px -3px rgba(0, 0, 0, 0.2),
+            0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            
+          &::before {
+            left: 100%;
+          }
+        }
+      }
+      
+      &.secondary-action {
+        --background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+        --color: #6b7280;
+        border: 2px solid #d1d5db;
+        
+        &:hover {
+          --background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+          --color: #374151;
+          transform: translateY(-2px);
+          border-color: #9ca3af;
+        }
+      }
+    }
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+// Stats icons in tutorial cards
+.tutorial-stats {
+  ion-icon {
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+  
+  &:hover ion-icon {
+    opacity: 1;
+  }
+}
+
+// Action buttons
+.tutorial-action-btn {
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  
+  &:hover {
+    transform: translateX(4px);
+  }
+}
+
+// Empty state styling
+.empty-state {
+  ion-icon {
+    animation: float 3s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// Responsive design improvements
+@media (max-width: 768px) {
+  .hero-gradient {
+    .hero-content {
+      text-align: center;
+    }
+    
+    .hero-icon-section {
+      display: none !important;
+    }
+  }
+  
+  .quick-action-card {
+    margin-bottom: 1rem;
+  }
+  
+  .tutorial-card {
+    margin-bottom: 1.5rem;
+  }
+  
+  // Mobile modal optimizations
+  ion-modal {
+    .modal-content-container {
+      padding: 12px;
+    }
+    
+    .modal-content-section {
+      padding: 20px !important;
+      margin-bottom: 16px !important;
+    }
+    
+    .modal-header-section {
+      .flex {
+        flex-direction: column;
+        text-align: center;
+        gap: 0;
+        
+        .tutorial-icon-container {
+          margin: 0 auto 20px auto;
+        }
+        
+        .tutorial-title {
+          font-size: 1.75rem;
+        }
+        
+        .tutorial-meta {
+          justify-content: center;
+          
+          .meta-item {
+            font-size: 0.875rem;
+          }
+        }
+      }
+    }
+    
+    .step-item {
+      .flex {
+        padding: 16px !important;
+      }
+      
+      .step-number {
+        width: 32px;
+        height: 32px;
+        margin-right: 16px;
+      }
+    }
+    
+    .tip-item {
+      padding: 16px !important;
+      
+      ion-icon {
+        margin-top: 4px;
+      }
+    }
+    
+    .modal-actions-section {
+      .flex {
+        flex-direction: column;
+        gap: 12px;
+        
+        ion-button {
+          height: 48px;
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+// Tablet optimizations
+@media (min-width: 769px) and (max-width: 1024px) {
+  ion-modal {
+    .modal-content-container {
+      padding: 20px;
+      max-width: 90%;
+    }
+    
+    .modal-header-section {
+      .tutorial-icon-container {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .tutorial-title {
+        font-size: 2rem;
+      }
+    }
+  }
+}
+
+// Large screen optimizations
+@media (min-width: 1400px) {
+  ion-modal {
+    .modal-content-container {
+      max-width: 1200px;
+    }
+    
+    .modal-content-section {
+      padding: 40px !important;
+    }
+    
+    .modal-header-section {
+      .tutorial-icon-container {
+        width: 120px;
+        height: 120px;
+        
+        ion-icon {
+          font-size: 3rem;
+        }
+      }
+      
+      .tutorial-title {
+        font-size: 2.5rem;
+      }
+      
+      .tutorial-description {
+        font-size: 1.25rem;
+      }
+    }
+    
+    .section-header {
+      font-size: 1.75rem;
+      margin-bottom: 2rem;
+    }
+    
+    .step-item, .tip-item {
+      padding: 24px !important;
+      
+      ion-label, span {
+        font-size: 1.125rem;
+      }
+    }
+  }
+}
+
+// Enhanced animations and micro-interactions
+.modal-content-section {
+  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+}
+
+@keyframes slideInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Step item progressive animation
+.step-item {
+  animation: fadeInLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.1}s;
+    }
+  }
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Tip item staggered animation
+.tip-item {
+  animation: fadeInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.15}s;
+    }
+  }
+}
+
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Loading state for modal
+.modal-loading {
+  .modal-content-section {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+// Print styles for modal content
+@media print {
+  ion-modal {
+    .modal-content-container {
+      max-width: 100%;
+      padding: 0;
+    }
+    
+    .modal-content-section {
+      box-shadow: none !important;
+      border: 1px solid #e5e7eb !important;
+      page-break-inside: avoid;
+      margin-bottom: 20px !important;
+    }
+    
+    .modal-actions-section {
+      display: none !important;
+    }
+    
+    .tutorial-icon-container {
+      background: #f3f4f6 !important;
+      
+      ion-icon {
+        color: #6b7280 !important;
+      }
+    }
+  }
+}
+
+// Dark mode support
+.ion-palette-dark {
+  // Header styles
+  ion-header ion-toolbar {
+    --background: #1f2937 !important;
+    --color: #f9fafb !important;
+    
+    ion-title {
+      color: #f9fafb !important;
+    }
+  }
+  
+  // Content background
+  ion-content {
+    --background: #111827 !important;
+  }
+  
+  // Hero section dark mode
+  .hero-gradient {
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 50%, #1e293b 100%);
+  }
+  
+  // Quick action cards
+  .quick-action-card {
+    background: rgba(31, 41, 55, 0.95) !important;
+    border-color: rgba(75, 85, 99, 0.3) !important;
+    
+    h3 {
+      color: rgba(243, 244, 246, 0.95) !important;
+    }
+    
+    p {
+      color: rgba(156, 163, 175, 0.85) !important;
+    }
+    
+    &:hover {
+      background: rgba(55, 65, 81, 0.95) !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 
+                  0 10px 10px -5px rgba(0, 0, 0, 0.2) !important;
+    }
+  }
+  
+  // Tutorial cards
+  .tutorial-card {
+    background: rgba(31, 41, 55, 0.95) !important;
+    border-color: rgba(75, 85, 99, 0.3) !important;
+    
+    .tutorial-title {
+      color: rgba(243, 244, 246, 0.95) !important;
+    }
+    
+    .tutorial-description {
+      color: rgba(156, 163, 175, 0.85) !important;
+    }
+    
+    .tutorial-difficulty {
+      background: rgba(55, 65, 81, 0.8) !important;
+      color: rgba(209, 213, 219, 0.9) !important;
+    }
+    
+    &:hover {
+      background: rgba(55, 65, 81, 0.95) !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
+    }
+  }
+  
+  // Search bar
+  .search-container {
+    background: rgba(31, 41, 55, 0.95) !important;
+    border-color: rgba(75, 85, 99, 0.3) !important;
+    
+    ion-searchbar {
+      --background: rgba(55, 65, 81, 0.8);
+      --color: rgba(243, 244, 246, 0.95);
+      --placeholder-color: rgba(156, 163, 175, 0.7);
+      --icon-color: rgba(156, 163, 175, 0.8);
+      --clear-button-color: rgba(156, 163, 175, 0.8);
+    }
+  }
+  
+  // Filter buttons
+  .filter-button {
+    background: rgba(55, 65, 81, 0.8) !important;
+    color: rgba(156, 163, 175, 0.9) !important;
+    border-color: rgba(75, 85, 99, 0.4) !important;
+    
+    &.active {
+      background: rgba(59, 130, 246, 0.3) !important;
+      color: rgba(147, 197, 253, 0.95) !important;
+      border-color: rgba(59, 130, 246, 0.5) !important;
+    }
+  }
+  
+  // Section titles
+  h2, .section-title {
+    color: rgba(243, 244, 246, 0.95) !important;
+  }
+  
+  // Background colors and text adjustments
+  .bg-white {
+    background: rgba(31, 41, 55, 0.95) !important;
+    border-color: rgba(75, 85, 99, 0.3) !important;
+  }
+  
+  .bg-gray-50 {
+    background: #111827 !important;
+  }
+  
+  .text-gray-800 {
+    color: rgba(243, 244, 246, 0.95) !important;
+  }
+  
+  .text-gray-600 {
+    color: rgba(209, 213, 219, 0.85) !important;
+  }
+  
+  .text-gray-500 {
+    color: rgba(156, 163, 175, 0.8) !important;
+  }
+  
+  // Icon background adjustments
+  .bg-blue-100 {
+    background-color: rgba(59, 130, 246, 0.25) !important;
+    
+    ion-icon {
+      color: rgba(147, 197, 253, 0.9) !important;
+    }
+  }
+  
+  .bg-green-100, .bg-emerald-100 {
+    background-color: rgba(34, 197, 94, 0.25) !important;
+    
+    ion-icon {
+      color: rgba(134, 239, 172, 0.9) !important;
+    }
+  }
+  
+  .bg-purple-100 {
+    background-color: rgba(168, 85, 247, 0.25) !important;
+    
+    ion-icon {
+      color: rgba(196, 181, 253, 0.9) !important;
+    }
+  }
+  
+  .bg-orange-100 {
+    background-color: rgba(249, 115, 22, 0.25) !important;
+    
+    ion-icon {
+      color: rgba(251, 191, 36, 0.9) !important;
+    }
+  }
+  
+  .bg-red-100 {
+    background-color: rgba(239, 68, 68, 0.25) !important;
+    
+    ion-icon {
+      color: rgba(252, 165, 165, 0.9) !important;
+    }
+  }
+  
+  .bg-teal-100 {
+    background-color: rgba(20, 184, 166, 0.25) !important;
+    
+    ion-icon {
+      color: rgba(153, 246, 228, 0.9) !important;
+    }
+  }
+
+  // Modal specific dark mode styles
+  ion-modal {
+    .modal-content-section {
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+      border-color: #374151 !important;
+      
+      .tutorial-title {
+        background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      
+      .tutorial-description {
+        color: #d1d5db !important;
+      }
+      
+      .section-header {
+        color: #f9fafb !important;
+      }
+      
+      .step-item, .tip-item {
+        background: linear-gradient(135deg, #374151 0%, #1f2937 100%) !important;
+        border-color: #4b5563 !important;
+        
+        ion-label, span {
+          color: #e5e7eb !important;
+        }
+      }
+    }
+  }
+}
+
+// Custom scrollbar for modal content
+ion-modal ion-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+ion-modal ion-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+ion-modal ion-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+ion-modal ion-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+// Focus states for accessibility
+.quick-action-card:focus-visible,
+.tutorial-card:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+// Loading animation for tutorial icons
+.tutorial-icon {
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+// Color-specific gradients for tutorial cards
+.gradient-emerald {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.gradient-blue {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.gradient-purple {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.gradient-orange {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.gradient-red {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.gradient-teal {
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+}

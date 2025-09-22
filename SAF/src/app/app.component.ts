@@ -1,10 +1,8 @@
 import { addIcons } from 'ionicons';
-import { documentTextOutline, timeOutline, checkmarkCircleOutline, closeCircleOutline, calendarOutline, alertCircleOutline, warningOutline, homeOutline, checkmarkDoneOutline, cubeOutline, barChartOutline, peopleOutline, settingsOutline, businessOutline, createOutline, trashOutline, addCircleOutline, listOutline, closeCircle, searchOutline } from 'ionicons/icons';
+import { documentTextOutline, timeOutline, checkmarkCircleOutline, closeCircleOutline, calendarOutline, alertCircleOutline, warningOutline, homeOutline, checkmarkDoneOutline, cubeOutline, barChartOutline, peopleOutline, settingsOutline, businessOutline, createOutline, trashOutline, addCircleOutline, listOutline, closeCircle, searchOutline, pieChartOutline, helpCircleOutline, analyticsOutline, helpCircle } from 'ionicons/icons';
 import { Component } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
-import { IonApp, IonRouterOutlet, IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonIcon } from '@ionic/angular/standalone';
-// ...existing code...
-
+import { IonApp, IonRouterOutlet, IonMenu, IonHeader, IonToolbar, IonContent, IonItem, IonIcon } from '@ionic/angular/standalone';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -16,39 +14,15 @@ import { IonApp, IonRouterOutlet, IonMenu, IonHeader, IonToolbar, IonTitle, IonC
     IonMenu,
     IonHeader,
     IonToolbar,
-    IonTitle,
     IonContent,
-    IonList,
     IonItem,
     RouterModule,
-    IonLabel,
   IonIcon
   ],
 })
 export class AppComponent {
   constructor(private router: Router) {
-    addIcons({
-      documentTextOutline,
-      timeOutline,
-      checkmarkCircleOutline,
-      closeCircleOutline,
-      calendarOutline,
-      alertCircleOutline,
-      warningOutline,
-      homeOutline,
-      checkmarkDoneOutline,
-      cubeOutline,
-      barChartOutline,
-      peopleOutline,
-      settingsOutline,
-      businessOutline,
-      createOutline,
-      trashOutline,
-      addCircleOutline,
-      listOutline,
-      closeCircle,
-      searchOutline
-    });
+    addIcons({homeOutline,documentTextOutline,checkmarkDoneOutline,cubeOutline,barChartOutline,analyticsOutline,peopleOutline,settingsOutline,helpCircleOutline,businessOutline,pieChartOutline,timeOutline,checkmarkCircleOutline,closeCircleOutline,calendarOutline,alertCircleOutline,warningOutline,createOutline,trashOutline,addCircleOutline,listOutline,closeCircle,searchOutline});
     // Aplicar modo oscuro si está guardado en localStorage
     const dark = localStorage.getItem('saf-dark-mode');
     if (dark === 'true') {
@@ -58,10 +32,5 @@ export class AppComponent {
     }
   }
 
-  irAHomeYRecargar() {
-    // Navega a /home y recarga la página para refrescar datos
-    this.router.navigateByUrl('/home').then(() => {
-      window.location.reload();
-    });
-  }
+  // Método eliminado para evitar recargas y mantener SPA
 }

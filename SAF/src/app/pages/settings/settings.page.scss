@@ -1,0 +1,207 @@
+// Settings Page SCSS - Complementing Tailwind CSS
+
+.hero-section {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') repeat;
+    opacity: 0.3;
+  }
+}
+
+.settings-section {
+  .setting-item {
+    transition: all 0.2s ease;
+    cursor: pointer;
+    
+    &:hover {
+      background-color: rgba(59, 130, 246, 0.05);
+      transform: translateX(2px);
+    }
+    
+    .w-10.h-10 {
+      transition: transform 0.2s ease;
+    }
+    
+    &:hover .w-10.h-10 {
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Dark mode specific styles
+:root.ion-palette-dark {
+  .hero-section {
+    background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
+  }
+  
+  // Header styles
+  ion-header ion-toolbar {
+    --background: #1f2937 !important;
+    --color: #f9fafb !important;
+    
+    ion-title {
+      color: #f9fafb !important;
+    }
+  }
+  
+  // Content background
+  ion-content {
+    --background: #111827 !important;
+  }
+  
+  .bg-white {
+    background-color: rgba(31, 41, 55, 0.95) !important;
+    border: 1px solid rgba(75, 85, 99, 0.3) !important;
+  }
+  
+  .text-gray-800 {
+    color: rgba(243, 244, 246, 0.95) !important;
+  }
+  
+  .text-gray-500 {
+    color: rgba(156, 163, 175, 0.85) !important;
+  }
+  
+  .bg-gray-50 {
+    background-color: #111827 !important;
+  }
+  
+  .border-gray-100 {
+    border-color: rgba(75, 85, 99, 0.3) !important;
+  }
+  
+  .settings-section .setting-item:hover {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+  }
+  
+  // Section titles
+  .settings-section h2 {
+    color: rgba(243, 244, 246, 0.95) !important;
+  }
+  
+  // Ion-button styling in dark mode
+  ion-button {
+    --color: rgba(156, 163, 175, 0.9);
+    
+    &[color="medium"] {
+      --color: rgba(156, 163, 175, 0.9);
+    }
+  }
+  
+  // Icon background colors in dark mode with better contrast
+  .bg-blue-100 {
+    background-color: rgba(59, 130, 246, 0.25) !important;
+    
+    ion-icon {
+      color: rgba(147, 197, 253, 0.9) !important;
+    }
+  }
+  
+  .bg-green-100 {
+    background-color: rgba(34, 197, 94, 0.25) !important;
+    
+    ion-icon {
+      color: rgba(134, 239, 172, 0.9) !important;
+    }
+  }
+  
+  .bg-orange-100 {
+    background-color: rgba(249, 115, 22, 0.25) !important;
+    
+    ion-icon {
+      color: rgba(251, 191, 36, 0.9) !important;
+    }
+  }
+  
+  .bg-yellow-100 {
+    background-color: rgba(245, 158, 11, 0.25) !important;
+    
+    ion-icon {
+      color: rgba(251, 191, 36, 0.9) !important;
+    }
+  }
+  
+  .bg-purple-100 {
+    background-color: rgba(168, 85, 247, 0.25) !important;
+    
+    ion-icon {
+      color: rgba(196, 181, 253, 0.9) !important;
+    }
+  }
+  
+  .bg-indigo-100 {
+    background-color: rgba(99, 102, 241, 0.25) !important;
+    
+    ion-icon {
+      color: rgba(165, 180, 252, 0.9) !important;
+    }
+  }
+  
+  .bg-gray-100 {
+    background-color: rgba(107, 114, 128, 0.25) !important;
+    
+    ion-icon {
+      color: rgba(156, 163, 175, 0.9) !important;
+    }
+  }
+}
+
+// Responsive design for desktop first
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 1.5rem 1rem;
+    
+    h1 {
+      font-size: 1.5rem;
+    }
+    
+    .w-16.h-16 {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+  
+  .settings-section {
+    margin-bottom: 1.5rem;
+    
+    h2 {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Smooth transitions for theme switching
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+// Custom toggle styling
+ion-toggle {
+  --handle-background: #ffffff;
+  --handle-background-checked: #ffffff;
+  --track-background: #e5e7eb;
+  --track-background-checked: #3b82f6;
+  
+  :root.ion-palette-dark & {
+    --track-background: #374151;
+    --track-background-checked: #6366f1;
+  }
+}
+
+// Enhanced shadow for cards
+.shadow-sm {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  
+  :root.ion-palette-dark & {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+}

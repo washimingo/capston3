@@ -1,0 +1,326 @@
+<ion-header [translucent]="true">
+  <ion-toolbar style="--background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%); --color: white;">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Panel de Inicio</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="home-content">
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content 
+      pullingIcon="arrow-dropdown" 
+      refreshingSpinner="crescent"
+      pullingText="Desliza para refrescar" 
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Hero Section -->
+  <div class="hero-section bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white">
+    <div class="max-w-7xl mx-auto px-6 py-12">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl lg:text-4xl font-bold mb-4">Sistema de Administración de Facturas</h1>
+        <p class="text-lg text-blue-100 max-w-2xl mx-auto">
+          Gestiona todas tus facturas de manera eficiente y mantén el control total de tu flujo de documentos
+        </p>
+      </div>
+
+      <!-- Alerta de facturas por vencer - Destacada -->
+      @if (facturasPorVencer.length > 0) {
+        <div class="alert-destacada bg-red-500/20 backdrop-blur-sm border border-red-400/30 rounded-xl p-6 mb-8 max-w-4xl mx-auto">
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
+              <ion-icon name="warning-outline" class="text-2xl text-white"></ion-icon>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-semibold text-red-100 mb-2">¡Atención Urgente!</h3>
+              <p class="text-red-200 mb-4">
+                {{ facturasPorVencer.length }} {{ facturasPorVencer.length === 1 ? 'factura' : 'facturas' }} 
+                {{ facturasPorVencer.length === 1 ? 'vence' : 'vencen' }} en los próximos 2 días
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                @for (factura of facturasPorVencer | slice:0:3; track factura.folio) {
+                  <div class="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <p class="font-medium text-white">Folio: {{ factura.folio }}</p>
+                        <p class="text-sm text-red-200">{{ factura.diasRestantes }} {{ factura.diasRestantes === 1 ? 'día' : 'días' }} restantes</p>
+                      </div>
+                      <ion-button fill="clear" size="small" color="light" (click)="verFactura(factura)">
+                        <ion-icon name="eye-outline"></ion-icon>
+                      </ion-button>
+                    </div>
+                  </div>
+                }
+              </div>
+              @if (facturasPorVencer.length > 3) {
+                <div class="mt-4">
+                  <ion-button fill="outline" color="light" (click)="irAFacturasConFiltro('PorVencer')">
+                    <ion-icon name="list-outline" slot="start"></ion-icon>
+                    Ver todas las {{ facturasPorVencer.length }} facturas
+                  </ion-button>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Quick Stats Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+        <div class="stat-card bg-white/10 backdrop-blur-sm rounded-xl p-4 lg:p-6 border border-white/20 text-center">
+          <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+            <ion-icon name="document-text-outline" class="text-xl text-white"></ion-icon>
+          </div>
+          <h3 class="text-2xl lg:text-3xl font-bold">{{ totalRecibidas }}</h3>
+          <p class="text-blue-100 text-sm">Total Facturas</p>
+        </div>
+
+        <div class="stat-card bg-white/10 backdrop-blur-sm rounded-xl p-4 lg:p-6 border border-white/20 text-center">
+          <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+            <ion-icon name="time-outline" class="text-xl text-white"></ion-icon>
+          </div>
+          <h3 class="text-2xl lg:text-3xl font-bold">{{ totalPendientes }}</h3>
+          <p class="text-blue-100 text-sm">Pendientes</p>
+        </div>
+
+        <div class="stat-card bg-white/10 backdrop-blur-sm rounded-xl p-4 lg:p-6 border border-white/20 text-center">
+          <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+            <ion-icon name="checkmark-circle-outline" class="text-xl text-white"></ion-icon>
+          </div>
+          <h3 class="text-2xl lg:text-3xl font-bold">{{ totalAceptadas }}</h3>
+          <p class="text-blue-100 text-sm">Aceptadas</p>
+        </div>
+
+        <div class="stat-card bg-white/10 backdrop-blur-sm rounded-xl p-4 lg:p-6 border border-white/20 text-center">
+          <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+            <ion-icon name="alert-circle-outline" class="text-xl text-white"></ion-icon>
+          </div>
+          <h3 class="text-2xl lg:text-3xl font-bold">{{ totalPorVencer }}</h3>
+          <p class="text-blue-100 text-sm">Por Vencer</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content max-w-7xl mx-auto px-6 py-8">
+    <!-- Action Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      
+      <!-- Facturas Totales - Card Principal -->
+      <div class="lg:col-span-2">
+        <ion-card class="action-card h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300" 
+                  id="tour-dashboard" 
+                  (click)="irAFacturasConFiltro('')">
+          <ion-card-content class="p-6">
+            <div class="flex items-center space-x-4">
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                <ion-icon name="document-text-outline" class="text-2xl text-white"></ion-icon>
+              </div>
+              <div class="flex-1">
+                <h2 class="text-3xl font-bold text-gray-800 mb-1">{{ totalRecibidas }}</h2>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Facturas Totales</h3>
+                <p class="text-gray-600 text-sm">Gestiona todas las facturas recibidas</p>
+              </div>
+              <div class="text-blue-500">
+                <ion-icon name="chevron-forward-outline" class="text-xl"></ion-icon>
+              </div>
+            </div>
+            <div class="mt-4">
+              <ion-button expand="block" fill="clear" color="primary" id="tour-ver-todas">
+                <ion-icon name="eye-outline" slot="start"></ion-icon>
+                Ver todas las facturas
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <!-- Por Vencer - Card de Prioridad -->
+      <div class="lg:col-span-2">
+        <ion-card class="action-card priority-card h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300" 
+                  id="tour-por-vencer" 
+                  (click)="irAFacturasConFiltro('PorVencer')">
+          <ion-card-content class="p-6">
+            <div class="flex items-center space-x-4">
+              <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center animate-pulse">
+                <ion-icon name="alert-circle-outline" class="text-2xl text-white"></ion-icon>
+              </div>
+              <div class="flex-1">
+                <h2 class="text-3xl font-bold text-gray-800 mb-1">{{ totalPorVencer }}</h2>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Por Vencer</h3>
+                <p class="text-orange-600 text-sm font-medium">¡Requieren atención urgente!</p>
+              </div>
+              <div class="text-orange-500">
+                <ion-icon name="chevron-forward-outline" class="text-xl"></ion-icon>
+              </div>
+            </div>
+            <div class="mt-4">
+              <ion-button expand="block" fill="solid" color="warning">
+                <ion-icon name="warning-outline" slot="start"></ion-icon>
+                Revisar Urgente
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+
+    <!-- Estado de Facturas Grid -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Estados de Facturas</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Pendientes -->
+        <ion-card class="status-card border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer" 
+                  (click)="irAFacturasConFiltro('Pendiente')">
+          <ion-card-content class="p-6 text-center">
+            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <ion-icon name="time-outline" class="text-xl text-orange-600"></ion-icon>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ totalPendientes }}</h3>
+            <p class="text-gray-600 font-medium">Pendientes</p>
+            <div class="mt-3">
+              <ion-badge color="warning" class="px-3 py-1">En Revisión</ion-badge>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Aceptadas -->
+        <ion-card class="status-card border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer" 
+                  (click)="irAFacturasConFiltro('Aceptada')">
+          <ion-card-content class="p-6 text-center">
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <ion-icon name="checkmark-circle-outline" class="text-xl text-green-600"></ion-icon>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ totalAceptadas }}</h3>
+            <p class="text-gray-600 font-medium">Aceptadas</p>
+            <div class="mt-3">
+              <ion-badge color="success" class="px-3 py-1">Completado</ion-badge>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Rechazadas -->
+        <ion-card class="status-card border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer" 
+                  (click)="irAFacturasConFiltro('Rechazada')">
+          <ion-card-content class="p-6 text-center">
+            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <ion-icon name="close-circle-outline" class="text-xl text-red-600"></ion-icon>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ totalRechazadas }}</h3>
+            <p class="text-gray-600 font-medium">Rechazadas</p>
+            <div class="mt-3">
+              <ion-badge color="danger" class="px-3 py-1">Denegado</ion-badge>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Vencidas -->
+        <ion-card class="status-card border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer" 
+                  (click)="irAFacturasConFiltro('Vencida')">
+          <ion-card-content class="p-6 text-center">
+            <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <ion-icon name="warning-outline" class="text-xl text-gray-600"></ion-icon>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ totalVencidas }}</h3>
+            <p class="text-gray-600 font-medium">Vencidas</p>
+            <div class="mt-3">
+              <ion-badge color="medium" class="px-3 py-1">Expirado</ion-badge>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+
+    <!-- Alertas pendientes -->
+    @if (alertasPendientes.length > 0) {
+      <div class="mb-8">
+        <ion-card class="border-0 shadow-lg border-l-4 border-l-orange-500">
+          <ion-card-header>
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                <ion-icon name="notifications-outline" class="text-lg text-orange-600"></ion-icon>
+              </div>
+              <div>
+                <ion-card-title class="text-xl font-semibold">Alertas Pendientes</ion-card-title>
+                <p class="text-sm text-gray-600">Notificaciones que requieren tu atención</p>
+              </div>
+            </div>
+          </ion-card-header>
+          <ion-card-content class="p-6">
+            <div class="space-y-3">
+              @for (alerta of alertasPendientes; track alerta.facturaId) {
+                <div class="flex items-center justify-between p-4 bg-orange-50 rounded-lg border border-orange-200">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                      <ion-icon name="alert-outline" class="text-sm text-white"></ion-icon>
+                    </div>
+                    <div>
+                      <p class="font-medium text-gray-800">{{ alerta.tipo }}</p>
+                      <p class="text-sm text-gray-600">Factura: <strong>{{ alerta.facturaId }}</strong></p>
+                    </div>
+                  </div>
+                  <ion-button fill="clear" size="small" color="primary">
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                  </ion-button>
+                </div>
+              }
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    }
+
+    <!-- Quick Actions -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Acciones Rápidas</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <ion-card class="quick-action-card border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
+          <ion-card-content class="p-6 text-center">
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <ion-icon name="analytics-outline" class="text-2xl text-white"></ion-icon>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Dashboard</h3>
+            <p class="text-gray-600 text-sm mb-4">Ver análisis y gráficos detallados</p>
+            <ion-button expand="block" fill="outline" color="primary" routerLink="/dashboard">
+              Ir al Dashboard
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="quick-action-card border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
+          <ion-card-content class="p-6 text-center">
+            <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <ion-icon name="document-attach-outline" class="text-2xl text-white"></ion-icon>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Reportes</h3>
+            <p class="text-gray-600 text-sm mb-4">Generar informes y estadísticas</p>
+            <ion-button expand="block" fill="outline" color="success" routerLink="/reports">
+              Ver Reportes
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="quick-action-card border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
+          <ion-card-content class="p-6 text-center">
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <ion-icon name="settings-outline" class="text-2xl text-white"></ion-icon>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Configuración</h3>
+            <p class="text-gray-600 text-sm mb-4">Ajustar preferencias del sistema</p>
+            <ion-button expand="block" fill="outline" color="primary" routerLink="/settings">
+              Configurar
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer spacing -->
+  <div class="h-8"></div>
+</ion-content>

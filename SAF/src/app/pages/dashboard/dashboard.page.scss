@@ -1,0 +1,340 @@
+// Dashboard SCSS - Complementa Tailwind CSS
+.dashboard-content {
+  --background: #f8fafc;
+}
+
+// Hero section enhancements
+.hero-section {
+  position: relative;
+  
+  // Gradient overlay
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+    pointer-events: none;
+  }
+  
+  // Animated background pattern
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+    pointer-events: none;
+  }
+}
+
+// KPI Cards
+.kpi-card {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  // Icon containers
+  .w-12.h-12 {
+    transition: all 0.3s ease;
+  }
+  
+  &:hover .w-12.h-12 {
+    transform: scale(1.1);
+  }
+}
+
+// Chart card styling
+.chart-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  ion-card-header {
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .chart-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    canvas {
+      border-radius: 8px;
+      max-width: 100%;
+      max-height: 100%;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    
+    // Asegurar que el canvas tenga el z-index correcto
+    #pieChartCanvas {
+      position: relative;
+      z-index: 1;
+    }
+  }
+}
+
+// Ranking card styling
+.ranking-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  .space-y-4 > div {
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+// Table card styling
+.table-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  table {
+    thead {
+      background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    }
+    
+    tbody tr {
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: rgba(59, 130, 246, 0.05);
+        transform: scale(1.01);
+      }
+      
+      // Alternate row coloring for better readability
+      &:nth-child(even) {
+        background-color: rgba(249, 250, 251, 0.5);
+      }
+    }
+    
+    td, th {
+      vertical-align: middle;
+    }
+  }
+}
+
+// Alert card styling
+.alert-card {
+  background: linear-gradient(135deg, #fef2f2 0%, #fff7ed 100%);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  
+  ion-card-content {
+    .w-12.h-12 {
+      animation: pulse 2s infinite;
+    }
+  }
+}
+
+// Main content area
+.main-content {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  
+  // Grid responsiveness
+  .grid {
+    gap: 2rem;
+    
+    @media (min-width: 1280px) {
+      gap: 2.5rem;
+    }
+  }
+}
+
+// Animations
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .dashboard-content {
+    --background: #0f172a;
+  }
+  
+  .kpi-card {
+    background: rgba(30, 41, 59, 0.9) !important;
+    border-color: rgba(148, 163, 184, 0.2);
+    
+    p, span {
+      color: #e2e8f0 !important;
+    }
+    
+    .text-gray-600 {
+      color: #94a3b8 !important;
+    }
+  }
+  
+  .chart-card,
+  .ranking-card,
+  .table-card {
+    background: rgba(30, 41, 59, 0.95) !important;
+    border-color: rgba(148, 163, 184, 0.2);
+    
+    ion-card-title {
+      color: #f1f5f9;
+    }
+    
+    p {
+      color: #cbd5e1;
+    }
+  }
+  
+  .table-card {
+    table {
+      thead {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        
+        th {
+          color: #cbd5e1;
+        }
+      }
+      
+      tbody {
+        tr {
+          border-color: rgba(148, 163, 184, 0.1);
+          
+          &:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+          }
+          
+          &:nth-child(even) {
+            background-color: rgba(51, 65, 85, 0.3);
+          }
+          
+          td {
+            color: #e2e8f0;
+            border-color: rgba(148, 163, 184, 0.1);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Loading states
+.loading-placeholder {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Custom scrollbar for table
+.overflow-x-auto {
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+    
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+}
+
+// Responsive design enhancements
+@media (max-width: 768px) {
+  .hero-section {
+    .text-center h1 {
+      font-size: 2.5rem;
+    }
+    
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+  
+  .main-content {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .table-card {
+    table {
+      font-size: 0.875rem;
+      
+      th, td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+  }
+}
+
+// Print styles
+@media print {
+  .hero-section {
+    background: white !important;
+    color: black !important;
+    
+    * {
+      color: black !important;
+    }
+  }
+  
+  .kpi-card {
+    background: white !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+  }
+  
+  ion-button {
+    display: none !important;
+  }
+}
