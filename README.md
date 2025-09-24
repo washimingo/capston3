@@ -1,5 +1,4 @@
 # Sistema de Gestión de Facturas  
-**Ionic v8 + Firebase v12 + TailwindCSS v4.1**
 
 ![Ionic](https://img.shields.io/badge/Ionic-v8-3880FF?logo=ionic&logoColor=white)
 ![Angular](https://img.shields.io/badge/Angular-18-DD0031?logo=angular&logoColor=white)
