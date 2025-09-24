@@ -1,6 +1,13 @@
 # Sistema de Gestión de Facturas  
 **Ionic v8 + Firebase v12 + TailwindCSS v4.1**
 
+![Ionic](https://img.shields.io/badge/Ionic-v8-3880FF?logo=ionic&logoColor=white)
+![Angular](https://img.shields.io/badge/Angular-18-DD0031?logo=angular&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-v12-FFCA28?logo=firebase&logoColor=black)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4.1-06B6D4?logo=tailwindcss&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+
 Aplicación **web y móvil** para la gestión y seguimiento de facturas.  
 Permite listar facturas, enviar notificaciones (email, push o dentro de la app), acceder a un **dashboard interactivo**, generar reportes y configurar tanto la aplicación como los usuarios de forma flexible.
 
