@@ -3,6 +3,7 @@ import { documentTextOutline, timeOutline, checkmarkCircleOutline, closeCircleOu
 import { Component } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { IonApp, IonRouterOutlet, IonMenu, IonHeader, IonToolbar, IonContent, IonItem, IonIcon } from '@ionic/angular/standalone';
+import { HeaderComponent } from './components/header/header.component';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -17,6 +18,7 @@ import { IonApp, IonRouterOutlet, IonMenu, IonHeader, IonToolbar, IonContent, Io
     IonContent,
     IonItem,
     RouterModule,
+    HeaderComponent,
   IonIcon
   ],
 })

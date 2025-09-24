@@ -109,6 +109,6 @@ export class SettingsPage implements OnInit {
 
   // Add or remove the "ion-palette-dark" class on the html element
   toggleDarkPalette(shouldAdd: boolean) {
-    document.documentElement.classList.toggle('ion-palette-dark', shouldAdd);
+    document.documentElement.classList.remove('ion-palette-dark');
   }
 }

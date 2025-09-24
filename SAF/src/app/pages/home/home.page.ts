@@ -24,6 +24,7 @@ import {
   documentAttachOutline,
   settingsOutline
 } from 'ionicons/icons';
+import { HeaderComponent } from 'src/app/components/header/header.component';
 
 @Component({
   selector: 'app-home',
@@ -48,7 +49,8 @@ import {
     IonRefresher, 
     IonRefresherContent, 
     IonIcon, 
-    IonBadge
+    IonBadge,
+    HeaderComponent,
   ]
 })
 export class HomePage implements OnInit {
@@ -201,7 +203,48 @@ export class HomePage implements OnInit {
     this.totalPorVencer = this.facturasPorVencer.length;
   }
 
-  // ...existing code...
+  circunferencia = 2 * Math.PI * 16;
+
+  get porcentajePendientes() {
+    return this.totalRecibidas ? (this.totalPendientes / this.totalRecibidas) * 100 : 0;
+  }
+  get porcentajeAceptadas() {
+    return this.totalRecibidas ? (this.totalAceptadas / this.totalRecibidas) * 100 : 0;
+  }
+  get porcentajeRechazadas() {
+    return this.totalRecibidas ? (this.totalRechazadas / this.totalRecibidas) * 100 : 0;
+  }
+  get porcentajePorVencer() {
+    return this.totalRecibidas ? (this.totalPorVencer / this.totalRecibidas) * 100 : 0;
+  }
+
+  // Segmentos para el donut
+  get circPendientes() {
+    return (this.porcentajePendientes / 100) * this.circunferencia;
+  }
+  get circAceptadas() {
+    return (this.porcentajeAceptadas / 100) * this.circunferencia;
+  }
+  get circRechazadas() {
+    return (this.porcentajeRechazadas / 100) * this.circunferencia;
+  }
+  get circPorVencer() {
+    return (this.porcentajePorVencer / 100) * this.circunferencia;
+  }
+
+  // Offsets para que los segmentos no se superpongan
+  get offsetPendientes() {
+    return 0;
+  }
+  get offsetAceptadas() {
+    return this.circPendientes;
+  }
+  get offsetRechazadas() {
+    return this.circPendientes + this.circAceptadas;
+  }
+  get offsetPorVencer() {
+    return this.circPendientes + this.circAceptadas + this.circRechazadas;
+  }
 
   diasRestantes(fechaRecepcion: string): number {
     const fechaInicio = new Date(fechaRecepcion);

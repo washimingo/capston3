@@ -12,7 +12,7 @@
 // Header del menú con efectos
 .menu-header {
   ion-toolbar {
-    --background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%);
+    --background: #19417C;
     --color: #ffffff;
     position: relative;
     overflow: hidden;
@@ -69,118 +69,7 @@
   transition: all 0.2s ease;
 }
 
-// Dark mode support - SIMPLIFICADO
-:root.ion-palette-dark {
-  .custom-menu {
-    // Header dark mode
-    .menu-header ion-toolbar {
-      --background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 50%, #991b1b 100%);
-    }
-    
-    // Content background
-    .menu-content {
-      --background: #111827;
-    }
-    
-    // Menu items dark mode
-    .menu-item {
-      --color: rgba(243, 244, 246, 0.95);
-      
-      &:hover {
-        --background: rgba(59, 130, 246, 0.15);
-      }
-      
-      &.item-selected,
-      &[aria-selected="true"] {
-        --background: rgba(59, 130, 246, 0.2);
-        border-color: rgba(59, 130, 246, 0.4);
-      }
-    }
-    
-    // Text colors
-    .font-medium {
-      color: rgba(243, 244, 246, 0.95) !important;
-    }
-    
-    .text-xs.text-gray-500 {
-      color: rgba(156, 163, 175, 0.8) !important;
-    }
-    
-    .text-gray-500 {
-      color: rgba(156, 163, 175, 0.8) !important;
-    }
-    
-    // Dividers
-    .border-gray-200 {
-      border-color: rgba(75, 85, 99, 0.3) !important;
-    }
-    
-    // Icon backgrounds in dark mode - SIMPLIFICADO
-    .bg-blue-100 {
-      background-color: rgba(59, 130, 246, 0.25) !important;
-      ion-icon { color: rgba(147, 197, 253, 0.9) !important; }
-    }
-    
-    .bg-green-100 {
-      background-color: rgba(34, 197, 94, 0.25) !important;
-      ion-icon { color: rgba(134, 239, 172, 0.9) !important; }
-    }
-    
-    .bg-purple-100 {
-      background-color: rgba(168, 85, 247, 0.25) !important;
-      ion-icon { color: rgba(196, 181, 253, 0.9) !important; }
-    }
-    
-    .bg-orange-100 {
-      background-color: rgba(249, 115, 22, 0.25) !important;
-      ion-icon { color: rgba(251, 191, 36, 0.9) !important; }
-    }
-    
-    .bg-indigo-100 {
-      background-color: rgba(99, 102, 241, 0.25) !important;
-      ion-icon { color: rgba(165, 180, 252, 0.9) !important; }
-    }
-    
-    .bg-teal-100 {
-      background-color: rgba(20, 184, 166, 0.25) !important;
-      ion-icon { color: rgba(153, 246, 228, 0.9) !important; }
-    }
-    
-    .bg-pink-100 {
-      background-color: rgba(236, 72, 153, 0.25) !important;
-      ion-icon { color: rgba(249, 168, 212, 0.9) !important; }
-    }
-    
-    .bg-gray-100 {
-      background-color: rgba(107, 114, 128, 0.25) !important;
-      ion-icon { color: rgba(156, 163, 175, 0.9) !important; }
-    }
-    
-    .bg-yellow-100 {
-      background-color: rgba(245, 158, 11, 0.25) !important;
-      ion-icon { color: rgba(251, 191, 36, 0.9) !important; }
-    }
-    
-    .bg-red-100 {
-      background-color: rgba(239, 68, 68, 0.25) !important;
-      ion-icon { color: rgba(252, 165, 165, 0.9) !important; }
-    }
-    
-    // Footer card dark mode
-    .bg-white {
-      background: rgba(31, 41, 55, 0.95) !important;
-      border-color: rgba(75, 85, 99, 0.3) !important;
-      
-      .font-semibold {
-        color: rgba(243, 244, 246, 0.95) !important;
-      }
-      
-      .text-xs {
-        color: rgba(156, 163, 175, 0.8) !important;
-      }
-    }
-  }
-}
+
 
 // Responsive adjustments
 @media (max-width: 768px) {

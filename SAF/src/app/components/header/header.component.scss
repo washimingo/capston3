@@ -1,0 +1,19 @@
+.header-toolbar {
+  background: #ffffff !important;
+  --ion-color-base: #cf2020 !important;
+  --ion-toolbar-background: #19417C !important;
+  --ion-toolbar-color: #222 !important;
+}
+
+.header-toolbar ion-title {
+  color: #ffffff !important;      // Color del texto
+  font-size: 1.4rem;           // Tamaño de fuente
+  font-weight: 600;            // Negrita > 700
+  letter-spacing: 1px;         // Espaciado entre letras  
+}
+
+.header-toolbar ion-menu-button,
+.header-toolbar ion-icon {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
