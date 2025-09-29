@@ -1,11 +1,20 @@
 // Menu Lateral SCSS - Complementing Tailwind CSS
 
-.custom-menu {
-  // Desktop-first: Ancho fijo para escritorio
-  --width: 320px;
-  
-  @media (max-width: 768px) {
-    --width: 280px;
+
+/* Menu Lateral - Responsive  */
+
+ion-menu.custom-menu {
+  --width: 340px !important;
+  width: 340px !important;
+  min-width: 340px !important;
+  max-width: 340px !important;
+}
+@media (max-width: 768px) {
+  ion-menu.custom-menu {
+    --width: 320px !important;
+    width: 320px !important;
+    min-width: 320px !important;
+    max-width: 320px !important;
   }
 }
 

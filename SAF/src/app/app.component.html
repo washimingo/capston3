@@ -1,19 +1,31 @@
 
 <ion-app>
-  <!-- Menú lateral moderno -->
-  <ion-menu side="start" menuId="main-menu" contentId="main-content" class="custom-menu">
+  <ion-split-pane contentId="main-content">
+    <!-- Menú lateral moderno -->
+    <ion-menu side="start" menuId="main-menu" contentId="main-content" class="custom-menu">
     <!-- Header del menú con gradiente -->
     <ion-header class="menu-header">
       <ion-toolbar class="bg-gradient-to-br from-red-700 via-red-800 to-red-900 text-white">
+        <ion-buttons slot="start">
+          <ion-menu-toggle auto-hide="false">
+            <ion-button fill="clear" color="light">
+              <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-menu-toggle>
+        </ion-buttons>
         <div class="flex items-center justify-center py-4">
           <div class="flex items-center space-x-3">
+            <!-- Icono del Menu
             <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
               <ion-icon name="business-outline" class="text-lg text-white-600"></ion-icon>
             </div>
+            -->
+            <!-- Titulo del Menu
             <div class="text-center">
               <h2 class="text-lg font-bold text-white">SAF</h2>
               <p class="text-xs text-white-200">Sistema Empresarial</p>
             </div>
+            -->
           </div>
         </div>
       </ion-toolbar>
@@ -206,5 +218,6 @@
     </ion-content>
   </ion-menu>
 
-  <ion-router-outlet id="main-content"></ion-router-outlet>
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
 </ion-app>
