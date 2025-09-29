@@ -26,28 +26,20 @@
   }
 }
 
-// Alerta destacada
+// Alerta destacada - Optimized for performance
 .alert-destacada {
-  animation: pulse-glow 2s ease-in-out infinite;
-  
-  @keyframes pulse-glow {
-    0%, 100% {
-      box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 30px rgba(239, 68, 68, 0.5);
-    }
-  }
+  /* Removed infinite animation for better performance */
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
 }
 
-// Stats cards en hero
+// Stats cards en hero - Optimized
 .stat-card {
   background: #f3f4f6 !important;      // Fondo gris claro
   border: 1px solid #e5e7eb !important; // Borde gris suave
   box-shadow: 0 2px 8px rgba(0,0,0,0.04); // Sombra suave
   border-radius: 1rem;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  transition: transform 0.2s ease;
+  /* Removed backdrop-filter for better performance */
   
   &:hover {
     transform: translateY(-2px);
@@ -102,19 +94,21 @@
   }
 }
 
-// Status Cards
+// Status Cards - Optimized
 .status-card {
   background: #1B4483 !important; // Fondo azul solicitado
   border: 1px solid #16376a !important;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   border-radius: 1rem;
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease;
   cursor: pointer;
   color: #fff !important; // Texto blanco para contraste
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
   }
 
   ion-card-content {

@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { 
-  IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, 
-  IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon 
-} from '@ionic/angular/standalone';
+  IonContent, 
+  IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon, IonHeader, IonToolbar, IonButtons } from '@ionic/angular/standalone';
 import { Chart, registerables } from 'chart.js';
 import { Db } from 'src/app/services/Database/db';
+import { HeaderComponent } from 'src/app/components/header/header.component';
 import { addIcons } from 'ionicons';
 import {
   refreshOutline,
@@ -38,10 +38,10 @@ import {
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
   standalone: true,
-  imports: [ 
-    CommonModule, FormsModule, RouterModule, IonMenuButton, IonHeader, IonToolbar, 
-    IonButtons, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, 
-    IonCardContent, IonButton, IonIcon 
+  imports: [  
+    CommonModule, FormsModule, RouterModule, 
+    IonContent, IonCard, IonCardHeader, IonCardTitle, 
+    IonCardContent, IonButton, IonIcon, HeaderComponent
   ]
 })
 export class DashboardPage implements OnInit {
@@ -544,5 +544,15 @@ export class DashboardPage implements OnInit {
   filtrarPorProveedor(proveedor: any): void {
     // Placeholder para filtrar por proveedor
     console.log('Filtrar por proveedor:', proveedor);
+  }
+
+  onHeaderButtonClick(action: string): void {
+    switch(action) {
+      case 'refresh':
+        this.ngOnInit();
+        break;
+      default:
+        console.log('Acción de botón no reconocida:', action);
+    }
   }
 }

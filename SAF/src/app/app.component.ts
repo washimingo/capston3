@@ -18,7 +18,6 @@ import { HeaderComponent } from './components/header/header.component';
     IonContent,
     IonItem,
     RouterModule,
-    HeaderComponent,
   IonIcon
   ],
 })
@@ -33,6 +32,5 @@ export class AppComponent {
       document.body.classList.remove('dark');
     }
   }
-
   // Método eliminado para evitar recargas y mantener SPA
 }

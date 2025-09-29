@@ -1,8 +1,23 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" [class]="shadowClass">
   <ion-toolbar class="header-toolbar">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>{{ title }}</ion-title>
+    <ion-title [class]="titleClass">
+      <div [class]="titleContainerClass">
+        <ion-icon *ngIf="titleIcon" [name]="titleIcon" class="mr-2 text-white"></ion-icon>
+        {{ title }}
+      </div>
+    </ion-title>
+    <ion-buttons slot="end" *ngIf="endButtons && endButtons.length > 0">
+      <ion-button 
+        *ngFor="let button of endButtons" 
+        fill="clear" 
+        [class]="button.class || ''"
+        (click)="onButtonClick(button.action)">
+        <ion-icon [name]="button.icon" class="text-white" [attr.slot]="button.iconOnly ? 'icon-only' : null"></ion-icon>
+        <span *ngIf="button.badge" class="absolute -top-1 -right-1 bg-cyan-400 text-white-600 text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">{{button.badge}}</span>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>

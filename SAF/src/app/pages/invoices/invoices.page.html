@@ -166,19 +166,12 @@
   </div>
 
 <!-- =================== HEADER Y TOOLBAR =================== -->
-<ion-header class="shadow-sm">
-  <ion-toolbar style="--background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%); --color: white;">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title class="text-xl font-bold">
-      <div class="flex items-center">
-        <ion-icon name="receipt-outline" class="mr-2 text-white"></ion-icon>
-        Gestión de Facturas
-      </div>
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header 
+  title="Gestión de Facturas" 
+  titleIcon="receipt-outline"
+  shadowClass="shadow-sm"
+  (buttonClick)="onHeaderButtonClick($event)">
+</app-header>
 
 <!-- =================== CONTENIDO PRINCIPAL =================== -->
 <ion-content class="bg-gray-50">

@@ -1,19 +1,9 @@
-<ion-header [translucent]="true" class="shadow-lg">
-  <ion-toolbar style="--background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%); --color: white;">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title class="text-xl font-bold">Tips y Tutoriales</ion-title>
-    <ion-buttons slot="end">
-      <ion-button fill="clear">
-        <ion-icon icon="search-outline" slot="icon-only" class="text-white"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear">
-        <ion-icon icon="bookmark-outline" slot="icon-only" class="text-white"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header 
+  title="Tips y Tutoriales" 
+  [endButtons]="headerButtons"
+  (buttonClick)="onHeaderButtonClick($event)"
+  shadowClass="shadow-lg tips-header">
+</app-header>
 
 <ion-content [fullscreen]="true" class="bg-gray-50">
   <!-- Hero Section -->
@@ -61,6 +51,98 @@
           </ion-col>
         </ion-row>
       </ion-grid>
+    </div>
+  </div>
+
+  <!-- Tutorial Carousel Section -->
+  <div class="max-w-7xl mx-auto px-6 -mt-8 relative z-10 mb-12">
+    <div class="bg-white rounded-2xl shadow-xl p-8">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-800 mb-2">Tutoriales Destacados</h2>
+          <p class="text-gray-600">Aprende paso a paso con nuestros tutoriales interactivos</p>
+        </div>
+        <div class="flex space-x-2">
+          <ion-button fill="clear" size="small" id="tutorial-prev-btn" class="tutorial-nav-btn">
+            <ion-icon name="chevron-back-outline" class="text-xl"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" id="tutorial-next-btn" class="tutorial-nav-btn">
+            <ion-icon name="chevron-forward-outline" class="text-xl"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+
+      <!-- Swiper Carousel -->
+      <swiper-container
+        #tutorialSwiper
+        slides-per-view="1"
+        space-between="20"
+        loop="true"
+        autoplay-delay="5000"
+        navigation-next-el="#tutorial-next-btn"
+        navigation-prev-el="#tutorial-prev-btn"
+        breakpoints='{
+          "640": {"slidesPerView": 2},
+          "1024": {"slidesPerView": 3}
+        }'>
+        
+        <swiper-slide *ngFor="let tutorial of tutorials" class="tutorial-slide">
+          <ion-card class="tutorial-carousel-card h-full hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2" 
+                    (click)="openTutorialModal(tutorial)">
+            <!-- Card Header with Gradient -->
+            <div [ngClass]="'carousel-tutorial-header h-40 gradient-' + tutorial.color + ' flex items-center justify-center relative overflow-hidden'">
+              <ion-icon [icon]="getIcon(tutorial.icon)" class="tutorial-icon text-5xl text-white/90"></ion-icon>
+              <div class="difficulty-badge absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-bold text-white bg-black/20 backdrop-blur-sm">
+                {{ tutorial.difficulty }}
+              </div>
+              <div class="duration-badge absolute bottom-3 left-3 px-2 py-1 rounded-full text-xs font-bold text-white bg-black/20 backdrop-blur-sm flex items-center space-x-1">
+                <ion-icon name="time-outline" class="text-xs"></ion-icon>
+                <span>{{ tutorial.duration }}</span>
+              </div>
+            </div>
+
+            <ion-card-content class="p-6">
+              <ion-card-header class="p-0 mb-4">
+                <ion-card-title class="text-lg font-bold text-gray-800 mb-2 line-clamp-2">
+                  {{ tutorial.title }}
+                </ion-card-title>
+                <p class="text-gray-600 text-sm line-clamp-2">{{ tutorial.description }}</p>
+              </ion-card-header>
+
+              <!-- Progress indicator -->
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-2 text-sm text-gray-500">
+                  <ion-icon name="eye-outline" class="text-xs"></ion-icon>
+                  <span>{{ tutorial.views }} vistas</span>
+                </div>
+                <div class="flex items-center space-x-1">
+                  <ion-icon name="star-outline" class="text-yellow-500 text-sm"></ion-icon>
+                  <span class="text-sm font-medium text-gray-700">{{ tutorial.rating }}</span>
+                </div>
+              </div>
+
+              <!-- Action Button -->
+              <ion-button 
+                fill="clear" 
+                size="small" 
+                [ngClass]="'tutorial-action-btn text-' + tutorial.color + '-600'"
+                class="w-full">
+                <span>Iniciar Tutorial</span>
+                <ion-icon name="play-circle-outline" slot="end"></ion-icon>
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </swiper-slide>
+      </swiper-container>
+
+      <!-- Pagination dots -->
+      <div class="flex justify-center mt-6 space-x-2" id="tutorial-pagination">
+        <div *ngFor="let tutorial of tutorials; let i = index" 
+             class="pagination-dot w-3 h-3 rounded-full bg-gray-300 cursor-pointer transition-all"
+             [class.active]="i === 0"
+             (click)="goToSlide(i)">
+        </div>
+      </div>
     </div>
   </div>
 

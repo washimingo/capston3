@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonIcon, IonRefresher, IonRefresherContent, IonSpinner, IonBadge, AlertController } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, IonRefresher, IonRefresherContent, IonSpinner, IonBadge, AlertController } from '@ionic/angular/standalone';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Factura } from 'src/app/models/factura.model';
 import * as XLSX from 'xlsx';
 import { ActivatedRoute } from '@angular/router';
 import { Db } from 'src/app/services/Database/db';
 import { ToastController } from '@ionic/angular';
+import { HeaderComponent } from 'src/app/components/header/header.component';
 import { addIcons } from 'ionicons';
 import { 
   receiptOutline,
@@ -24,8 +25,6 @@ import {
   arrowForwardOutline,
   calendarOutline,
   optionsOutline,
-  chevronUpOutline,
-  chevronDownOutline,
   calendarNumberOutline,
   cashOutline,
   flagOutline,
@@ -41,8 +40,7 @@ import {
   downloadOutline,
   timeOutline as timeIcon,
   checkmarkCircleOutline,
-  closeCircleOutline,
-  menuOutline, analyticsOutline } from 'ionicons/icons';
+  closeCircleOutline, analyticsOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-invoices',
@@ -53,15 +51,11 @@ import {
     CommonModule,
     FormsModule,
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonButtons,
-    IonMenuButton,
     IonIcon,
     IonRefresher,
     IonRefresherContent,
     IonSpinner,
+    HeaderComponent
   ]
 })
 export class InvoicesPage implements OnInit {
@@ -859,5 +853,12 @@ export class InvoicesPage implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  onHeaderButtonClick(action: string): void {
+    switch(action) {
+      default:
+        console.log('Acción de botón no reconocida:', action);
+    }
   }
 }

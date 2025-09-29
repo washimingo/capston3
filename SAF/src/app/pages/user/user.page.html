@@ -1,44 +1,13 @@
-<ion-header [translucent]="true">
-  <ion-toolbar class="desktop-toolbar" style="--background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%); --color: white;">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    
-    <ion-title>Usuario</ion-title>
-    
-    <!-- Right side actions -->
-    <ion-buttons slot="end">
-      <!-- Notifications with badge -->
-      <ion-button fill="clear" class="relative">
-        <ion-icon name="notifications" class="text-white"></ion-icon>
-        <span class="absolute -top-1 -right-1 bg-cyan-400 text-white-600 text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">3</span>
-      </ion-button>
-      
-      <!-- Help/Support -->
-      <ion-button fill="clear" class="hidden lg:inline-flex" (click)="goToTips()">
-        <ion-icon name="help-circle" class="text-white"></ion-icon>
-      </ion-button>
-      
-      <!-- User avatar dropdown -->
-      <ion-button fill="clear" class="hidden lg:inline-flex ml-2">
-        <div class="flex items-center space-x-2">
-          <div class="w-8 h-8 bg-sky-500/90 bg-opacity-20 rounded-full flex items-center justify-center">
-            <span class="text-white text-sm font-medium">JP</span>
-          </div>
-          <ion-icon name="chevron-down" class="text-white text-sm"></ion-icon>
-        </div>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header 
+  title="Usuario"
+  [endButtons]="[
+    {icon: 'notifications', action: 'notifications', class: 'relative', badge: '3'},
+    {icon: 'help-circle', action: 'help', class: 'hidden lg:inline-flex'}
+  ]"
+  (buttonClick)="onHeaderButtonClick($event)">
+</app-header>
 
 <ion-content [fullscreen]="true" class="bg-gray-50 user-page">
-  <ion-header collapse="condense">
-    <ion-toolbar style="--background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%); --color: white;">
-      <ion-title size="large">Usuario</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
   <!-- Desktop Layout Container -->
   <div class="max-w-6xl mx-auto px-6 py-8">
     

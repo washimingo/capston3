@@ -1,22 +1,16 @@
-<ion-header [translucent]="true" class="shadow-lg">
-  <ion-toolbar style="--background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%); --color: white;">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title class="text-xl font-bold">Configuración</ion-title>
-    <ion-buttons slot="end">
-      <ion-button fill="clear">
-        <ion-icon icon="save-outline" slot="icon-only" class="text-white"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header 
+  title="Configuración" 
+  shadowClass="shadow-lg"
+  [endButtons]="[{icon: 'save-outline', action: 'save', iconOnly: true}]"
+  (buttonClick)="onHeaderButtonClick($event)">
+</app-header>
 
 <ion-content [fullscreen]="true" class="bg-gray-50">
   <!-- Hero Section -->
-  <div class="hero-section bg-gradient-to-br from-blue-600 to-purple-600 text-white py-8 px-6">
+  <div class="hero-section text-white py-8 px-6"
+       style="background: linear-gradient(135deg, #19417C 0%, #2563eb 50%, #1e40af 100%);">
     <div class="max-w-4xl mx-auto text-center">
-      <div class="w-16 h-16 bg-sky-500/90 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div class="w-16 h-16 bg-white/20 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
         <ion-icon icon="construct-outline" class="text-4xl text-white" style="font-size: 2rem !important; color: white !important;"></ion-icon>
       </div>
       <h1 class="text-2xl font-bold mb-2">Configuración</h1>

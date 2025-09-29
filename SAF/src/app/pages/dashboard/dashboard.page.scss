@@ -19,7 +19,7 @@
     pointer-events: none;
   }
   
-  // Animated background pattern
+  // Optimized animated background pattern - removed for performance
   &::after {
     content: '';
     position: absolute;
@@ -29,37 +29,39 @@
     bottom: 0;
     background-image: 
       radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 40% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%);
-    animation: float 20s ease-in-out infinite;
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
     pointer-events: none;
   }
 }
 
-// KPI Cards
+// KPI Cards - Optimized
 .kpi-card {
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease;
   border: 1px solid rgba(255, 255, 255, 0.2);
   
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
   }
   
-  // Icon containers
+  // Icon containers - Optimized
   .w-12.h-12 {
-    transition: all 0.3s ease;
+    transition: transform 0.2s ease;
   }
   
-  &:hover .w-12.h-12 {
-    transform: scale(1.1);
+  @media (hover: hover) {
+    &:hover .w-12.h-12 {
+      transform: scale(1.05);
+    }
   }
 }
 
-// Chart card styling
+// Chart card styling - Optimized blur removal for performance
 .chart-card {
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  /* Removed backdrop-filter for better performance */
   border: 1px solid rgba(255, 255, 255, 0.2);
   
   ion-card-header {
@@ -181,72 +183,6 @@
   }
   50% {
     opacity: 0.7;
-  }
-}
-
-// Dark mode support
-@media (prefers-color-scheme: dark) {
-  .dashboard-content {
-    --background: #0f172a;
-  }
-  
-  .kpi-card {
-    background: rgba(30, 41, 59, 0.9) !important;
-    border-color: rgba(148, 163, 184, 0.2);
-    
-    p, span {
-      color: #e2e8f0 !important;
-    }
-    
-    .text-gray-600 {
-      color: #94a3b8 !important;
-    }
-  }
-  
-  .chart-card,
-  .ranking-card,
-  .table-card {
-    background: rgba(30, 41, 59, 0.95) !important;
-    border-color: rgba(148, 163, 184, 0.2);
-    
-    ion-card-title {
-      color: #f1f5f9;
-    }
-    
-    p {
-      color: #cbd5e1;
-    }
-  }
-  
-  .table-card {
-    table {
-      thead {
-        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-        
-        th {
-          color: #cbd5e1;
-        }
-      }
-      
-      tbody {
-        tr {
-          border-color: rgba(148, 163, 184, 0.1);
-          
-          &:hover {
-            background-color: rgba(59, 130, 246, 0.1);
-          }
-          
-          &:nth-child(even) {
-            background-color: rgba(51, 65, 85, 0.3);
-          }
-          
-          td {
-            color: #e2e8f0;
-            border-color: rgba(148, 163, 184, 0.1);
-          }
-        }
-      }
-    }
   }
 }
 

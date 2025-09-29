@@ -3,15 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
   IonButton, 
-  IonButtons, 
   IonContent,
-  IonHeader, 
   IonIcon, 
-  IonMenuButton, 
-  IonTitle, 
-  IonToggle,
-  IonToolbar 
+  IonToggle
 } from '@ionic/angular/standalone';
+import { HeaderComponent } from 'src/app/components/header/header.component';
 import { addIcons } from 'ionicons';
 import { 
   settingsOutline,
@@ -43,14 +39,10 @@ import {
     CommonModule, 
     FormsModule, 
     IonButton,
-    IonButtons,
     IonContent,
-    IonHeader, 
     IonIcon, 
-    IonMenuButton, 
-    IonTitle, 
     IonToggle,
-    IonToolbar
+    HeaderComponent
   ]
 })
 export class SettingsPage implements OnInit {
@@ -110,5 +102,16 @@ export class SettingsPage implements OnInit {
   // Add or remove the "ion-palette-dark" class on the html element
   toggleDarkPalette(shouldAdd: boolean) {
     document.documentElement.classList.remove('ion-palette-dark');
+  }
+
+  onHeaderButtonClick(action: string): void {
+    switch(action) {
+      case 'save':
+        // Guardar configuraciones
+        console.log('Guardar configuraciones');
+        break;
+      default:
+        console.log('Acción de botón no reconocida:', action);
+    }
   }
 }

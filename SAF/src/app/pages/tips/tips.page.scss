@@ -1,5 +1,13 @@
 /* Tips Page Specific Styles */
 
+// Header specific styles for tips page
+.tips-header {
+  ion-toolbar {
+    --ion-toolbar-background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%) !important;
+    --ion-toolbar-color: white !important;
+  }
+}
+
 // Hero section enhancements
 .hero-gradient {
   background: linear-gradient(135deg, #3b82f6 0%, #1e40af 50%, #3730a3 100%);
@@ -1070,4 +1078,119 @@ ion-modal ion-content::-webkit-scrollbar-thumb:hover {
 
 .gradient-teal {
   background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+}
+
+// Estilos específicos para el carrusel de tutoriales
+.tutorial-carousel-card {
+  height: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.carousel-tutorial-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    pointer-events: none;
+  }
+}
+
+.tutorial-nav-btn {
+  --background: rgba(59, 130, 246, 0.1);
+  --color: #3b82f6;
+  border-radius: 50%;
+  margin: 0 4px;
+  
+  &:hover {
+    --background: #3b82f6;
+    --color: white;
+    transform: scale(1.1);
+  }
+}
+
+.tutorial-slide {
+  height: auto;
+  padding: 0 4px;
+}
+
+.pagination-dot {
+  transition: all 0.3s ease;
+  
+  &.active {
+    background-color: #3b82f6;
+    transform: scale(1.2);
+  }
+  
+  &:hover {
+    background-color: #60a5fa;
+    transform: scale(1.1);
+  }
+}
+
+.difficulty-badge, .duration-badge {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+// Swiper container customization
+swiper-container {
+  --swiper-theme-color: #3b82f6;
+  --swiper-navigation-size: 24px;
+  padding: 8px 0;
+}
+
+// Responsive adjustments for carousel
+@media (max-width: 640px) {
+  .tutorial-carousel-card {
+    margin: 0 8px;
+  }
+  
+  .carousel-tutorial-header {
+    height: 160px;
+  }
+  
+  .tutorial-nav-btn {
+    display: none;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .carousel-tutorial-header {
+    height: 180px;
+  }
+}
+
+// Animation for tutorial cards appearing
+.tutorial-slide {
+  opacity: 0;
+  animation: slideIn 0.6s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

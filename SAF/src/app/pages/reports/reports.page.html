@@ -1,26 +1,19 @@
-<ion-header [translucent]="true">
-  <ion-toolbar style="--background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%); --color: white;">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title class="text-xl font-bold">Reportes</ion-title>
-    <ion-buttons slot="end">
-      <ion-button fill="clear">
-        <ion-icon icon="refresh-outline" slot="icon-only" class="text-white"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header 
+  title="Reportes" 
+  [endButtons]="[{icon: 'refresh-outline', action: 'refresh', iconOnly: true}]"
+  (buttonClick)="onHeaderButtonClick($event)">
+</app-header>
 
 <ion-content [fullscreen]="true">
   <!-- Hero Section -->
-  <div class="hero-section bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 text-white py-8 px-6">
+  <div class="hero-section text-white py-8 px-6"
+       style="background: linear-gradient(135deg, #19417C 0%, #2563eb 50%, #1e40af 100%);">
     <div class="max-w-7xl mx-auto">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
         <!-- Título y descripción -->
         <div>
           <div class="flex items-center space-x-3 mb-4">
-            <div class="w-12 h-12 bg-sky-500/90 bg-opacity-20 rounded-full flex items-center justify-center">
+            <div class="w-12 h-12 bg-white/20 bg-opacity-20 rounded-full flex items-center justify-center">
               <ion-icon icon="analytics-outline" class="text-2xl text-white"></ion-icon>
             </div>
             <div>

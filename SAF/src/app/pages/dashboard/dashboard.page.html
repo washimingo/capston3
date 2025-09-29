@@ -1,26 +1,14 @@
-<ion-header [translucent]="true" class="shadow-lg">
-  <ion-toolbar style="--background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%); --color: white;">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title class="text-xl font-bold">Dashboard</ion-title>
-    <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="ngOnInit()">
-        <ion-icon name="refresh-outline" class="text-white"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header 
+  title="Dashboard" 
+  shadowClass="shadow-lg"
+  [endButtons]="[{icon: 'refresh-outline', action: 'refresh', iconOnly: true}]"
+  (buttonClick)="onHeaderButtonClick($event)">
+</app-header>
 
 <ion-content [fullscreen]="true" class="dashboard-content">
-  <ion-header collapse="condense">
-    <ion-toolbar style="--background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%); --color: white;">
-      <ion-title size="large">Dashboard</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
   <!-- Hero Section with Gradient -->
-  <div class="hero-section bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 relative overflow-hidden">
+  <div class="hero-section bg-gradient-to-br from-blue-800 via-blue-700 to-blue-600 relative overflow-hidden"
+       style="background: linear-gradient(135deg, #19417C 0%, #2563eb 50%, #1e40af 100%);">
     <div class="absolute inset-0 bg-black opacity-10"></div>
     <div class="relative max-w-7xl mx-auto px-6 py-12">
       <div class="text-center mb-8">
@@ -126,12 +114,14 @@
             <div [class]="vistaDetallada ? 'lg:col-span-2' : 'lg:col-span-3'">
               <div class="chart-container" [style.height]="vistaDetallada ? '450px' : '500px'">
                 <canvas #pieChartCanvas></canvas>
-                <div *ngIf="!pieChart" class="absolute inset-0 flex items-center justify-center text-gray-500">
-                  <div class="text-center">
-                    <ion-icon name="pie-chart-outline" class="text-4xl mb-2"></ion-icon>
-                    <p>Generando gráfico...</p>
+                @if (!pieChart) {
+                  <div class="absolute inset-0 flex items-center justify-center text-gray-500">
+                    <div class="text-center">
+                      <ion-icon name="pie-chart-outline" class="text-4xl mb-2"></ion-icon>
+                      <p>Generando gráfico...</p>
+                    </div>
                   </div>
-                </div>
+                }
               </div>
             </div>
 

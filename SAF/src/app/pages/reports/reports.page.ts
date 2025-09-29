@@ -1,13 +1,14 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { Db } from 'src/app/services/Database/db';
 import { Router } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
 import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
 import autoTable from 'jspdf-autotable';
+import { HeaderComponent } from 'src/app/components/header/header.component';
 import { addIcons } from 'ionicons';
 import { 
   documentTextOutline, 
@@ -37,7 +38,7 @@ import {
   templateUrl: './reports.page.html',
   styleUrls: ['./reports.page.scss'],
   standalone: true,
-  imports: [IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonMenuButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon]
+  imports: [IonContent, CommonModule, FormsModule, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon, HeaderComponent]
 })
 export class ReportsPage implements OnInit {
   // Importar los headers y función de invoices
@@ -303,5 +304,15 @@ export class ReportsPage implements OnInit {
       margin: { top: 20 }
     });
     doc.save(nombreArchivo);
+  }
+
+  onHeaderButtonClick(action: string): void {
+    switch(action) {
+      case 'refresh':
+        this.ngOnInit();
+        break;
+      default:
+        console.log('Acción de botón no reconocida:', action);
+    }
   }
 }

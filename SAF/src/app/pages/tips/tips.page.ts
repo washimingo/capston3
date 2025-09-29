@@ -1,16 +1,13 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from '@angular/router';
+import { HeaderComponent } from '../../components/header/header.component';
 import { 
-  IonHeader, 
   IonContent, 
   IonButtons, 
   IonButton, 
   IonIcon, 
-  IonToolbar, 
-  IonMenuButton, 
-  IonTitle,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -25,6 +22,7 @@ import {
   IonLabel,
   IonList
 } from "@ionic/angular/standalone";
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { 
   searchOutline,
@@ -47,23 +45,20 @@ import {
   bulbOutline,
   schoolOutline,
   closeOutline,
-  menuOutline
-} from 'ionicons/icons';
+  menuOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-tips',
   templateUrl: './tips.page.html',
   styleUrls: ['./tips.page.scss'],
   standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
-    IonHeader,
+    HeaderComponent,
     IonContent, 
     IonButtons, 
     IonButton, 
     IonIcon, 
-    IonToolbar, 
-    IonMenuButton, 
-    IonTitle,
     IonCard,
     IonCardContent,
     IonCardHeader,
@@ -81,7 +76,21 @@ import {
     FormsModule
   ]
 })
-export class TipsPage implements OnInit {
+export class TipsPage implements OnInit, AfterViewInit {
+
+  // Configuración del header
+  headerButtons = [
+    {
+      icon: 'search-outline',
+      action: 'search',
+      class: 'text-white'
+    },
+    {
+      icon: 'bookmark-outline', 
+      action: 'bookmark',
+      class: 'text-white'
+    }
+  ];
 
   // Estado del modal
   selectedTutorial: any = null;
@@ -279,29 +288,7 @@ export class TipsPage implements OnInit {
   ];
 
   constructor(private router: Router) {
-    addIcons({
-      searchOutline,
-      bookmarkOutline,
-      helpCircleOutline,
-      cloudUploadOutline,
-      documentTextOutline,
-      settingsOutline,
-      barChartOutline,
-      filterOutline,
-      alertCircleOutline,
-      shieldCheckmarkOutline,
-      timeOutline,
-      eyeOutline,
-      arrowForwardOutline,
-      playCircleOutline,
-      checkmarkCircleOutline,
-      starOutline,
-      trendingUpOutline,
-      bulbOutline,
-      schoolOutline,
-      closeOutline,
-      menuOutline
-    });
+    addIcons({chevronBackOutline,chevronForwardOutline,timeOutline,eyeOutline,starOutline,playCircleOutline,searchOutline,bookmarkOutline,helpCircleOutline,cloudUploadOutline,documentTextOutline,settingsOutline,barChartOutline,filterOutline,alertCircleOutline,shieldCheckmarkOutline,arrowForwardOutline,checkmarkCircleOutline,trendingUpOutline,bulbOutline,schoolOutline,closeOutline,menuOutline});
   }
 
   ngOnInit(): void {
@@ -372,6 +359,39 @@ export class TipsPage implements OnInit {
     }
   }
 
+  // Funciones para el carrusel
+  goToSlide(index: number) {
+    const swiperEl = document.querySelector('swiper-container') as any;
+    if (swiperEl && swiperEl.swiper) {
+      swiperEl.swiper.slideTo(index);
+      this.updatePaginationDots(index);
+    }
+  }
+
+  updatePaginationDots(activeIndex: number) {
+    const dots = document.querySelectorAll('.pagination-dot');
+    dots.forEach((dot, index) => {
+      if (index === activeIndex) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
+
+  // Inicializar el carrusel después de que la vista se cargue
+  ngAfterViewInit() {
+    // Configurar eventos del carrusel
+    setTimeout(() => {
+      const swiperEl = document.querySelector('swiper-container') as any;
+      if (swiperEl) {
+        swiperEl.addEventListener('swiperslidechange', (event: any) => {
+          this.updatePaginationDots(event.detail[0].activeIndex % this.tutorials.length);
+        });
+      }
+    }, 100);
+  }
+
   // Obtener el icono por nombre
   getIcon(iconName: string) {
     const iconMap: any = {
@@ -389,5 +409,21 @@ export class TipsPage implements OnInit {
       'trending-up-outline': trendingUpOutline
     };
     return iconMap[iconName] || helpCircleOutline;
+  }
+
+  // Manejar clicks del header
+  onHeaderButtonClick(action: string) {
+    switch(action) {
+      case 'search':
+        // Lógica para buscar
+        console.log('Buscar clicked');
+        break;
+      case 'bookmark':
+        // Lógica para favoritos
+        console.log('Bookmark clicked');
+        break;
+      default:
+        console.log('Action not handled:', action);
+    }
   }
 }
