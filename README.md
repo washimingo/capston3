@@ -40,8 +40,8 @@ Permite listar facturas, enviar notificaciones (email, push o dentro de la app),
 Clona el repositorio:
 
 ```bash
-git clone <url_de_este_repositorio>
-cd <carpeta_del_repositorio>
+git clone <https://github.com/washimingo/capston3.git>
+cd <SAF>
 ```
 
 Instala dependencias:
@@ -68,13 +68,6 @@ ng serve
 ```bash
 ionic build --prod
 ```
-
-### Deploy a Firebase Hosting
-```bash
-npm run build
-firebase deploy
-```
-
 ### Capacitor sync
 ```bash
 npx cap sync
