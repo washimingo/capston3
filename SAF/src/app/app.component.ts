@@ -2,9 +2,9 @@ import { addIcons } from 'ionicons';
 import { documentTextOutline, timeOutline, checkmarkCircleOutline, closeCircleOutline, calendarOutline, alertCircleOutline, warningOutline, homeOutline, checkmarkDoneOutline, cubeOutline, barChartOutline, peopleOutline, settingsOutline, businessOutline, createOutline, trashOutline, addCircleOutline, listOutline, closeCircle, searchOutline, pieChartOutline, helpCircleOutline, analyticsOutline, helpCircle } from 'ionicons/icons';
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
-import { IonApp, IonRouterOutlet, IonMenu, IonHeader, IonToolbar, IonContent, IonItem, IonIcon, IonSplitPane, IonButton, IonMenuToggle, IonButtons } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, IonMenu, IonContent, IonItem, IonIcon, IonSplitPane, IonButton, IonMenuToggle } from '@ionic/angular/standalone';
 import { MenuController } from '@ionic/angular';
-import { HeaderComponent } from './components/header/header.component';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -14,16 +14,13 @@ import { HeaderComponent } from './components/header/header.component';
     IonApp,
     IonRouterOutlet,
     IonMenu,
-    IonHeader,
-    IonToolbar,
     IonContent,
     IonItem,
     RouterModule,
     IonIcon,
     IonSplitPane,
     IonButton,
-    IonMenuToggle,
-    IonButtons
+    IonMenuToggle
   ],
 })
 export class AppComponent implements AfterViewInit {
@@ -37,8 +34,8 @@ export class AppComponent implements AfterViewInit {
     } else {
       document.body.classList.remove('dark');
     }
-  this.setMenuType();
-  window.addEventListener('resize', this.setMenuType.bind(this));
+    this.setMenuType();
+    window.addEventListener('resize', this.setMenuType.bind(this));
   }
   
   menuType: 'overlay' | 'side' = 'side';

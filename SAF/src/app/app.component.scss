@@ -4,40 +4,20 @@
 /* Menu Lateral - Responsive  */
 
 ion-menu.custom-menu {
-  --width: 340px !important;
-  width: 340px !important;
-  min-width: 340px !important;
-  max-width: 340px !important;
+  --width: 280px ;
+  width: 280px ;
+  min-width: 280px ;
+  max-width: 280px ;
 }
 @media (max-width: 768px) {
   ion-menu.custom-menu {
-    --width: 320px !important;
-    width: 320px !important;
-    min-width: 320px !important;
-    max-width: 320px !important;
+    --width: 320px ;
+    width: 320px ;
+    min-width: 320px ;
+    max-width: 320px ;
   }
 }
 
-// Header del menú con efectos
-.menu-header {
-  ion-toolbar {
-    --background: #19417C;
-    --color: #ffffff;
-    position: relative;
-    overflow: hidden;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M 8 0 L 0 0 0 8" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') repeat;
-      opacity: 0.3;
-    }
-  }
-}
 
 // Contenido del menú - SIMPLIFICADO
 .menu-content {
@@ -72,12 +52,13 @@ ion-menu.custom-menu {
 }
 
 // Transiciones suaves
+/*
 .menu-item,
 .menu-item ion-icon,
 .menu-item .w-10 {
   transition: all 0.2s ease;
 }
-
+*/
 
 
 // Responsive adjustments

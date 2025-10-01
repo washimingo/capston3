@@ -1,4 +1,9 @@
 .header-toolbar {
-  --ion-toolbar-background: #19417C !important;
-  --ion-toolbar-color: #ffffff !important;
+  --ion-toolbar-background: #ffffff ;
+  --ion-toolbar-color: #ffffff ;
+}
+
+ion-header, ion-toolbar {
+  box-shadow: none !important;
+  --box-shadow: none !important;
 }

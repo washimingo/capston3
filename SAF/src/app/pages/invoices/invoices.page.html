@@ -11,7 +11,7 @@
        [class.translate-x-0]="drawerVisible"
        [class.translate-x-full]="!drawerVisible">
     
-    <!-- Header del drawer -->
+    <!-- Header del drawer
     <div class="drawer-header sticky top-0 text-white px-6 py-4 border-b shadow-lg" 
          style="background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%);">
       <div class="flex items-center justify-between">
@@ -32,6 +32,7 @@
         </button>
       </div>
     </div>
+    -->
 
     <!-- Contenido del drawer -->
     <div class="drawer-content flex-1 overflow-y-auto p-6 space-y-6" *ngIf="facturaSeleccionada">
@@ -166,12 +167,7 @@
   </div>
 
 <!-- =================== HEADER Y TOOLBAR =================== -->
-<app-header 
-  title="Gestión de Facturas" 
-  titleIcon="receipt-outline"
-  shadowClass="shadow-sm"
-  (buttonClick)="onHeaderButtonClick($event)">
-</app-header>
+<app-header title="Gestión de Facturas" titleIcon="receipt-outline" shadowClass="shadow-sm" (buttonClick)="onHeaderButtonClick($event)"> </app-header>
 
 <!-- =================== CONTENIDO PRINCIPAL =================== -->
 <ion-content class="bg-gray-50">

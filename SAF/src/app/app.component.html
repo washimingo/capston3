@@ -1,200 +1,131 @@
-
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <!-- Menú lateral moderno -->
     <ion-menu side="start" menuId="main-menu" contentId="main-content" class="custom-menu">
-    <!-- Header del menú con gradiente -->
-    <ion-header class="menu-header">
-      <ion-toolbar class="bg-gradient-to-br from-red-700 via-red-800 to-red-900 text-white">
-        <ion-buttons slot="start">
-          <ion-menu-toggle auto-hide="false">
-            <ion-button fill="clear" color="light">
-              <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-            </ion-button>
-          </ion-menu-toggle>
-        </ion-buttons>
-        <div class="flex items-center justify-center py-4">
-          <div class="flex items-center space-x-3">
-            <!-- Icono del Menu
-            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-              <ion-icon name="business-outline" class="text-lg text-white-600"></ion-icon>
-            </div>
-            -->
-            <!-- Titulo del Menu
-            <div class="text-center">
-              <h2 class="text-lg font-bold text-white">SAF</h2>
-              <p class="text-xs text-white-200">Sistema Empresarial</p>
-            </div>
-            -->
+      <ion-content class="menu-content bg-white">
+        <!-- Logo en la parte superior -->
+        <div class="flex justify-center py-4">
+          <img src="assets/icon/logo_muni.jpg" alt="Logo SAF" class="h-22 w-auto" />
+        </div>
+          <div>
+            <ion-menu-toggle auto-hide="false">
+                <ion-button fill="clear" color="dark" size="default">
+                  <ion-icon name="arrow-outline" class="text-lg text-blue-600"></ion-icon>
+                </ion-button>
+            </ion-menu-toggle>
           </div>
-        </div>
-      </ion-toolbar>
-    </ion-header>
 
-    <!-- Contenido del menú -->
-    <ion-content class="menu-content bg-white">
-      <!-- Sección principal de navegación -->
+        <!-- Sección principal de navegación -->
       <div class="px-4 py-6">
-        <!-- Navegación principal -->
         <div class="space-y-1">
-          <div class="px-3 py-2">
-        </div>
-          
-          <ion-item 
-            routerLink="/home" 
-            class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-blue-50 hover:scale-105"
-            lines="none">
+          <ion-item routerLink="/home" class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-blue-50 hover:scale-105" lines="none">
             <div class="flex items-center space-x-4 w-full py-2">
               <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                 <ion-icon name="home-outline" class="text-lg text-blue-600"></ion-icon>
               </div>
               <div class="flex-1">
                 <span class="font-medium text-gray-800">Inicio</span>
-                <p class="text-xs text-gray-500">Dashboard principal</p>
               </div>
             </div>
           </ion-item>
 
-          <ion-item 
-            routerLink="/invoices" 
-            class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-green-50 hover:scale-105"
-            lines="none">
+          <ion-item routerLink="/invoices" class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-green-50 hover:scale-105" lines="none">
             <div class="flex items-center space-x-4 w-full py-2">
               <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                 <ion-icon name="document-text-outline" class="text-lg text-green-600"></ion-icon>
               </div>
               <div class="flex-1">
                 <span class="font-medium text-gray-800">Facturas</span>
-                <p class="text-xs text-gray-500">Gestión de documentos</p>
               </div>
             </div>
           </ion-item>
 
-          <ion-item 
-            routerLink="/validation" 
-            class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-purple-50 hover:scale-105"
-            lines="none">
+          <ion-item routerLink="/validation" class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-purple-50 hover:scale-105" lines="none">
             <div class="flex items-center space-x-4 w-full py-2">
               <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                 <ion-icon name="checkmark-done-outline" class="text-lg text-purple-600"></ion-icon>
               </div>
               <div class="flex-1">
                 <span class="font-medium text-gray-800">Validación</span>
-                <p class="text-xs text-gray-500">Verificar documentos</p>
               </div>
             </div>
           </ion-item>
 
-          <ion-item 
-            routerLink="/purchases" 
-            class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-orange-50 hover:scale-105"
-            lines="none">
+          <ion-item routerLink="/purchases" class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-orange-50 hover:scale-105" lines="none">
             <div class="flex items-center space-x-4 w-full py-2">
               <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
                 <ion-icon name="cube-outline" class="text-lg text-orange-600"></ion-icon>
               </div>
               <div class="flex-1">
                 <span class="font-medium text-gray-800">Adquisiciones</span>
-                <p class="text-xs text-gray-500">Compras y pedidos</p>
               </div>
             </div>
           </ion-item>
         </div>
 
-        <!-- Divider -->
+        <!-- Divider 
         <div class="my-6 border-t border-gray-200"></div>
+        -->
 
         <!-- Sección de análisis -->
         <div class="space-y-1">
-          <div class="px-3 py-2">
-            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Análisis y Reportes
-            </h3>
-          </div>
-
-          <ion-item 
-            routerLink="/reports" 
-            class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-indigo-50 hover:scale-105"
-            lines="none">
+          <ion-item routerLink="/reports" class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-indigo-50 hover:scale-105" lines="none">
             <div class="flex items-center space-x-4 w-full py-2">
               <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
                 <ion-icon name="bar-chart-outline" class="text-lg text-indigo-600"></ion-icon>
               </div>
               <div class="flex-1">
                 <span class="font-medium text-gray-800">Reportes</span>
-                <p class="text-xs text-gray-500">Informes detallados</p>
               </div>
             </div>
           </ion-item>
 
-          <ion-item 
-            routerLink="/dashboard" 
-            class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-teal-50 hover:scale-105"
-            lines="none">
+          <ion-item routerLink="/dashboard" class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-teal-50 hover:scale-105" lines="none">
             <div class="flex items-center space-x-4 w-full py-2">
               <div class="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
                 <ion-icon name="analytics-outline" class="text-lg text-teal-600"></ion-icon>
               </div>
               <div class="flex-1">
                 <span class="font-medium text-gray-800">Dashboard</span>
-                <p class="text-xs text-gray-500">Indicadores KPI</p>
               </div>
             </div>
           </ion-item>
         </div>
 
-        <!-- Divider -->
+        <!-- Divider
         <div class="my-6 border-t border-gray-200"></div>
+        -->
 
         <!-- Sección de configuración -->
         <div class="space-y-1">
-          <div class="px-3 py-2">
-            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Configuración
-            </h3>
-          </div>
-
-          <ion-item 
-            routerLink="/user" 
-            class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-pink-50 hover:scale-105"
-            lines="none">
+          <ion-item routerLink="/user" class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-pink-50 hover:scale-105" lines="none">
             <div class="flex items-center space-x-4 w-full py-2">
               <div class="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center">
                 <ion-icon name="people-outline" class="text-lg text-pink-600"></ion-icon>
               </div>
               <div class="flex-1">
                 <span class="font-medium text-gray-800">Usuarios</span>
-                <p class="text-xs text-gray-500">Gestión de personal</p>
               </div>
             </div>
           </ion-item>
 
-          <ion-item 
-            routerLink="/settings" 
-            class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-gray-50 hover:scale-105"
-            lines="none">
+          <ion-item routerLink="/settings" class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-gray-50 hover:scale-105" lines="none">
             <div class="flex items-center space-x-4 w-full py-2">
               <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
                 <ion-icon name="settings-outline" class="text-lg text-gray-600"></ion-icon>
               </div>
               <div class="flex-1">
                 <span class="font-medium text-gray-800">Configuración</span>
-                <p class="text-xs text-gray-500">Preferencias del sistema</p>
               </div>
             </div>
           </ion-item>
 
-          <ion-item 
-            routerLink="/tips" 
-            class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-yellow-50 hover:scale-105"
-            lines="none">
+          <ion-item routerLink="/tips" class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-yellow-50 hover:scale-105" lines="none">
             <div class="flex items-center space-x-4 w-full py-2">
               <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
                 <ion-icon name="help-circle-outline" class="text-lg text-yellow-600"></ion-icon>
               </div>
               <div class="flex-1">
                 <span class="font-medium text-gray-800">Tips y Tutorial</span>
-                <p class="text-xs text-gray-500">Ayuda y guías</p>
               </div>
             </div>
           </ion-item>
@@ -202,19 +133,19 @@
       </div>
 
       <!-- Footer del menú -->
-      <div class="mt-8 p-4">
-        <div class="bg-white rounded-xl p-4 shadow-lg border border-gray-100">
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-sky-200 rounded-full flex items-center justify-center">
-              <ion-icon name="business-outline" class="text-lg text-19417C"></ion-icon>
-            </div>
-            <div class="flex-1">
-              <p class="font-semibold text-gray-800 text-sm">SAF Empresarial</p>
-              <p class="text-xs text-gray-500">Versión 1.0.0</p>
+        <div class="mt-8 p-4">
+          <div class="bg-white rounded-xl p-4 shadow-lg border border-gray-100">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-sky-200 rounded-full flex items-center justify-center">
+                <ion-icon name="business-outline" class="text-lg text-19417C"></ion-icon>
+              </div>
+              <div class="flex-1">
+                <p class="font-semibold text-gray-800 text-sm">SAF</p>
+                <p class="text-xs text-gray-500">Versión 0.0</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
     </ion-content>
   </ion-menu>
 
