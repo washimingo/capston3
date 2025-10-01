@@ -6,17 +6,11 @@
         <div class="flex justify-center py-4">
           <img src="assets/icon/logo_muni.jpg" alt="Logo SAF" class="h-22 w-auto" />
         </div>
-          <div>
-            <ion-menu-toggle auto-hide="false">
-                <ion-button fill="clear" color="dark" size="default">
-                  <ion-icon name="arrow-outline" class="text-lg text-blue-600"></ion-icon>
-                </ion-button>
-            </ion-menu-toggle>
-          </div>
-
+        
         <!-- Sección principal de navegación -->
       <div class="px-4 py-6">
         <div class="space-y-1">
+
           <ion-item routerLink="/home" class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-blue-50 hover:scale-105" lines="none">
             <div class="flex items-center space-x-4 w-full py-2">
               <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -39,27 +33,6 @@
             </div>
           </ion-item>
 
-          <ion-item routerLink="/validation" class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-purple-50 hover:scale-105" lines="none">
-            <div class="flex items-center space-x-4 w-full py-2">
-              <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                <ion-icon name="checkmark-done-outline" class="text-lg text-purple-600"></ion-icon>
-              </div>
-              <div class="flex-1">
-                <span class="font-medium text-gray-800">Validación</span>
-              </div>
-            </div>
-          </ion-item>
-
-          <ion-item routerLink="/purchases" class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-orange-50 hover:scale-105" lines="none">
-            <div class="flex items-center space-x-4 w-full py-2">
-              <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                <ion-icon name="cube-outline" class="text-lg text-orange-600"></ion-icon>
-              </div>
-              <div class="flex-1">
-                <span class="font-medium text-gray-800">Adquisiciones</span>
-              </div>
-            </div>
-          </ion-item>
         </div>
 
         <!-- Divider 
@@ -152,3 +125,5 @@
     <ion-router-outlet id="main-content"></ion-router-outlet>
   </ion-split-pane>
 </ion-app>
+
+

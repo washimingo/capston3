@@ -1,6 +1,6 @@
 <app-header [title]="'Inicio'"></app-header>
 
-<ion-content [fullscreen]="true" class="home-content">
+<ion-content class="home-content">
   <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
     <ion-refresher-content 
       pullingIcon="arroow-dropdown" 
@@ -11,7 +11,7 @@
   </ion-refresher>
 
   <!-- Hero Section -->
-  <div class="hero-section bg-white text-gray-800">
+  <div class="hero-section text-gray-800">
     <div class="max-w-7xl mx-auto px-6 py-12">
       <!-- Alerta de facturas por vencer -->
       @if (facturasPorVencer.length > 0) {
@@ -390,50 +390,51 @@
       </div>
     }
 
-    <!-- Quick Actions -->
-    <div class="mb-8">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">Acciones Rápidas</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <ion-card class="quick-action-card border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
-          <ion-card-content class="p-6 text-center">
-            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <ion-icon name="analytics-outline" class="text-2xl text-white"></ion-icon>
-            </div>
-            <h3 class="text-lg font-semibold text-white mb-2">Dashboard</h3>
-            <p class="text-gray-300 text-sm mb-4">Ver análisis y gráficos detallados</p>
-            <ion-button expand="block" fill="outline" color="primary" routerLink="/dashboard">
-              Ir al Dashboard
-            </ion-button>
-          </ion-card-content>
-        </ion-card>
+    <!-- Quick Actions 
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Acciones Rápidas</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <ion-card class="quick-action-card border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <ion-card-content class="p-6 text-center">
+              <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <ion-icon name="analytics-outline" class="text-2xl text-white"></ion-icon>
+              </div>
+              <h3 class="text-lg font-semibold text-white mb-2">Dashboard</h3>
+              <p class="text-gray-300 text-sm mb-4">Ver análisis y gráficos detallados</p>
+              <ion-button expand="block" fill="outline" color="primary" routerLink="/dashboard">
+                Ir al Dashboard
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
 
-        <ion-card class="quick-action-card border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
-          <ion-card-content class="p-6 text-center">
-            <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <ion-icon name="document-attach-outline" class="text-2xl text-white"></ion-icon>
-            </div>
-            <h3 class="text-lg font-semibold text-white mb-2">Reportes</h3>
-            <p class="text-gray-300 text-sm mb-4">Generar informes y estadísticas</p>
-            <ion-button expand="block" fill="outline" color="success" routerLink="/reports">
-              Ver Reportes
-            </ion-button>
-          </ion-card-content>
-        </ion-card>
+          <ion-card class="quick-action-card border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <ion-card-content class="p-6 text-center">
+              <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <ion-icon name="document-attach-outline" class="text-2xl text-white"></ion-icon>
+              </div>
+              <h3 class="text-lg font-semibold text-white mb-2">Reportes</h3>
+              <p class="text-gray-300 text-sm mb-4">Generar informes y estadísticas</p>
+              <ion-button expand="block" fill="outline" color="success" routerLink="/reports">
+                Ver Reportes
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
 
-        <ion-card class="quick-action-card border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
-          <ion-card-content class="p-6 text-center">
-            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <ion-icon name="settings-outline" class="text-2xl text-white"></ion-icon>
-            </div>
-            <h3 class="text-lg font-semibold text-white mb-2">Configuración</h3>
-            <p class="text-gray-300 text-sm mb-4">Ajustar preferencias del sistema</p>
-            <ion-button expand="block" fill="outline" color="primary" routerLink="/settings">
-              Configurar
-            </ion-button>
-          </ion-card-content>
-        </ion-card>
+          <ion-card class="quick-action-card border-0 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <ion-card-content class="p-6 text-center">
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <ion-icon name="settings-outline" class="text-2xl text-white"></ion-icon>
+              </div>
+              <h3 class="text-lg font-semibold text-white mb-2">Configuración</h3>
+              <p class="text-gray-300 text-sm mb-4">Ajustar preferencias del sistema</p>
+              <ion-button expand="block" fill="outline" color="primary" routerLink="/settings">
+                Configurar
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </div>
       </div>
-    </div>
+    -->
   </div>
 
   <!-- Footer spacing -->

@@ -1,7 +1,7 @@
 // ============= HOME PAGE STYLES =============
 
 .home-content {
-  --background: #ffffff;
+  --background: #fcfcfc;
 }
 
 // Hero Section
@@ -96,13 +96,11 @@
 
 // Status Cards - Optimized
 .status-card {
-  background: #1B4483 !important; // Fondo azul solicitado
-  border: 1px solid #16376a !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  border-radius: 1rem;
+  background: #2a4220 !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
   transition: transform 0.2s ease;
   cursor: pointer;
-  color: #fff !important; // Texto blanco para contraste
+  color: #fff !important; 
 
   @media (hover: hover) {
     &:hover {
@@ -112,17 +110,17 @@
   }
 
   ion-card-content {
-    background: linear-gradient(135deg, #1B4483 0%, #16376a 100%);
-    color: #fff !important;
+    background: #ffffff !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+    color: #000000 !important; //Letras
+
   }
 }
 
 // Quick Action Cards
 .quick-action-card {
   background: #1B4483 !important; // Fondo
-  border: 1px solid #16376a !important;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  border-radius: 1rem;
   transition: all 0.3s ease;
   cursor: pointer;
   color: #fff !important; // Texto blanco para contraste
