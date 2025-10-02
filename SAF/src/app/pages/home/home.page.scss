@@ -1,7 +1,7 @@
 // ============= HOME PAGE STYLES =============
 
 .home-content {
-  --background: #fcfcfc;
+  --background: #F3F4F6;
 }
 
 // Hero Section
@@ -34,10 +34,9 @@
 
 // Stats cards en hero - Optimized
 .stat-card {
-  background: #f3f4f6 !important;      // Fondo gris claro
-  border: 1px solid #e5e7eb !important; // Borde gris suave
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04); // Sombra suave
-  border-radius: 1rem;
+  background: #ffffff !important;      
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   transition: transform 0.2s ease;
   /* Removed backdrop-filter for better performance */
   

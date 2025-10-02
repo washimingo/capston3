@@ -1,5 +1,5 @@
 import { addIcons } from 'ionicons';
-import { documentTextOutline, timeOutline, checkmarkCircleOutline, closeCircleOutline, calendarOutline, alertCircleOutline, warningOutline, homeOutline, checkmarkDoneOutline, cubeOutline, barChartOutline, peopleOutline, settingsOutline, businessOutline, createOutline, trashOutline, addCircleOutline, listOutline, closeCircle, searchOutline, pieChartOutline, helpCircleOutline, analyticsOutline, helpCircle } from 'ionicons/icons';
+import { documentTextOutline, arrowBackOutline,timeOutline, checkmarkCircleOutline, closeCircleOutline, calendarOutline, alertCircleOutline, warningOutline, homeOutline, checkmarkDoneOutline, cubeOutline, barChartOutline, peopleOutline, settingsOutline, businessOutline, createOutline, trashOutline, addCircleOutline, listOutline, closeCircle, searchOutline, pieChartOutline, helpCircleOutline, analyticsOutline, helpCircle } from 'ionicons/icons';
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { IonApp, IonRouterOutlet, IonMenu, IonContent, IonItem, IonIcon, IonSplitPane, IonButton, IonMenuToggle } from '@ionic/angular/standalone';
@@ -26,16 +26,31 @@ import { MenuController } from '@ionic/angular';
 export class AppComponent implements AfterViewInit {
   @ViewChild(IonMenu) menu?: IonMenu;
   constructor(private router: Router, private menuCtrl: MenuController) {
-    addIcons({homeOutline,documentTextOutline,checkmarkDoneOutline,cubeOutline,barChartOutline,analyticsOutline,peopleOutline,settingsOutline,helpCircleOutline,businessOutline,pieChartOutline,timeOutline,checkmarkCircleOutline,closeCircleOutline,calendarOutline,alertCircleOutline,warningOutline,createOutline,trashOutline,addCircleOutline,listOutline,closeCircle,searchOutline});
-    // Aplicar modo oscuro si está guardado en localStorage
-    const dark = localStorage.getItem('saf-dark-mode');
-    if (dark === 'true') {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
-    this.setMenuType();
-    window.addEventListener('resize', this.setMenuType.bind(this));
+    addIcons({homeOutline,
+      documentTextOutline,
+      checkmarkDoneOutline,
+      cubeOutline,
+      barChartOutline,
+      analyticsOutline,
+      peopleOutline,
+      settingsOutline,
+      helpCircleOutline,
+      businessOutline,
+      pieChartOutline,
+      timeOutline,
+      checkmarkCircleOutline,
+      closeCircleOutline,
+      calendarOutline,
+      alertCircleOutline,
+      warningOutline,
+      createOutline,
+      trashOutline,
+      addCircleOutline,
+      listOutline,
+      closeCircle,
+      searchOutline,
+      arrowBackOutline,
+    });
   }
   
   menuType: 'overlay' | 'side' = 'side';

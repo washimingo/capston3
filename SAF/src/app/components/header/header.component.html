@@ -1,18 +1,22 @@
 <ion-header>
-  <ion-toolbar class="header-toolbar">
+  <ion-toolbar class="border-b border-gray-300 shadow-none text-black">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+
     <ion-title [class]="titleClass">
-      <div [class]="titleContainerClass + ' ml-8 text-black font-sans text-2x1'">
+      <div [class]="titleContainerClass + ' ml-8 text-black font-sans text-2xl flex items-center'">
         <ion-icon *ngIf="titleIcon" [name]="titleIcon" class="mr-2 text-black"></ion-icon>
         {{ title }}
       </div>
     </ion-title>
+
     <ion-buttons slot="end" *ngIf="endButtons && endButtons.length > 0">
       <ion-button *ngFor="let button of endButtons" fill="clear" [class]="button.class || ''" (click)="onButtonClick(button.action)">
         <ion-icon [name]="button.icon" class="text-white" [attr.slot]="button.iconOnly ? 'icon-only' : null"></ion-icon>
-        <span *ngIf="button.badge" class="absolute -top-1 -right-1 bg-cyan-400 text-white-600 text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">{{button.badge}}</span>
+        <span *ngIf="button.badge" class="absolute -top-1 -right-1 bg-cyan-400 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+          {{button.badge}}
+        </span>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
