@@ -1,4 +1,7 @@
-<app-header [title]="'Inicio'"></app-header>
+<app-header 
+  title="Inicio" 
+  titleIcon="home-outline">
+</app-header>
 
 <ion-content class="home-content">
   <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">

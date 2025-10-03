@@ -22,7 +22,8 @@ import {
   alertOutline,
   analyticsOutline,
   documentAttachOutline,
-  settingsOutline
+  settingsOutline,
+  homeOutline
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 
@@ -121,7 +122,8 @@ export class HomePage implements OnInit {
       alertOutline,
       analyticsOutline,
       documentAttachOutline,
-      settingsOutline
+      settingsOutline,
+      homeOutline
     });
   }
 

@@ -30,7 +30,8 @@ import {
   businessOutline, 
   funnelOutline, 
   downloadOutline, 
-  swapVerticalOutline 
+  swapVerticalOutline,
+  analyticsOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -182,7 +183,8 @@ export class DashboardPage implements OnInit {
       warningOutline,
       arrowForwardOutline,
       expandOutline,
-      contractOutline
+      contractOutline,
+      analyticsOutline
     });
   }
 

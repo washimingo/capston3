@@ -1,1196 +1,872 @@
-/* Tips Page Specific Styles */
+/* Executive Tips Dashboard - Web-Optimized Styles */
 
-// Header specific styles for tips page
-.tips-header {
-  ion-toolbar {
-    --ion-toolbar-background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 50%, #991b1b 100%) !important;
-    --ion-toolbar-color: white !important;
-  }
-}
-
-// Hero section enhancements
-.hero-gradient {
-  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 50%, #3730a3 100%);
-  position: relative;
-  overflow: hidden;
+// Executive Dashboard Layout
+.executive-dashboard {
+  --background: #f8fafc;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-    pointer-events: none;
-  }
-}
-
-// Quick action cards animations
-.quick-action-card {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  
-  &:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
-                0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  }
-  
-  .action-icon {
-    transition: all 0.3s ease;
-  }
-  
-  &:hover .action-icon {
-    transform: scale(1.1) rotate(5deg);
-  }
-}
-
-// Tutorial cards enhancements
-.tutorial-card {
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  &:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  }
-  
-  .tutorial-header {
-    position: relative;
-    overflow: hidden;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(45deg, rgba(0,0,0,0.1) 0%, transparent 50%, rgba(255,255,255,0.1) 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    &:hover::after {
-      opacity: 1;
-    }
-  }
-  
-  .difficulty-badge {
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-}
-
-// Search and filter section
-.search-filter-section {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-// Category chips styling
-ion-chip {
-  --background: #f1f5f9;
-  --color: #475569;
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    --background: #e2e8f0;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  &.chip-primary {
-    --background: #3b82f6;
-    --color: white;
-    border-color: #2563eb;
-  }
-}
-
-// Modal enhancements - Redesigned
-ion-modal {
-  --backdrop-opacity: 0.75;
-  --backdrop-filter: blur(8px);
-  
-  .modal-wrapper {
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 
-      0 25px 50px -12px rgba(0, 0, 0, 0.25),
-      0 0 0 1px rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
-  }
-  
-  ion-header {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    border-bottom: 1px solid #e2e8f0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    
-    ion-toolbar {
-      --background: transparent;
-      --border-width: 0;
-      padding: 0 8px;
-      min-height: 72px;
-      
-      ion-title {
-        font-size: 1.375rem;
-        font-weight: 700;
-        color: #1f2937;
-        text-align: center;
-        padding: 0 60px; // Space for close button
-      }
-      
-      ion-button {
-        --background: #f3f4f6;
-        --background-hover: #e5e7eb;
-        --color: #6b7280;
-        --border-radius: 12px;
-        --padding-start: 12px;
-        --padding-end: 12px;
-        width: 44px;
-        height: 44px;
-        margin: 0 8px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        
-        &:hover {
-          --background: #ef4444;
-          --color: white;
-          transform: scale(1.05);
-        }
-      }
-    }
-  }
-  
-  ion-content {
-    --background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    --padding-start: 0;
-    --padding-end: 0;
-    --padding-top: 0;
-    --padding-bottom: 0;
-  }
-  
-  .modal-content-container {
-    padding: 24px;
-    max-width: 5xl;
+  .dashboard-container {
+    max-width: 100%;
     margin: 0 auto;
+    padding: 2rem;
     
     @media (max-width: 768px) {
-      padding: 16px;
+      padding: 1rem;
     }
   }
+}
+
+// Dashboard Header Section
+.dashboard-header {
+  margin-bottom: 2rem;
   
-  .modal-content-section {
-    background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    backdrop-filter: blur(10px);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
+  .header-content {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
-      opacity: 0;
-      transition: opacity 0.3s ease;
+    .title-section {
+      margin-bottom: 2rem;
+      
+      h1 {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0;
+        letter-spacing: -0.025em;
+      }
+      
+      p {
+        font-size: 1.125rem;
+        color: #6b7280;
+        margin: 0.5rem 0 0 0;
+        font-weight: 400;
+      }
     }
     
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 
-        0 20px 25px -5px rgba(0, 0, 0, 0.15),
-        0 10px 10px -5px rgba(0, 0, 0, 0.1);
-      border-color: rgba(59, 130, 246, 0.2);
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
       
-      &::before {
-        opacity: 1;
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 1rem;
       }
     }
   }
+}
+
+// Stats Cards
+.stat-card {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   
-  .modal-header-section {
-    .tutorial-icon-container {
-      background: linear-gradient(135deg, var(--icon-bg-from), var(--icon-bg-to));
-      border: 3px solid rgba(255, 255, 255, 0.9);
-      box-shadow: 
-        0 8px 16px rgba(0, 0, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      
-      &::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-        transform: rotate(45deg);
-        transition: all 0.6s ease;
-        opacity: 0;
-      }
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 8px;
+    margin-right: 1rem;
+    
+    ion-icon {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .stat-content {
+    .stat-number {
+      font-size: 1.875rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    
+    .stat-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+}
+
+// Search Section
+.search-section {
+  margin-bottom: 2rem;
+  
+  .search-container {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+  
+  .search-bar-wrapper {
+    margin-bottom: 1rem;
+    
+    .executive-searchbar {
+      --background: #f9fafb;
+      --color: #374151;
+      --placeholder-color: #9ca3af;
+      --icon-color: #6b7280;
+      --clear-button-color: #6b7280;
+      --border-radius: 8px;
+      --box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      border: 1px solid #d1d5db;
       
       &:hover {
-        transform: scale(1.05) rotate(5deg);
-        box-shadow: 
-          0 12px 24px rgba(0, 0, 0, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.3);
-          
-        &::after {
-          opacity: 1;
-          animation: shimmer 1.5s ease-in-out;
+        --background: #ffffff;
+        border-color: #9ca3af;
+      }
+      
+      &:focus-within {
+        --background: #ffffff;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+    }
+  }
+  
+  .filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    
+    @media (max-width: 768px) {
+      gap: 0.5rem;
+    }
+  }
+}
+
+// Chips Styling
+.chip-active {
+  --background: #2563eb;
+  --color: white;
+  border: 1px solid #2563eb;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  
+  ion-label {
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+}
+
+.chip-inactive {
+  --background: #f3f4f6;
+  --color: #6b7280;
+  border: 1px solid #d1d5db;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    --background: #e5e7eb;
+    --color: #374151;
+    border-color: #9ca3af;
+    cursor: pointer;
+  }
+  
+  ion-label {
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+}
+
+// Tutorials Library Section
+.tutorials-library {
+  .library-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0;
+    }
+    
+    .view-options {
+      display: flex;
+      gap: 0.5rem;
+      
+      .view-btn-active {
+        --background: #2563eb;
+        --color: white;
+        
+        ion-icon {
+          color: white;
         }
       }
       
-      ion-icon {
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      .view-btn-inactive {
+        --background: #f3f4f6;
+        --color: #6b7280;
+        
+        &:hover {
+          --background: #e5e7eb;
+          --color: #374151;
+        }
+        
+        ion-icon {
+          color: currentColor;
+        }
       }
+    }
+  }
+}
+
+// Grid View Styles
+.tutorials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.5rem;
+  
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  @media (min-width: 1600px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Executive Cards
+.executive-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: #d1d5db;
+  }
+  
+  .card-header {
+    height: 120px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .header-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      
+      .tutorial-icon {
+        font-size: 2.5rem;
+        color: white;
+      }
+      
+      .difficulty-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        
+        &.badge-principiante {
+          background: rgba(34, 197, 94, 0.2);
+          color: #166534;
+        }
+        
+        &.badge-intermedio {
+          background: rgba(245, 158, 11, 0.2);
+          color: #92400e;
+        }
+        
+        &.badge-avanzado {
+          background: rgba(239, 68, 68, 0.2);
+          color: #991b1b;
+        }
+      }
+    }
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+    
+    .category-tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: #f3f4f6;
+      color: #6b7280;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
     }
     
     .tutorial-title {
-      background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 800;
-      letter-spacing: -0.025em;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0 0 0.5rem 0;
+      line-height: 1.4;
     }
     
     .tutorial-description {
+      font-size: 0.875rem;
       color: #6b7280;
-      line-height: 1.7;
-      font-size: 1.05rem;
+      line-height: 1.5;
+      margin: 0 0 1rem 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
     
     .tutorial-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      
       .meta-item {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 8px 12px;
-        transition: all 0.3s ease;
-        
-        &:hover {
-          background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-          border-color: #3b82f6;
-          transform: translateY(-2px);
-        }
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.75rem;
+        color: #6b7280;
         
         ion-icon {
-          color: #6b7280;
+          font-size: 0.875rem;
+          color: #9ca3af;
         }
-      }
-      
-      ion-chip {
-        --background: linear-gradient(135deg, var(--chip-bg), var(--chip-bg-secondary));
-        --color: var(--chip-text);
-        border: 2px solid var(--chip-border);
-        font-weight: 600;
-        letter-spacing: 0.025em;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        
-        &:hover {
-          transform: scale(1.05);
-        }
-      }
-    }
-  }
-  
-  .modal-steps-section {
-    .section-header {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      
-      ion-icon {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        border-radius: 50%;
-        padding: 4px;
-        color: white;
-        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
       }
     }
     
-    .step-item {
-      background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-      border: 1px solid #e5e7eb;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-      
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 4px;
-        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-        transform: scaleY(0);
-        transition: transform 0.3s ease;
-      }
-      
-      &:hover {
-        background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
-        border-color: #3b82f6;
-        transform: translateX(8px);
-        box-shadow: 
-          0 10px 15px -3px rgba(0, 0, 0, 0.1),
-          0 4px 6px -2px rgba(0, 0, 0, 0.05);
-          
-        &::before {
-          transform: scaleY(1);
-        }
-        
-        .step-number {
-          background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
-          transform: scale(1.1);
-          box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
-        }
-      }
-      
-      .step-number {
-        background: linear-gradient(135deg, var(--step-color), var(--step-color-dark));
-        border: 2px solid rgba(255, 255, 255, 0.9);
-        box-shadow: 
-          0 4px 8px rgba(0, 0, 0, 0.15),
-          inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        font-weight: 700;
-      }
-      
-      ion-label {
-        font-size: 1rem;
-        line-height: 1.6;
-        color: #374151;
-      }
-    }
-  }
-  
-  .modal-tips-section {
-    .section-header {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      
-      ion-icon {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        border-radius: 50%;
-        padding: 4px;
-        color: white;
-        box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
-      }
-    }
-    
-    .tip-item {
-      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-      border: 1px solid #fbbf24;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-      
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 4px;
-        background: linear-gradient(135deg, #f59e0b, #d97706);
-        transform: scaleY(0);
-        transition: transform 0.3s ease;
-      }
-      
-      &:hover {
-        background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
-        border-color: #f59e0b;
-        transform: translateX(8px);
-        box-shadow: 
-          0 10px 15px -3px rgba(245, 158, 11, 0.2),
-          0 4px 6px -2px rgba(245, 158, 11, 0.1);
-          
-        &::before {
-          transform: scaleY(1);
-        }
-        
-        ion-icon {
-          color: #d97706;
-          transform: scale(1.1);
-        }
-      }
-      
-      ion-icon {
-        transition: all 0.3s ease;
-        background: linear-gradient(135deg, #10b981, #059669);
-        border-radius: 50%;
-        padding: 2px;
-        color: white;
-        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
-      }
-      
-      span {
-        color: #92400e;
-        font-weight: 500;
-        line-height: 1.6;
-      }
-    }
-  }
-  
-  .modal-actions-section {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    border-top: 3px solid #e2e8f0;
-    
-    ion-button {
-      border-radius: 16px;
-      font-weight: 600;
-      letter-spacing: 0.025em;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      
-      &.primary-action {
-        background: linear-gradient(135deg, var(--primary-color), var(--primary-color-dark));
-        position: relative;
+    .progress-section {
+      .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: #f3f4f6;
+        border-radius: 3px;
         overflow: hidden;
+        margin-bottom: 0.5rem;
         
-        &::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
+        .progress-fill {
           height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-          transition: left 0.6s ease;
-        }
-        
-        &:hover {
-          transform: translateY(-2px) scale(1.02);
-          box-shadow: 
-            0 10px 15px -3px rgba(0, 0, 0, 0.2),
-            0 4px 6px -2px rgba(0, 0, 0, 0.1);
-            
-          &::before {
-            left: 100%;
-          }
-        }
-      }
-      
-      &.secondary-action {
-        --background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-        --color: #6b7280;
-        border: 2px solid #d1d5db;
-        
-        &:hover {
-          --background: linear-gradient(135deg, #e5e7eb, #d1d5db);
-          --color: #374151;
-          transform: translateY(-2px);
-          border-color: #9ca3af;
-        }
-      }
-    }
-  }
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-}
-
-// Stats icons in tutorial cards
-.tutorial-stats {
-  ion-icon {
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
-  }
-  
-  &:hover ion-icon {
-    opacity: 1;
-  }
-}
-
-// Action buttons
-.tutorial-action-btn {
-  transition: all 0.3s ease;
-  border-radius: 12px;
-  
-  &:hover {
-    transform: translateX(4px);
-  }
-}
-
-// Empty state styling
-.empty-state {
-  ion-icon {
-    animation: float 3s ease-in-out infinite;
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-// Responsive design improvements
-@media (max-width: 768px) {
-  .hero-gradient {
-    .hero-content {
-      text-align: center;
-    }
-    
-    .hero-icon-section {
-      display: none !important;
-    }
-  }
-  
-  .quick-action-card {
-    margin-bottom: 1rem;
-  }
-  
-  .tutorial-card {
-    margin-bottom: 1.5rem;
-  }
-  
-  // Mobile modal optimizations
-  ion-modal {
-    .modal-content-container {
-      padding: 12px;
-    }
-    
-    .modal-content-section {
-      padding: 20px !important;
-      margin-bottom: 16px !important;
-    }
-    
-    .modal-header-section {
-      .flex {
-        flex-direction: column;
-        text-align: center;
-        gap: 0;
-        
-        .tutorial-icon-container {
-          margin: 0 auto 20px auto;
-        }
-        
-        .tutorial-title {
-          font-size: 1.75rem;
-        }
-        
-        .tutorial-meta {
-          justify-content: center;
+          border-radius: 3px;
+          transition: width 0.3s ease;
           
-          .meta-item {
-            font-size: 0.875rem;
-          }
+          &.progress-blue { background: #2563eb; }
+          &.progress-green { background: #10b981; }
+          &.progress-purple { background: #8b5cf6; }
+          &.progress-orange { background: #f59e0b; }
+          &.progress-red { background: #ef4444; }
+          &.progress-teal { background: #14b8a6; }
         }
       }
-    }
-    
-    .step-item {
-      .flex {
-        padding: 16px !important;
-      }
       
-      .step-number {
-        width: 32px;
-        height: 32px;
-        margin-right: 16px;
+      .progress-text {
+        font-size: 0.75rem;
+        color: #6b7280;
+        font-weight: 500;
       }
     }
+  }
+  
+  .card-footer {
+    padding: 0 1.5rem 1.5rem 1.5rem;
     
-    .tip-item {
-      padding: 16px !important;
+    .action-button {
+      --background: transparent;
+      --color: #6b7280;
+      --padding-start: 0;
+      --padding-end: 0;
+      font-size: 0.875rem;
+      font-weight: 600;
+      height: auto;
+      
+      &.btn-blue { --color: #2563eb; }
+      &.btn-green { --color: #10b981; }
+      &.btn-purple { --color: #8b5cf6; }
+      &.btn-orange { --color: #f59e0b; }
+      &.btn-red { --color: #ef4444; }
+      &.btn-teal { --color: #14b8a6; }
       
       ion-icon {
-        margin-top: 4px;
-      }
-    }
-    
-    .modal-actions-section {
-      .flex {
-        flex-direction: column;
-        gap: 12px;
-        
-        ion-button {
-          height: 48px;
-          font-size: 1rem;
-        }
+        font-size: 1rem;
       }
     }
   }
 }
 
-// Tablet optimizations
-@media (min-width: 769px) and (max-width: 1024px) {
-  ion-modal {
-    .modal-content-container {
-      padding: 20px;
-      max-width: 90%;
-    }
-    
-    .modal-header-section {
-      .tutorial-icon-container {
-        width: 80px;
-        height: 80px;
-      }
-      
-      .tutorial-title {
-        font-size: 2rem;
-      }
-    }
-  }
+// List View Styles
+.tutorials-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-// Large screen optimizations
-@media (min-width: 1400px) {
-  ion-modal {
-    .modal-content-container {
-      max-width: 1200px;
-    }
-    
-    .modal-content-section {
-      padding: 40px !important;
-    }
-    
-    .modal-header-section {
-      .tutorial-icon-container {
-        width: 120px;
-        height: 120px;
-        
-        ion-icon {
-          font-size: 3rem;
-        }
-      }
-      
-      .tutorial-title {
-        font-size: 2.5rem;
-      }
-      
-      .tutorial-description {
-        font-size: 1.25rem;
-      }
-    }
-    
-    .section-header {
-      font-size: 1.75rem;
-      margin-bottom: 2rem;
-    }
-    
-    .step-item, .tip-item {
-      padding: 24px !important;
-      
-      ion-label, span {
-        font-size: 1.125rem;
-      }
-    }
-  }
-}
-
-// Enhanced animations and micro-interactions
-.modal-content-section {
-  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  &:nth-child(1) { animation-delay: 0.1s; }
-  &:nth-child(2) { animation-delay: 0.2s; }
-  &:nth-child(3) { animation-delay: 0.3s; }
-  &:nth-child(4) { animation-delay: 0.4s; }
-}
-
-@keyframes slideInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-// Step item progressive animation
-.step-item {
-  animation: fadeInLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  opacity: 0;
-  
-  @for $i from 1 through 10 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.1}s;
-    }
-  }
-}
-
-@keyframes fadeInLeft {
-  0% {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-// Tip item staggered animation
-.tip-item {
-  animation: fadeInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  opacity: 0;
-  
-  @for $i from 1 through 10 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.15}s;
-    }
-  }
-}
-
-@keyframes fadeInRight {
-  0% {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-// Loading state for modal
-.modal-loading {
-  .modal-content-section {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-// Print styles for modal content
-@media print {
-  ion-modal {
-    .modal-content-container {
-      max-width: 100%;
-      padding: 0;
-    }
-    
-    .modal-content-section {
-      box-shadow: none !important;
-      border: 1px solid #e5e7eb !important;
-      page-break-inside: avoid;
-      margin-bottom: 20px !important;
-    }
-    
-    .modal-actions-section {
-      display: none !important;
-    }
-    
-    .tutorial-icon-container {
-      background: #f3f4f6 !important;
-      
-      ion-icon {
-        color: #6b7280 !important;
-      }
-    }
-  }
-}
-
-// Dark mode support
-.ion-palette-dark {
-  // Header styles
-  ion-header ion-toolbar {
-    --background: #1f2937 !important;
-    --color: #f9fafb !important;
-    
-    ion-title {
-      color: #f9fafb !important;
-    }
-  }
-  
-  // Content background
-  ion-content {
-    --background: #111827 !important;
-  }
-  
-  // Hero section dark mode
-  .hero-gradient {
-    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 50%, #1e293b 100%);
-  }
-  
-  // Quick action cards
-  .quick-action-card {
-    background: rgba(31, 41, 55, 0.95) !important;
-    border-color: rgba(75, 85, 99, 0.3) !important;
-    
-    h3 {
-      color: rgba(243, 244, 246, 0.95) !important;
-    }
-    
-    p {
-      color: rgba(156, 163, 175, 0.85) !important;
-    }
-    
-    &:hover {
-      background: rgba(55, 65, 81, 0.95) !important;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 
-                  0 10px 10px -5px rgba(0, 0, 0, 0.2) !important;
-    }
-  }
-  
-  // Tutorial cards
-  .tutorial-card {
-    background: rgba(31, 41, 55, 0.95) !important;
-    border-color: rgba(75, 85, 99, 0.3) !important;
-    
-    .tutorial-title {
-      color: rgba(243, 244, 246, 0.95) !important;
-    }
-    
-    .tutorial-description {
-      color: rgba(156, 163, 175, 0.85) !important;
-    }
-    
-    .tutorial-difficulty {
-      background: rgba(55, 65, 81, 0.8) !important;
-      color: rgba(209, 213, 219, 0.9) !important;
-    }
-    
-    &:hover {
-      background: rgba(55, 65, 81, 0.95) !important;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
-    }
-  }
-  
-  // Search bar
-  .search-container {
-    background: rgba(31, 41, 55, 0.95) !important;
-    border-color: rgba(75, 85, 99, 0.3) !important;
-    
-    ion-searchbar {
-      --background: rgba(55, 65, 81, 0.8);
-      --color: rgba(243, 244, 246, 0.95);
-      --placeholder-color: rgba(156, 163, 175, 0.7);
-      --icon-color: rgba(156, 163, 175, 0.8);
-      --clear-button-color: rgba(156, 163, 175, 0.8);
-    }
-  }
-  
-  // Filter buttons
-  .filter-button {
-    background: rgba(55, 65, 81, 0.8) !important;
-    color: rgba(156, 163, 175, 0.9) !important;
-    border-color: rgba(75, 85, 99, 0.4) !important;
-    
-    &.active {
-      background: rgba(59, 130, 246, 0.3) !important;
-      color: rgba(147, 197, 253, 0.95) !important;
-      border-color: rgba(59, 130, 246, 0.5) !important;
-    }
-  }
-  
-  // Section titles
-  h2, .section-title {
-    color: rgba(243, 244, 246, 0.95) !important;
-  }
-  
-  // Background colors and text adjustments
-  .bg-white {
-    background: rgba(31, 41, 55, 0.95) !important;
-    border-color: rgba(75, 85, 99, 0.3) !important;
-  }
-  
-  .bg-gray-50 {
-    background: #111827 !important;
-  }
-  
-  .text-gray-800 {
-    color: rgba(243, 244, 246, 0.95) !important;
-  }
-  
-  .text-gray-600 {
-    color: rgba(209, 213, 219, 0.85) !important;
-  }
-  
-  .text-gray-500 {
-    color: rgba(156, 163, 175, 0.8) !important;
-  }
-  
-  // Icon background adjustments
-  .bg-blue-100 {
-    background-color: rgba(59, 130, 246, 0.25) !important;
-    
-    ion-icon {
-      color: rgba(147, 197, 253, 0.9) !important;
-    }
-  }
-  
-  .bg-green-100, .bg-emerald-100 {
-    background-color: rgba(34, 197, 94, 0.25) !important;
-    
-    ion-icon {
-      color: rgba(134, 239, 172, 0.9) !important;
-    }
-  }
-  
-  .bg-purple-100 {
-    background-color: rgba(168, 85, 247, 0.25) !important;
-    
-    ion-icon {
-      color: rgba(196, 181, 253, 0.9) !important;
-    }
-  }
-  
-  .bg-orange-100 {
-    background-color: rgba(249, 115, 22, 0.25) !important;
-    
-    ion-icon {
-      color: rgba(251, 191, 36, 0.9) !important;
-    }
-  }
-  
-  .bg-red-100 {
-    background-color: rgba(239, 68, 68, 0.25) !important;
-    
-    ion-icon {
-      color: rgba(252, 165, 165, 0.9) !important;
-    }
-  }
-  
-  .bg-teal-100 {
-    background-color: rgba(20, 184, 166, 0.25) !important;
-    
-    ion-icon {
-      color: rgba(153, 246, 228, 0.9) !important;
-    }
-  }
-
-  // Modal specific dark mode styles
-  ion-modal {
-    .modal-content-section {
-      background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
-      border-color: #374151 !important;
-      
-      .tutorial-title {
-        background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      
-      .tutorial-description {
-        color: #d1d5db !important;
-      }
-      
-      .section-header {
-        color: #f9fafb !important;
-      }
-      
-      .step-item, .tip-item {
-        background: linear-gradient(135deg, #374151 0%, #1f2937 100%) !important;
-        border-color: #4b5563 !important;
-        
-        ion-label, span {
-          color: #e5e7eb !important;
-        }
-      }
-    }
-  }
-}
-
-// Custom scrollbar for modal content
-ion-modal ion-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-ion-modal ion-content::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-
-ion-modal ion-content::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-}
-
-ion-modal ion-content::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-// Focus states for accessibility
-.quick-action-card:focus-visible,
-.tutorial-card:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-}
-
-// Loading animation for tutorial icons
-.tutorial-icon {
-  animation: iconPulse 2s ease-in-out infinite;
-}
-
-@keyframes iconPulse {
-  0%, 100% {
-    opacity: 0.8;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-// Color-specific gradients for tutorial cards
-.gradient-emerald {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-}
-
-.gradient-blue {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-}
-
-.gradient-purple {
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-}
-
-.gradient-orange {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-}
-
-.gradient-red {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-}
-
-.gradient-teal {
-  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
-}
-
-// Estilos específicos para el carrusel de tutoriales
-.tutorial-carousel-card {
-  height: 100%;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
-  }
-}
-
-.carousel-tutorial-header {
-  position: relative;
+.executive-row {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
   display: flex;
   align-items: center;
+  gap: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-color: #d1d5db;
+  }
+  
+  .row-icon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    
+    &.icon-blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+    &.icon-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    &.icon-purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+    &.icon-orange { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+    &.icon-red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+    &.icon-teal { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
+    
+    ion-icon {
+      font-size: 1.5rem;
+      color: white;
+    }
+  }
+  
+  .row-content {
+    flex: 1;
+    min-width: 0;
+    
+    .row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+      
+      .row-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0;
+      }
+      
+      .row-badges {
+        display: flex;
+        gap: 0.5rem;
+        flex-shrink: 0;
+        
+        .category-badge {
+          padding: 0.25rem 0.75rem;
+          background: #f3f4f6;
+          color: #6b7280;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          border-radius: 6px;
+        }
+        
+        .difficulty-badge {
+          padding: 0.25rem 0.75rem;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          border-radius: 6px;
+          
+          &.badge-principiante {
+            background: rgba(34, 197, 94, 0.1);
+            color: #166534;
+          }
+          
+          &.badge-intermedio {
+            background: rgba(245, 158, 11, 0.1);
+            color: #92400e;
+          }
+          
+          &.badge-avanzado {
+            background: rgba(239, 68, 68, 0.1);
+            color: #991b1b;
+          }
+        }
+      }
+    }
+    
+    .row-description {
+      font-size: 0.875rem;
+      color: #6b7280;
+      line-height: 1.5;
+      margin: 0 0 0.75rem 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .row-meta {
+      display: flex;
+      gap: 1.5rem;
+      
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.75rem;
+        color: #6b7280;
+        
+        ion-icon {
+          font-size: 0.875rem;
+          color: #9ca3af;
+        }
+      }
+    }
+  }
+  
+  .row-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+    
+    .progress-circle {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: white;
+      
+      &.progress-blue { background: #2563eb; }
+      &.progress-green { background: #10b981; }
+      &.progress-purple { background: #8b5cf6; }
+      &.progress-orange { background: #f59e0b; }
+      &.progress-red { background: #ef4444; }
+      &.progress-teal { background: #14b8a6; }
+    }
+    
+    .action-button {
+      --background: transparent;
+      --padding-start: 0.75rem;
+      --padding-end: 0.75rem;
+      height: 2.5rem;
+      
+      &.btn-blue { --color: #2563eb; }
+      &.btn-green { --color: #10b981; }
+      &.btn-purple { --color: #8b5cf6; }
+      &.btn-orange { --color: #f59e0b; }
+      &.btn-red { --color: #ef4444; }
+      &.btn-teal { --color: #14b8a6; }
+    }
+  }
+}
+
+// Gradient Classes
+.gradient-blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+.gradient-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+.gradient-purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+.gradient-orange { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+.gradient-red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+.gradient-teal { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
+
+// Empty State
+.empty-state {
+  display: flex;
   justify-content: center;
-  overflow: hidden;
+  align-items: center;
+  min-height: 300px;
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
-    pointer-events: none;
+  .empty-content {
+    text-align: center;
+    max-width: 400px;
+    
+    .empty-icon {
+      font-size: 4rem;
+      color: #d1d5db;
+      margin-bottom: 1rem;
+    }
+    
+    .empty-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #374151;
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .empty-description {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin: 0 0 1.5rem 0;
+      line-height: 1.5;
+    }
   }
 }
 
-.tutorial-nav-btn {
-  --background: rgba(59, 130, 246, 0.1);
-  --color: #3b82f6;
-  border-radius: 50%;
-  margin: 0 4px;
+// Modal Styles
+.modal-header {
+  ion-toolbar {
+    --background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    --color: #1f2937;
+    border-bottom: 1px solid #e5e7eb;
+    
+    ion-title {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    ion-button {
+      --color: #6b7280;
+      
+      &:hover {
+        --color: #374151;
+      }
+    }
+  }
+}
+
+.modal-content {
+  --background: #f8fafc;
   
-  &:hover {
-    --background: #3b82f6;
-    --color: white;
-    transform: scale(1.1);
+  .tutorial-detail {
+    .detail-header {
+      height: 200px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+      
+      .header-overlay {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        color: white;
+        
+        .detail-icon {
+          font-size: 4rem;
+          margin-bottom: 1rem;
+        }
+        
+        .detail-title {
+          font-size: 2rem;
+          font-weight: 700;
+          margin: 0 0 0.5rem 0;
+        }
+        
+        .detail-subtitle {
+          font-size: 1rem;
+          opacity: 0.9;
+          margin: 0;
+        }
+      }
+    }
+    
+    .detail-content {
+      padding: 0 2rem;
+      
+      .content-section {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #e5e7eb;
+        
+        h3 {
+          font-size: 1.125rem;
+          font-weight: 600;
+          color: #1f2937;
+          margin: 0 0 1rem 0;
+        }
+        
+        p {
+          font-size: 0.875rem;
+          color: #6b7280;
+          line-height: 1.6;
+          margin: 0;
+        }
+        
+        .learning-objectives {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          
+          li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+            color: #374151;
+            
+            ion-icon {
+              font-size: 1rem;
+            }
+          }
+        }
+        
+        .tutorial-steps {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          
+          .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            
+            &.completed {
+              background: #f0fdf4;
+              border-color: #bbf7d0;
+            }
+            
+            .step-number {
+              width: 2rem;
+              height: 2rem;
+              border-radius: 50%;
+              background: #f3f4f6;
+              color: #6b7280;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: 600;
+              font-size: 0.875rem;
+              flex-shrink: 0;
+            }
+            
+            .step-content {
+              flex: 1;
+              
+              h4 {
+                font-size: 0.875rem;
+                font-weight: 600;
+                color: #1f2937;
+                margin: 0 0 0.25rem 0;
+              }
+              
+              p {
+                font-size: 0.75rem;
+                color: #6b7280;
+                margin: 0;
+              }
+            }
+            
+            .step-status {
+              ion-icon {
+                font-size: 1.25rem;
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    .tutorial-actions {
+      padding: 0 2rem 2rem 2rem;
+      
+      ion-button {
+        --border-radius: 8px;
+        --padding-top: 1rem;
+        --padding-bottom: 1rem;
+        font-weight: 600;
+        
+        &.btn-blue { --background: #2563eb; }
+        &.btn-green { --background: #10b981; }
+        &.btn-purple { --background: #8b5cf6; }
+        &.btn-orange { --background: #f59e0b; }
+        &.btn-red { --background: #ef4444; }
+        &.btn-teal { --background: #14b8a6; }
+      }
+    }
   }
 }
 
-.tutorial-slide {
-  height: auto;
-  padding: 0 4px;
-}
-
-.pagination-dot {
-  transition: all 0.3s ease;
+// Responsive adjustments
+@media (max-width: 768px) {
+  .executive-dashboard .dashboard-container {
+    padding: 1rem;
+  }
   
-  &.active {
-    background-color: #3b82f6;
-    transform: scale(1.2);
+  .dashboard-header .header-content {
+    padding: 1.5rem;
+    
+    .title-section h1 {
+      font-size: 1.875rem;
+    }
   }
   
-  &:hover {
-    background-color: #60a5fa;
-    transform: scale(1.1);
-  }
-}
-
-.difficulty-badge, .duration-badge {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-// Swiper container customization
-swiper-container {
-  --swiper-theme-color: #3b82f6;
-  --swiper-navigation-size: 24px;
-  padding: 8px 0;
-}
-
-// Responsive adjustments for carousel
-@media (max-width: 640px) {
-  .tutorial-carousel-card {
-    margin: 0 8px;
+  .tutorials-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
   
-  .carousel-tutorial-header {
-    height: 160px;
+  .executive-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    
+    .row-content .row-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .row-actions {
+      align-self: stretch;
+      justify-content: space-between;
+    }
   }
   
-  .tutorial-nav-btn {
-    display: none;
+  .filter-chips {
+    flex-direction: column;
+    align-items: flex-start;
   }
-}
-
-@media (min-width: 641px) and (max-width: 1024px) {
-  .carousel-tutorial-header {
-    height: 180px;
+  
+  .modal-content .tutorial-detail .detail-content {
+    padding: 0 1rem;
   }
-}
-
-// Animation for tutorial cards appearing
-.tutorial-slide {
-  opacity: 0;
-  animation: slideIn 0.6s ease-out forwards;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  .modal-content .tutorial-detail .tutorial-actions {
+    padding: 0 1rem 1rem 1rem;
   }
 }

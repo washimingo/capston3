@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { IonContent, IonIcon, IonItem, IonLabel, IonButton } from '@ionic/angular/standalone';
+import { IonContent, IonIcon } from '@ionic/angular/standalone';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { addIcons } from 'ionicons';
-import { person, mail, call, business, calendar, settings, notifications, shieldCheckmark, chevronForward, documentText, checkmarkCircle, create, logOut, time, closeCircle, download, helpCircle, chevronDown } from 'ionicons/icons';
+import { person, mail, call, business, calendar, chevronForward, documentText, checkmarkCircle, logOut, time, closeCircle, chevronDown, personCircleOutline, barChartOutline, personOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-user',
@@ -15,9 +14,6 @@ import { person, mail, call, business, calendar, settings, notifications, shield
   imports: [
     IonContent,
     IonIcon,
-    IonItem,
-    IonLabel,
-    IonButton,
     CommonModule,
     FormsModule,
     HeaderComponent
@@ -25,48 +21,26 @@ import { person, mail, call, business, calendar, settings, notifications, shield
 })
 export class UserPage implements OnInit {
 
-  constructor(private router: Router) {
+  constructor() {
     addIcons({
       person,
       mail,
       call,
       business,
       calendar,
-      settings,
-      notifications,
-      shieldCheckmark,
       chevronForward,
       documentText,
       checkmarkCircle,
-      create,
       logOut,
       time,
       closeCircle,
-      download,
-      helpCircle,
-      chevronDown
+      chevronDown,
+      personCircleOutline,
+      barChartOutline,
+      personOutline
     });
   }
 
   ngOnInit() {
-  }
-
-  // Método para navegar a la página de tips
-  goToTips() {
-    this.router.navigate(['/tips']);
-  }
-
-  onHeaderButtonClick(action: string): void {
-    switch(action) {
-      case 'notifications':
-        // Mostrar notificaciones
-        console.log('Ver notificaciones');
-        break;
-      case 'help':
-        this.goToTips();
-        break;
-      default:
-        console.log('Acción de botón no reconocida:', action);
-    }
   }
 }
