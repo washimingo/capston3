@@ -1,409 +1,432 @@
-// Modern User Page SCSS
-
-// Background gradient
-.bg-gradient-to-br {
-  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
-}
-
-.from-gray-50 {
-  --tw-gradient-from: #f9fafb;
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(249, 250, 251, 0));
-}
-
-.via-blue-50 {
-  --tw-gradient-stops: var(--tw-gradient-from), #eff6ff, var(--tw-gradient-to, rgba(239, 246, 255, 0));
-}
-
-.to-indigo-50 {
-  --tw-gradient-to: #eef2ff;
-}
-
-// Avatar with gradient background
-.user-avatar {
-  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
-  position: relative;
-  overflow: hidden;
+// Estilos optimizados para aplicación de escritorio
+.user-page {
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-  }
-}
-
-// Enhanced hover effects for information cards
-.info-card {
-  transition: all 0.3s ease;
+  // Configuración base para escritorio
+  min-height: 100vh;
+  font-size: 16px; // Tamaño base más grande para escritorio
   
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  }
-  
-  .icon-container {
-    transition: transform 0.3s ease;
-  }
-  
-  &:hover .icon-container {
-    transform: scale(1.1);
-  }
-}
-
-// Performance cards with enhanced animations
-.performance-card {
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.5s ease;
-  }
-  
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  // Header con gradiente mejorado para pantallas grandes - Optimized
+  .gradient-header {
+    background: linear-gradient(135deg, #19417C 0%, #2563eb 50%, #1e40af 100%);
+    box-shadow: 0 8px 32px rgba(25, 65, 124, 0.3);
+    transition: box-shadow 0.2s ease;
     
-    &::before {
-      left: 100%;
+    @media (hover: hover) {
+      &:hover {
+        box-shadow: 0 12px 40px rgba(25, 65, 124, 0.4);
+      }
     }
   }
-  
-  .performance-icon {
+
+  // Sombras más pronunciadas para desktop - Optimized
+  .card-shadow {
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease;
+    
+    @media (hover: hover) {
+      &:hover {
+        box-shadow: 
+          0 6px 8px -2px rgba(0, 0, 0, 0.1), 
+          0 2px 4px -1px rgba(0, 0, 0, 0.05);
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  // Mejoras específicas para ion-items en desktop - Optimized
+  ion-item {
+    --transition: transform 0.15s ease-in-out;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --min-height: 64px; // Altura mínima mayor para desktop
+    margin-bottom: 8px;
+    border-radius: 8px;
+    
+    @media (hover: hover) {
+      &:hover {
+        --background: #f8fafc;
+        transform: translateX(2px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    ion-label {
+      h3 {
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+      
+      p {
+        font-size: 14px;
+        color: #64748b;
+      }
+    }
+  }
+
+  // Botones optimizados para desktop
+  ion-button {
+    --border-radius: 12px;
+    --padding-start: 24px;
+    --padding-end: 24px;
+    height: 48px;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
     transition: all 0.3s ease;
-  }
-  
-  &:hover .performance-icon {
-    transform: scale(1.1) rotate(5deg);
-  }
-}
-
-// Status indicators with pulse animation
-.status-indicator {
-  position: relative;
-  
-  &.online::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: inherit;
-    border-radius: inherit;
-    animation: pulse-green 2s infinite;
-  }
-}
-
-@keyframes pulse-green {
-  0% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.3);
-    opacity: 0.4;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-}
-
-// Activity timeline
-.activity-timeline {
-  position: relative;
-  
-  .activity-item {
-    position: relative;
-    
-    &:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      left: 4px;
-      top: 20px;
-      width: 1px;
-      height: calc(100% - 8px);
-      background: linear-gradient(to bottom, #e5e7eb, transparent);
-    }
-  }
-  
-  .activity-dot {
-    position: relative;
-    z-index: 1;
-    
-    &.blue {
-      background: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    }
-    
-    &.green {
-      background: #10b981;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-    }
-    
-    &.orange {
-      background: #f59e0b;
-      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
-    }
-  }
-}
-
-// Enhanced buttons
-.action-button {
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s ease;
-  }
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    
-    &::before {
-      left: 100%;
-    }
-  }
-  
-  &.primary {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     
     &:hover {
-      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    &.button-outline {
+      --border-width: 2px;
+      --border-style: solid;
     }
   }
-  
-  &.secondary {
-    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+
+  // Iconos con animaciones mejoradas
+  ion-icon {
+    transition: all 0.3s ease;
     
     &:hover {
-      background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+      transform: scale(1.1);
     }
   }
-}
 
-// Responsive design
-@media (max-width: 1024px) {
-  .max-w-7xl {
-    padding-left: 1rem;
-    padding-right: 1rem;
+  // Grid responsivo optimizado para desktop
+  .desktop-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
   }
 
-  .grid.lg\:grid-cols-12 {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  // Tarjetas de estadísticas con efectos especiales
+  .stat-card {
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: linear-gradient(145deg, #f8fafc 0%, #ffffff 100%);
+      border-color: #cbd5e1;
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    ion-icon {
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
   }
 
-  .flex.lg\:flex-row {
-    flex-direction: column;
+  // Contenedor principal con máximo ancho
+  .desktop-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    
+    @media (max-width: 768px) {
+      padding: 1rem;
+    }
   }
 
-  .space-x-6.lg\:space-x-8 > :not([hidden]) ~ :not([hidden]) {
-    margin-left: 0;
-    margin-top: 1rem;
+  // Tipografía mejorada para desktop
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    
+    @media (max-width: 1024px) {
+      font-size: 1.75rem;
+    }
   }
 
-  .text-2xl.lg\:text-3xl {
-    font-size: 1.5rem;
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #1f2937;
   }
 
-  .w-20.lg\:w-24 {
-    width: 4rem;
-    height: 4rem;
+  // Espaciado consistente
+  .section-spacing {
+    margin-bottom: 2rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
-  .text-3xl.lg\:text-4xl {
-    font-size: 1.875rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .px-4.sm\:px-6.lg\:px-8 {
-    padding-left: 1rem;
-    padding-right: 1rem;
+  // Animaciones para entrada de elementos
+  .fade-in {
+    animation: fadeInUp 0.6s ease-out;
   }
 
-  .py-6 {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  .py-8 {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+  // Efectos de scroll suaves
+  .smooth-scroll {
+    scroll-behavior: smooth;
   }
 
-  .grid.md\:grid-cols-2 {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  // Responsive breakpoints específicos para la aplicación
+  @media (min-width: 1440px) {
+    .desktop-container {
+      padding: 3rem;
+    }
+    
+    .gradient-header {
+      padding: 3rem;
+    }
   }
 
-  .grid.lg\:grid-cols-4 {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+  @media (max-width: 1024px) {
+    font-size: 14px;
+    
+    .desktop-container {
+      padding: 1.5rem;
+    }
+    
+    ion-item {
+      --min-height: 56px;
+    }
+    
+    ion-button {
+      height: 44px;
+      font-size: 14px;
+    }
   }
 
-  .p-6 {
-    padding: 1rem;
-  }
-
-  .space-y-6 > :not([hidden]) ~ :not([hidden]) {
-    margin-top: 1rem;
-  }
-
-  .text-lg {
-    font-size: 1rem;
-  }
-
-  .text-3xl {
-    font-size: 1.5rem;
-  }
-
-  .w-16.h-16 {
-    width: 3rem;
-    height: 3rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .space-x-4 > :not([hidden]) ~ :not([hidden]) {
-    margin-left: 0.5rem;
-  }
-
-  .space-x-6 > :not([hidden]) ~ :not([hidden]) {
-    margin-left: 0.75rem;
-  }
-
-  .w-12.h-12 {
-    width: 2.5rem;
-    height: 2.5rem;
-  }
-
-  .text-xl {
-    font-size: 1.125rem;
-  }
-
-  .rounded-xl {
-    border-radius: 0.75rem;
+  @media (max-width: 768px) {
+    .grid-cols-2 {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    .gradient-header {
+      .hidden {
+        display: block !important;
+      }
+    }
   }
 }
 
 // Dark mode support
-:root.dark {
-  .bg-white {
-    background-color: #1f2937;
-    border-color: #374151;
+:root.ion-palette-dark {
+  .user-page {
+    // Header styles
+    ion-header ion-toolbar {
+      --background: #1f2937 !important;
+      --color: #f9fafb !important;
+      
+      ion-title {
+        color: #f9fafb !important;
+      }
+    }
+    
+    // Content background
+    ion-content {
+      --background: #111827 !important;
+    }
+    
+    // Gradient header dark mode
+    .gradient-header {
+      background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 50%, #1e293b 100%) !important;
+      box-shadow: 0 8px 32px rgba(30, 64, 175, 0.4) !important;
+      
+      &:hover {
+        box-shadow: 0 12px 40px rgba(30, 64, 175, 0.5) !important;
+      }
+    }
+    
+    // Cards and containers
+    .bg-white {
+      background: rgba(31, 41, 55, 0.95) !important;
+      border: 1px solid rgba(75, 85, 99, 0.3) !important;
+    }
+    
+    .bg-gray-50 {
+      background: #111827 !important;
+    }
+    
+    .card-shadow {
+      box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+        0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
+      
+      &:hover {
+        box-shadow: 
+          0 10px 15px -3px rgba(0, 0, 0, 0.4), 
+          0 4px 6px -2px rgba(0, 0, 0, 0.3) !important;
+      }
+    }
+    
+    // Text colors
+    .text-gray-800 {
+      color: rgba(243, 244, 246, 0.95) !important;
+    }
+    
+    .text-gray-600 {
+      color: rgba(209, 213, 219, 0.85) !important;
+    }
+    
+    .text-gray-500 {
+      color: rgba(156, 163, 175, 0.8) !important;
+    }
+    
+    .text-gray-400 {
+      color: rgba(156, 163, 175, 0.7) !important;
+    }
+    
+    // Ion-item dark mode
+    ion-item {
+      --background: rgba(31, 41, 55, 0.6);
+      --color: rgba(243, 244, 246, 0.95);
+      --border-color: rgba(75, 85, 99, 0.3);
+      
+      &:hover {
+        --background: rgba(55, 65, 81, 0.8) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+      }
+      
+      ion-label {
+        color: rgba(243, 244, 246, 0.95) !important;
+      }
+    }
+    
+    // Ion-button dark mode
+    ion-button {
+      --background: rgba(55, 65, 81, 0.8);
+      --color: rgba(243, 244, 246, 0.95);
+      --border-color: rgba(75, 85, 99, 0.4);
+      
+      &[fill="outline"] {
+        --border-color: rgba(75, 85, 99, 0.5);
+        --color: rgba(243, 244, 246, 0.9);
+        
+        &:hover {
+          --background: rgba(75, 85, 99, 0.3);
+        }
+      }
+      
+      &[color="primary"] {
+        --background: rgba(59, 130, 246, 0.8);
+        --color: rgba(255, 255, 255, 0.95);
+        
+        &:hover {
+          --background: rgba(59, 130, 246, 0.9);
+        }
+      }
+    }
+    
+    // Icon backgrounds
+    .bg-blue-100 {
+      background-color: rgba(59, 130, 246, 0.25) !important;
+      
+      ion-icon {
+        color: rgba(147, 197, 253, 0.9) !important;
+      }
+    }
+    
+    .bg-green-100 {
+      background-color: rgba(34, 197, 94, 0.25) !important;
+      
+      ion-icon {
+        color: rgba(134, 239, 172, 0.9) !important;
+      }
+    }
+    
+    .bg-purple-100 {
+      background-color: rgba(168, 85, 247, 0.25) !important;
+      
+      ion-icon {
+        color: rgba(196, 181, 253, 0.9) !important;
+      }
+    }
+    
+    .bg-orange-100 {
+      background-color: rgba(249, 115, 22, 0.25) !important;
+      
+      ion-icon {
+        color: rgba(251, 191, 36, 0.9) !important;
+      }
+    }
+    
+    .bg-red-100 {
+      background-color: rgba(239, 68, 68, 0.25) !important;
+      
+      ion-icon {
+        color: rgba(252, 165, 165, 0.9) !important;
+      }
+    }
+    
+    .bg-yellow-100 {
+      background-color: rgba(245, 158, 11, 0.25) !important;
+      
+      ion-icon {
+        color: rgba(251, 191, 36, 0.9) !important;
+      }
+    }
+    
+    .bg-indigo-100 {
+      background-color: rgba(99, 102, 241, 0.25) !important;
+      
+      ion-icon {
+        color: rgba(165, 180, 252, 0.9) !important;
+      }
+    }
+    
+    .bg-gray-100 {
+      background-color: rgba(107, 114, 128, 0.25) !important;
+      
+      ion-icon {
+        color: rgba(156, 163, 175, 0.9) !important;
+      }
+    }
+    
+    // Avatar and profile specific
+    .profile-avatar {
+      border-color: rgba(75, 85, 99, 0.4) !important;
+    }
+    
+    // Statistics cards
+    .stats-card {
+      background: rgba(31, 41, 55, 0.95) !important;
+      border-color: rgba(75, 85, 99, 0.3) !important;
+      
+      .stats-value {
+        color: rgba(243, 244, 246, 0.95) !important;
+      }
+      
+      .stats-label {
+        color: rgba(156, 163, 175, 0.8) !important;
+      }
+    }
+    
+    // Gradients adjustment for dark mode
+    .gradient-bg {
+      background: linear-gradient(135deg, rgba(31, 41, 55, 0.95) 0%, rgba(17, 24, 39, 0.95) 100%) !important;
+    }
   }
-
-  .bg-gray-50 {
-    background-color: #111827;
-  }
-
-  .bg-gradient-to-br.from-gray-50.via-blue-50.to-indigo-50 {
-    background-image: linear-gradient(to bottom right, #111827, #1e293b, #1e1b4b);
-  }
-
-  .text-gray-900 {
-    color: #f9fafb;
-  }
-
-  .text-gray-600 {
-    color: #d1d5db;
-  }
-
-  .text-gray-500 {
-    color: #9ca3af;
-  }
-
-  .border-gray-200 {
-    border-color: #374151;
-  }
-
-  .bg-blue-50 {
-    background-color: rgba(59, 130, 246, 0.1);
-  }
-
-  .bg-green-50 {
-    background-color: rgba(34, 197, 94, 0.1);
-  }
-
-  .bg-purple-50 {
-    background-color: rgba(168, 85, 247, 0.1);
-  }
-
-  .bg-orange-50 {
-    background-color: rgba(249, 115, 22, 0.1);
-  }
-
-  .bg-yellow-50 {
-    background-color: rgba(245, 158, 11, 0.1);
-  }
-
-  .bg-red-50 {
-    background-color: rgba(239, 68, 68, 0.1);
-  }
-
-  .border-blue-200 {
-    border-color: rgba(59, 130, 246, 0.3);
-  }
-
-  .border-green-200 {
-    border-color: rgba(34, 197, 94, 0.3);
-  }
-
-  .border-purple-200 {
-    border-color: rgba(168, 85, 247, 0.3);
-  }
-
-  .border-orange-200 {
-    border-color: rgba(249, 115, 22, 0.3);
-  }
-
-  .border-yellow-200 {
-    border-color: rgba(245, 158, 11, 0.3);
-  }
-
-  .border-red-200 {
-    border-color: rgba(239, 68, 68, 0.3);
-  }
-
-  .bg-gray-100 {
-    background-color: #374151;
-  }
-
-  .activity-item:not(:last-child)::after {
-    background: linear-gradient(to bottom, #4b5563, transparent);
-  }
-}
-
-// Smooth transitions
-* {
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
-
-// Enhanced shadows
-.shadow-sm {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-:root.dark .shadow-sm {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
 }

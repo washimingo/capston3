@@ -1,137 +1,191 @@
 <app-header 
   title="Configuración" 
-  titleIcon="settings-outline"
-  shadowClass="shadow-sm border-b border-gray-200">
+  shadowClass="shadow-lg"
+  [endButtons]="[{icon: 'save-outline', action: 'save', iconOnly: true}]"
+  (buttonClick)="onHeaderButtonClick($event)">
 </app-header>
 
 <ion-content [fullscreen]="true" class="bg-gray-50">
-  <!-- Modern Settings Layout -->
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-    <!-- Page Header -->
-    <div class="bg-white border-b border-gray-200 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="mt-1 text-sm text-gray-500">Personaliza tu experiencia y gestiona tus preferencias</p>
-          </div>
-          <div class="flex items-center space-x-3">
-            <div class="hidden sm:flex items-center px-3 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
-              <div class="w-2 h-2 bg-yellow-400 rounded-full mr-2"></div>
-              Pendiente
-            </div>
-          </div>
-        </div>
+  <!-- Hero Section -->
+  <div class="hero-section text-white py-8 px-6"
+       style="background: linear-gradient(135deg, #19417C 0%, #2563eb 50%, #1e40af 100%);">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="w-16 h-16 bg-white/20 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+        <ion-icon icon="construct-outline" class="text-4xl text-white" style="font-size: 2rem !important; color: white !important;"></ion-icon>
       </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <!-- Settings Cards Grid -->
-        <div class="lg:col-span-8 space-y-6">
-          
-          <!-- Notification Preferences -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <h2 class="text-lg font-semibold text-gray-900 flex items-center">
-                <ion-icon icon="notifications-outline" class="mr-3 text-orange-500"></ion-icon>
-                Preferencias de Notificación
-              </h2>
-            </div>
-            <div class="p-6 space-y-4">
-              <div class="flex items-center justify-between p-4 bg-orange-50 rounded-lg border border-orange-200">
-                <div class="flex items-center space-x-4">
-                  <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-                    <ion-icon icon="phone-portrait-outline" class="text-orange-600 text-xl"></ion-icon>
-                  </div>
-                  <div>
-                    <h3 class="font-semibold text-gray-900">Notificaciones Push</h3>
-                    <p class="text-sm text-gray-600">Recibir alertas importantes en tiempo real</p>
-                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 mt-1">
-                      Recomendado
-                    </span>
-                  </div>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <span class="text-sm text-gray-500">Activado</span>
-                  <div class="w-11 h-6 bg-orange-200 rounded-full relative">
-                    <div class="w-5 h-5 bg-orange-500 rounded-full absolute top-0.5 right-0.5 transition-transform"></div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="flex items-center justify-between p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                <div class="flex items-center space-x-4">
-                  <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
-                    <ion-icon icon="mail-outline" class="text-yellow-600 text-xl"></ion-icon>
-                  </div>
-                  <div>
-                    <h3 class="font-semibold text-gray-900">Recordatorios por Email</h3>
-                    <p class="text-sm text-gray-600">Resúmenes diarios y alertas de vencimiento</p>
-                  </div>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <span class="text-sm text-gray-500">Desactivado</span>
-                  <div class="w-11 h-6 bg-gray-200 rounded-full relative">
-                    <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition-transform border border-gray-300"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Account Settings -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <h2 class="text-lg font-semibold text-gray-900 flex items-center">
-                <ion-icon icon="person-outline" class="mr-3 text-blue-500"></ion-icon>
-                Configuración de Cuenta
-              </h2>
-            </div>
-            <div class="p-6">
-              <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors cursor-pointer">
-                <div class="flex items-center space-x-4">
-                  <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                    <ion-icon icon="person-circle-outline" class="text-blue-600 text-xl"></ion-icon>
-                  </div>
-                  <div>
-                    <h3 class="font-semibold text-gray-900">Información Personal</h3>
-                    <p class="text-sm text-gray-600">Nombre, email, departamento y más</p>
-                  </div>
-                </div>
-                <ion-icon icon="chevron-forward-outline" class="text-gray-400"></ion-icon>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Sidebar -->
-        <div class="lg:col-span-4 space-y-6">
-          
-          <!-- System Status -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Estado del Sistema</h3>
-            <div class="space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600">Versión</span>
-                <span class="text-sm font-medium text-gray-900">1.0.0</span>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600">Última actualización</span>
-                <span class="text-sm font-medium text-gray-900">Hace 2 días</span>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600">Base de datos</span>
-                <div class="flex items-center space-x-2">
-                  <div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                  <span class="text-sm font-medium text-yellow-600">Pendiente</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <h1 class="text-2xl font-bold mb-2">Configuración</h1>
+      <p class="text-blue-100">Personaliza tu experiencia en la aplicación</p>
     </div>
   </div>
+
+  <!-- Settings Container -->
+  <div class="max-w-4xl mx-auto px-6 py-8">
+    
+    <!-- Appearance Section -->
+    <div class="settings-section mb-8">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+        <ion-icon icon="color-palette-outline" class="mr-2 text-blue-600"></ion-icon>
+        Apariencia
+      </h2>
+      
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <!-- Dark Mode Toggle -->
+        <div class="setting-item flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0">
+          <div class="flex items-center space-x-4">
+            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <ion-icon icon="moon-outline" class="text-blue-600"></ion-icon>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-800">Modo Oscuro</h3>
+              <p class="text-sm text-gray-500">Cambia el tema de la aplicación</p>
+            </div>
+          </div>
+          <ion-toggle 
+            [checked]="paletteToggle" 
+            (ionChange)="toggleChange($event)"
+            class="ml-4">
+          </ion-toggle>
+        </div>
+        
+        <!-- Language Setting -->
+        <div class="setting-item flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0">
+          <div class="flex items-center space-x-4">
+            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <ion-icon icon="language-outline" class="text-green-600"></ion-icon>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-800">Idioma</h3>
+              <p class="text-sm text-gray-500">Español (México)</p>
+            </div>
+          </div>
+          <ion-button fill="clear" size="small" color="medium">
+            <ion-icon icon="chevron-forward-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications Section -->
+    <div class="settings-section mb-8">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+        <ion-icon icon="notifications-outline" class="mr-2 text-orange-600"></ion-icon>
+        Notificaciones
+      </h2>
+      
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <!-- Push Notifications -->
+        <div class="setting-item flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0">
+          <div class="flex items-center space-x-4">
+            <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+              <ion-icon icon="phone-portrait-outline" class="text-orange-600"></ion-icon>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-800">Notificaciones Push</h3>
+              <p class="text-sm text-gray-500">Recibir alertas importantes</p>
+            </div>
+          </div>
+          <ion-toggle class="ml-4"></ion-toggle>
+        </div>
+        
+        <!-- Email Notifications -->
+        <div class="setting-item flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0">
+          <div class="flex items-center space-x-4">
+            <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+              <ion-icon icon="mail-outline" class="text-yellow-600"></ion-icon>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-800">Recordatorios por Email</h3>
+              <p class="text-sm text-gray-500">Enviar resúmenes por correo</p>
+            </div>
+          </div>
+          <ion-toggle class="ml-4"></ion-toggle>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Section -->
+    <div class="settings-section mb-8">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+        <ion-icon icon="person-outline" class="mr-2 text-purple-600"></ion-icon>
+        Cuenta
+      </h2>
+      
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <!-- Profile -->
+        <div class="setting-item flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0">
+          <div class="flex items-center space-x-4">
+            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+              <ion-icon icon="person-circle-outline" class="text-purple-600"></ion-icon>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-800">Perfil</h3>
+              <p class="text-sm text-gray-500">Administrar información personal</p>
+            </div>
+          </div>
+          <ion-button fill="clear" size="small" color="medium">
+            <ion-icon icon="chevron-forward-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+        
+        <!-- Privacy -->
+        <div class="setting-item flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0">
+          <div class="flex items-center space-x-4">
+            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <ion-icon icon="shield-outline" class="text-indigo-600"></ion-icon>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-800">Privacidad</h3>
+              <p class="text-sm text-gray-500">Configuración de datos y privacidad</p>
+            </div>
+          </div>
+          <ion-button fill="clear" size="small" color="medium">
+            <ion-icon icon="chevron-forward-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="settings-section">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+        <ion-icon icon="information-circle-outline" class="mr-2 text-gray-600"></ion-icon>
+        Acerca de
+      </h2>
+      
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <!-- Version -->
+        <div class="setting-item flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0">
+          <div class="flex items-center space-x-4">
+            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+              <ion-icon icon="code-outline" class="text-gray-600"></ion-icon>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-800">Versión</h3>
+              <p class="text-sm text-gray-500">1.0.0</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Help -->
+        <div class="setting-item flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0">
+          <div class="flex items-center space-x-4">
+            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <ion-icon icon="help-circle-outline" class="text-blue-600"></ion-icon>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-800">Ayuda y Soporte</h3>
+              <p class="text-sm text-gray-500">Centro de ayuda y contacto</p>
+            </div>
+          </div>
+          <ion-button fill="clear" size="small" color="medium">
+            <ion-icon icon="chevron-forward-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer spacing -->
+  <div class="h-8"></div>
 </ion-content>

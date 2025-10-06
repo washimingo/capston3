@@ -1,331 +1,368 @@
-<!-- Header Component -->
 <app-header 
-  title="Ayuda y Tips" 
-  titleIcon="school-outline">
+  title="Tips y Tutoriales" 
+  [endButtons]="headerButtons"
+  (buttonClick)="onHeaderButtonClick($event)"
+  shadowClass="shadow-lg tips-header">
 </app-header>
 
-<!-- Executive Tips Dashboard -->
-<ion-content class="executive-dashboard">
-  <div class="dashboard-container">
-    
-    <!-- Dashboard Header Section -->
-    <section class="dashboard-header">
-      <div class="header-content">
-        <div class="title-section">
-          <h1 class="text-3xl font-bold text-gray-900">Centro de Aprendizaje</h1>
-          <p class="text-lg text-gray-600 mt-2">Tutoriales esenciales para manejarte en la plataforma</p>
+<ion-content [fullscreen]="true" class="bg-gray-50">
+  <!-- Hero Section -->
+  <div class="hero-gradient text-white">
+    <div class="max-w-7xl mx-auto px-6 py-16 hero-content">
+      <ion-grid>
+        <ion-row class="ion-align-items-center">
+          <ion-col size="12" size-lg="8">
+            <div class="space-y-6">
+              <div class="flex items-center space-x-3">
+                <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                  <ion-icon icon="school-outline" class="text-3xl text-white"></ion-icon>
+                </div>
+                <div>
+                  <h1 class="text-4xl lg:text-5xl font-bold mb-2">Centro de Aprendizaje</h1>
+                  <p class="text-xl text-blue-100">Domina el sistema con nuestros tutoriales profesionales</p>
+                </div>
+              </div>
+              
+              <p class="text-lg text-blue-100 max-w-2xl leading-relaxed">
+                Accede a guías detalladas, tutoriales paso a paso y mejores prácticas para 
+                aprovechar al máximo todas las funcionalidades del sistema de gestión de facturas.
+              </p>
+              
+              <div class="flex flex-wrap gap-4">
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2 flex items-center space-x-2">
+                  <ion-icon icon="play-circle-outline" class="text-blue-200"></ion-icon>
+                  <span class="text-sm font-medium">{{ tutorials.length }} Tutoriales</span>
+                </div>
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2 flex items-center space-x-2">
+                  <ion-icon icon="time-outline" class="text-blue-200"></ion-icon>
+                  <span class="text-sm font-medium">Actualizado Recientemente</span>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col size="12" size-lg="4" class="hidden lg:block hero-icon-section">
+            <div class="relative">
+              <div class="w-80 h-80 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm mx-auto">
+                <div class="w-60 h-60 bg-white/20 rounded-full flex items-center justify-center">
+                  <ion-icon icon="bulb-outline" class="text-8xl text-white/60"></ion-icon>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </div>
+
+  <!-- Tutorial Carousel Section -->
+  <div class="max-w-7xl mx-auto px-6 -mt-8 relative z-10 mb-12">
+    <div class="bg-white rounded-2xl shadow-xl p-8">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-800 mb-2">Tutoriales Destacados</h2>
+          <p class="text-gray-600">Aprende paso a paso con nuestros tutoriales interactivos</p>
         </div>
-        
-        <!-- Quick Stats -->
-        <div class="stats-grid">
-          <div class="stat-card bg-blue-50 border-blue-200">
-            <div class="stat-icon bg-blue-100 text-blue-600">
-              <ion-icon name="book-outline"></ion-icon>
-            </div>
-            <div class="stat-content">
-              <div class="stat-number text-blue-900">{{ totalTutorials }}</div>
-              <div class="stat-label text-blue-700">Tutoriales</div>
-            </div>
-          </div>
-          
-          <div class="stat-card bg-green-50 border-green-200">
-            <div class="stat-icon bg-green-100 text-green-600">
-              <ion-icon name="checkmark-circle-outline"></ion-icon>
-            </div>
-            <div class="stat-content">
-              <div class="stat-number text-green-900">{{ completedTutorials }}</div>
-              <div class="stat-label text-green-700">Completados</div>
-            </div>
-          </div>
-          
-          <div class="stat-card bg-purple-50 border-purple-200">
-            <div class="stat-icon bg-purple-100 text-purple-600">
-              <ion-icon name="time-outline"></ion-icon>
-            </div>
-            <div class="stat-content">
-              <div class="stat-number text-purple-900">{{ estimatedTime }}</div>
-              <div class="stat-label text-purple-700">Min. Promedio</div>
-            </div>
-          </div>
+        <div class="flex space-x-2">
+          <ion-button fill="clear" size="small" id="tutorial-prev-btn" class="tutorial-nav-btn">
+            <ion-icon name="chevron-back-outline" class="text-xl"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" id="tutorial-next-btn" class="tutorial-nav-btn">
+            <ion-icon name="chevron-forward-outline" class="text-xl"></ion-icon>
+          </ion-button>
         </div>
       </div>
-    </section>
 
-    <!-- Search and Filter Section -->
-    <section class="search-section">
-      <div class="search-container">
-        <div class="search-bar-wrapper">
+      <!-- Swiper Carousel -->
+      <swiper-container
+        #tutorialSwiper
+        slides-per-view="1"
+        space-between="20"
+        loop="true"
+        autoplay-delay="5000"
+        navigation-next-el="#tutorial-next-btn"
+        navigation-prev-el="#tutorial-prev-btn"
+        breakpoints='{
+          "640": {"slidesPerView": 2},
+          "1024": {"slidesPerView": 3}
+        }'>
+        
+        <swiper-slide *ngFor="let tutorial of tutorials" class="tutorial-slide">
+          <ion-card class="tutorial-carousel-card h-full hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2" 
+                    (click)="openTutorialModal(tutorial)">
+            <!-- Card Header with Gradient -->
+            <div [ngClass]="'carousel-tutorial-header h-40 gradient-' + tutorial.color + ' flex items-center justify-center relative overflow-hidden'">
+              <ion-icon [icon]="getIcon(tutorial.icon)" class="tutorial-icon text-5xl text-white/90"></ion-icon>
+              <div class="difficulty-badge absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-bold text-white bg-black/20 backdrop-blur-sm">
+                {{ tutorial.difficulty }}
+              </div>
+              <div class="duration-badge absolute bottom-3 left-3 px-2 py-1 rounded-full text-xs font-bold text-white bg-black/20 backdrop-blur-sm flex items-center space-x-1">
+                <ion-icon name="time-outline" class="text-xs"></ion-icon>
+                <span>{{ tutorial.duration }}</span>
+              </div>
+            </div>
+
+            <ion-card-content class="p-6">
+              <ion-card-header class="p-0 mb-4">
+                <ion-card-title class="text-lg font-bold text-gray-800 mb-2 line-clamp-2">
+                  {{ tutorial.title }}
+                </ion-card-title>
+                <p class="text-gray-600 text-sm line-clamp-2">{{ tutorial.description }}</p>
+              </ion-card-header>
+
+              <!-- Progress indicator -->
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-2 text-sm text-gray-500">
+                  <ion-icon name="eye-outline" class="text-xs"></ion-icon>
+                  <span>{{ tutorial.views }} vistas</span>
+                </div>
+                <div class="flex items-center space-x-1">
+                  <ion-icon name="star-outline" class="text-yellow-500 text-sm"></ion-icon>
+                  <span class="text-sm font-medium text-gray-700">{{ tutorial.rating }}</span>
+                </div>
+              </div>
+
+              <!-- Action Button -->
+              <ion-button 
+                fill="clear" 
+                size="small" 
+                [ngClass]="'tutorial-action-btn text-' + tutorial.color + '-600'"
+                class="w-full">
+                <span>Iniciar Tutorial</span>
+                <ion-icon name="play-circle-outline" slot="end"></ion-icon>
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </swiper-slide>
+      </swiper-container>
+
+      <!-- Pagination dots -->
+      <div class="flex justify-center mt-6 space-x-2" id="tutorial-pagination">
+        <div *ngFor="let tutorial of tutorials; let i = index" 
+             class="pagination-dot w-3 h-3 rounded-full bg-gray-300 cursor-pointer transition-all"
+             [class.active]="i === 0"
+             (click)="goToSlide(i)">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions Section -->
+  <div class="max-w-7xl mx-auto px-6 -mt-12 relative z-10">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-md="3" *ngFor="let action of quickActions">
+          <ion-card class="quick-action-card h-full hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1" (click)="handleQuickAction(action)">
+            <ion-card-content class="p-6 text-center">
+              <div [ngClass]="'action-icon w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center bg-' + action.color + '-100'">
+                <ion-icon [icon]="action.icon" [ngClass]="'text-3xl text-' + action.color + '-600'"></ion-icon>
+              </div>
+              <h3 class="text-lg font-bold text-gray-800 mb-2">{{ action.title }}</h3>
+              <p class="text-sm text-gray-600">{{ action.desc }}</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Search and Filter Section -->
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <div class="search-filter-section bg-white rounded-2xl shadow-lg p-8">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-800 mb-2">Biblioteca de Tutoriales</h2>
+          <p class="text-gray-600">Encuentra el tutorial perfecto para tus necesidades</p>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-4">
           <ion-searchbar 
-            class="executive-searchbar"
+            [(ngModel)]="searchQuery"
             placeholder="Buscar tutoriales..."
-            [(ngModel)]="searchTerm"
-            (ionInput)="onSearchChange($event)">
+            class="w-full sm:w-80"
+            search-icon="search-outline">
           </ion-searchbar>
         </div>
-        
-        <!-- Category Filters -->
-        <div class="filter-chips">
-          <ion-chip 
-            [class]="selectedCategory === 'all' ? 'chip-active' : 'chip-inactive'"
-            (click)="selectCategory('all')">
-            <ion-label>Todos</ion-label>
-          </ion-chip>
-          
-          <ion-chip 
-            [class]="selectedCategory === 'basico' ? 'chip-active' : 'chip-inactive'"
-            (click)="selectCategory('basico')">
-            <ion-label>Básico</ion-label>
-          </ion-chip>
-          
-          <ion-chip 
-            [class]="selectedCategory === 'facturacion' ? 'chip-active' : 'chip-inactive'"
-            (click)="selectCategory('facturacion')">
-            <ion-label>Facturación</ion-label>
-          </ion-chip>
-          
-          <ion-chip 
-            [class]="selectedCategory === 'reportes' ? 'chip-active' : 'chip-inactive'"
-            (click)="selectCategory('reportes')">
-            <ion-label>Reportes</ion-label>
-          </ion-chip>
-          
-          <ion-chip 
-            [class]="selectedCategory === 'configuracion' ? 'chip-active' : 'chip-inactive'"
-            (click)="selectCategory('configuracion')">
-            <ion-label>Configuración</ion-label>
-          </ion-chip>
-        </div>
-      </div>
-    </section>
-
-    <!-- Tutorials Library Section -->
-    <section class="tutorials-library">
-      <div class="library-header">
-        <h2 class="text-2xl font-semibold text-gray-900">Biblioteca de Tutoriales</h2>
-        <div class="view-options">
-          <ion-button 
-            fill="clear" 
-            [class]="viewMode === 'grid' ? 'view-btn-active' : 'view-btn-inactive'"
-            (click)="setViewMode('grid')">
-            <ion-icon name="grid-outline"></ion-icon>
-          </ion-button>
-          <ion-button 
-            fill="clear" 
-            [class]="viewMode === 'list' ? 'view-btn-active' : 'view-btn-inactive'"
-            (click)="setViewMode('list')">
-            <ion-icon name="list-outline"></ion-icon>
-          </ion-button>
-        </div>
       </div>
 
-      <!-- Grid View -->
-      <div *ngIf="viewMode === 'grid'" class="tutorials-grid">
-        <div 
-          *ngFor="let tutorial of getFilteredTutorials()" 
-          class="tutorial-card executive-card"
-          (click)="openTutorial(tutorial)">
-          
-          <!-- Card Header with Icon -->
-          <div class="card-header" [ngClass]="'gradient-' + tutorial.color">
-            <div class="header-content">
-              <ion-icon [name]="tutorial.icon" class="tutorial-icon"></ion-icon>
-              <div class="difficulty-badge" [ngClass]="'badge-' + tutorial.difficulty">
-                {{ tutorial.difficulty | titlecase }}
-              </div>
-            </div>
-          </div>
+      <!-- Category Filter -->
+      <div class="flex flex-wrap gap-3 mb-8">
+        <ion-chip 
+          *ngFor="let category of categories"
+          [color]="category.active ? 'primary' : 'medium'"
+          [class.chip-primary]="category.active"
+          (click)="filterByCategory(category.value)"
+          class="cursor-pointer transition-all">
+          {{ category.name }}
+        </ion-chip>
+      </div>
 
-          <!-- Card Body -->
-          <div class="card-body">
-            <div class="category-tag">{{ tutorial.category | titlecase }}</div>
-            <h3 class="tutorial-title">{{ tutorial.title }}</h3>
-            <p class="tutorial-description">{{ tutorial.description }}</p>
-            
-            <!-- Tutorial Meta -->
-            <div class="tutorial-meta">
-              <div class="meta-item">
-                <ion-icon name="time-outline"></ion-icon>
-                <span>{{ tutorial.duration }} min</span>
-              </div>
-              <div class="meta-item">
-                <ion-icon name="person-outline"></ion-icon>
-                <span>{{ tutorial.level }}</span>
-              </div>
-            </div>
-
-            <!-- Progress Bar -->
-            <div class="progress-section">
-              <div class="progress-bar">
-                <div 
-                  class="progress-fill" 
-                  [style.width.%]="tutorial.progress"
-                  [ngClass]="'progress-' + tutorial.color">
+      <!-- Tutorials Grid -->
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="6" size-lg="4" *ngFor="let tutorial of getFilteredTutorials()">
+            <ion-card class="tutorial-card h-full hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1" 
+                      (click)="openTutorialModal(tutorial)">
+              <!-- Card Header with Gradient -->
+              <div [ngClass]="'tutorial-header h-48 gradient-' + tutorial.color + ' flex items-center justify-center relative overflow-hidden'">
+                <ion-icon [icon]="getIcon(tutorial.icon)" class="tutorial-icon text-6xl text-white/80"></ion-icon>
+                <div class="difficulty-badge absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold text-white bg-black/20 backdrop-blur-sm">
+                  {{ tutorial.difficulty }}
                 </div>
               </div>
-              <span class="progress-text">{{ tutorial.progress }}% Completado</span>
-            </div>
-          </div>
 
-          <!-- Card Footer -->
-          <div class="card-footer">
-            <ion-button 
-              fill="clear" 
-              size="small" 
-              class="action-button"
-              [ngClass]="'btn-' + tutorial.color">
-              <ion-icon name="play-outline" slot="start"></ion-icon>
-              {{ tutorial.progress > 0 ? 'Continuar' : 'Comenzar' }}
-            </ion-button>
-          </div>
-        </div>
-      </div>
+              <ion-card-content class="p-6">
+                <ion-card-header class="p-0 mb-4">
+                  <ion-card-title class="text-xl font-bold text-gray-800 mb-2 line-clamp-2">
+                    {{ tutorial.title }}
+                  </ion-card-title>
+                  <p class="text-gray-600 text-sm line-clamp-3">{{ tutorial.description }}</p>
+                </ion-card-header>
 
-      <!-- List View -->
-      <div *ngIf="viewMode === 'list'" class="tutorials-list">
-        <div 
-          *ngFor="let tutorial of getFilteredTutorials()" 
-          class="tutorial-row executive-row"
-          (click)="openTutorial(tutorial)">
-          
-          <div class="row-icon" [ngClass]="'icon-' + tutorial.color">
-            <ion-icon [name]="tutorial.icon"></ion-icon>
-          </div>
-          
-          <div class="row-content">
-            <div class="row-header">
-              <h3 class="row-title">{{ tutorial.title }}</h3>
-              <div class="row-badges">
-                <span class="category-badge">{{ tutorial.category | titlecase }}</span>
-                <span class="difficulty-badge" [ngClass]="'badge-' + tutorial.difficulty">
-                  {{ tutorial.difficulty | titlecase }}
-                </span>
-              </div>
-            </div>
-            <p class="row-description">{{ tutorial.description }}</p>
-            <div class="row-meta">
-              <span class="meta-item">
-                <ion-icon name="time-outline"></ion-icon>
-                {{ tutorial.duration }} minutos
-              </span>
-              <span class="meta-item">
-                <ion-icon name="person-outline"></ion-icon>
-                {{ tutorial.level }}
-              </span>
-              <span class="meta-item">
-                <ion-icon name="checkmark-circle-outline"></ion-icon>
-                {{ tutorial.progress }}% Completado
-              </span>
-            </div>
-          </div>
-          
-          <div class="row-actions">
-            <div class="progress-circle" [ngClass]="'progress-' + tutorial.color">
-              <span>{{ tutorial.progress }}%</span>
-            </div>
-            <ion-button 
-              fill="clear" 
-              class="action-button"
-              [ngClass]="'btn-' + tutorial.color">
-              <ion-icon name="play-outline"></ion-icon>
-            </ion-button>
-          </div>
-        </div>
-      </div>
+                <!-- Stats -->
+                <div class="tutorial-stats flex items-center justify-between mb-4">
+                  <div class="flex items-center space-x-4 text-sm text-gray-500">
+                    <div class="flex items-center space-x-1">
+                      <ion-icon icon="time-outline" class="text-xs"></ion-icon>
+                      <span>{{ tutorial.duration }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Action Button -->
+                <ion-button 
+                  fill="clear" 
+                  size="small" 
+                  [ngClass]="'tutorial-action-btn text-' + tutorial.color + '-600'"
+                  class="w-full">
+                  <span>Ver Tutorial</span>
+                  <ion-icon icon="arrow-forward-outline" slot="end"></ion-icon>
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
       <!-- Empty State -->
-      <div *ngIf="getFilteredTutorials().length === 0" class="empty-state">
-        <div class="empty-content">
-          <ion-icon name="search-outline" class="empty-icon"></ion-icon>
-          <h3 class="empty-title">No se encontraron tutoriales</h3>
-          <p class="empty-description">
-            Intenta ajustar tu búsqueda o seleccionar una categoría diferente
-          </p>
-          <ion-button fill="outline" (click)="clearFilters()">
-            <ion-icon name="refresh-outline" slot="start"></ion-icon>
-            Mostrar Todos
-          </ion-button>
+      @if (getFilteredTutorials().length === 0) {
+        <div class="empty-state text-center py-16">
+          <ion-icon icon="search-outline" class="text-6xl text-gray-300 mb-4"></ion-icon>
+          <h3 class="text-xl font-semibold text-gray-600 mb-2">No se encontraron tutoriales</h3>
+          <p class="text-gray-500">Intenta con otros términos de búsqueda o selecciona una categoría diferente</p>
         </div>
-      </div>
-    </section>
+      }
+    </div>
   </div>
-</ion-content>
 
-<!-- Tutorial Modal -->
-<ion-modal #tutorialModal [isOpen]="isModalOpen" (willDismiss)="closeModal()">
-  <ng-template>
-    <ion-header class="modal-header">
-      <ion-toolbar>
-        <ion-title>{{ selectedTutorial?.title }}</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="closeModal()">
-            <ion-icon name="close"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    
-    <ion-content class="modal-content">
-      <div *ngIf="selectedTutorial" class="tutorial-detail">
-        <!-- Tutorial Header -->
-        <div class="detail-header" [ngClass]="'gradient-' + selectedTutorial.color">
-          <div class="header-overlay">
-            <ion-icon [name]="selectedTutorial.icon" class="detail-icon"></ion-icon>
-            <h1 class="detail-title">{{ selectedTutorial.title }}</h1>
-            <p class="detail-subtitle">{{ selectedTutorial.category | titlecase }} • {{ selectedTutorial.duration }} minutos</p>
-          </div>
-        </div>
-
-        <!-- Tutorial Content -->
-        <div class="detail-content">
-          <div class="content-section">
-            <h3>Descripción</h3>
-            <p>{{ selectedTutorial.description }}</p>
-          </div>
-
-          <div class="content-section">
-            <h3>Lo que aprenderás</h3>
-            <ul class="learning-objectives">
-              <li *ngFor="let objective of selectedTutorial.objectives">
-                <ion-icon name="checkmark-circle" class="text-green-500"></ion-icon>
-                {{ objective }}
-              </li>
-            </ul>
-          </div>
-
-          <div class="content-section">
-            <h3>Pasos del Tutorial</h3>
-            <div class="tutorial-steps">
-              <div 
-                *ngFor="let step of selectedTutorial.steps; let i = index" 
-                class="step-item"
-                [class.completed]="step.completed">
-                <div class="step-number">{{ i + 1 }}</div>
-                <div class="step-content">
-                  <h4>{{ step.title }}</h4>
-                  <p>{{ step.description }}</p>
-                </div>
-                <div class="step-status">
-                  <ion-icon 
-                    [name]="step.completed ? 'checkmark-circle' : 'ellipse-outline'"
-                    [class]="step.completed ? 'text-green-500' : 'text-gray-400'">
-                  </ion-icon>
+  <!-- Tutorial Modal -->
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeModal()" class="modal-wrapper">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ selectedTutorial?.title }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="closeModal()">
+              <ion-icon icon="close-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      
+      <ion-content *ngIf="selectedTutorial">
+        <div class="modal-content-container">
+          <!-- Tutorial Header -->
+          <div class="modal-content-section modal-header-section rounded-2xl shadow-sm p-8 mb-6">
+            <div class="flex items-start space-x-6">
+              <div [ngClass]="'tutorial-icon-container w-24 h-24 rounded-3xl flex items-center justify-center'"
+                   [style.--icon-bg-from]="'var(--' + selectedTutorial.color + '-400)'"
+                   [style.--icon-bg-to]="'var(--' + selectedTutorial.color + '-600)'">
+                <ion-icon [icon]="getIcon(selectedTutorial.icon)" class="text-4xl text-white"></ion-icon>
+              </div>
+              <div class="flex-1">
+                <h1 class="tutorial-title text-3xl font-bold mb-4">{{ selectedTutorial.title }}</h1>
+                <p class="tutorial-description mb-6">{{ selectedTutorial.description }}</p>
+                
+                <div class="tutorial-meta flex items-center flex-wrap gap-4 text-sm">
+                  <div class="meta-item flex items-center space-x-2">
+                    <ion-icon icon="time-outline" class="text-lg"></ion-icon>
+                    <span class="font-medium">{{ selectedTutorial.duration }}</span>
+                  </div>
+                  <ion-chip 
+                    [style.--chip-bg]="'var(--' + selectedTutorial.color + '-100)'"
+                    [style.--chip-bg-secondary]="'var(--' + selectedTutorial.color + '-50)'"
+                    [style.--chip-text]="'var(--' + selectedTutorial.color + '-800)'"
+                    [style.--chip-border]="'var(--' + selectedTutorial.color + '-200)'">
+                    {{ selectedTutorial.difficulty }}
+                  </ion-chip>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Tutorial Actions -->
-        <div class="tutorial-actions">
-          <ion-button 
-            expand="block" 
-            [ngClass]="'btn-' + selectedTutorial.color"
-            (click)="startTutorial(selectedTutorial)">
-            <ion-icon name="play-outline" slot="start"></ion-icon>
-            {{ selectedTutorial.progress > 0 ? 'Continuar Tutorial' : 'Comenzar Tutorial' }}
-          </ion-button>
+          <!-- Tutorial Steps -->
+          <div class="modal-content-section modal-steps-section rounded-2xl shadow-sm p-8 mb-6">
+            <h2 class="section-header text-2xl font-bold mb-8 flex items-center">
+              <ion-icon icon="checkmark-circle-outline" class="text-2xl mr-4"></ion-icon>
+              Pasos del Tutorial
+            </h2>
+            <ion-list class="bg-transparent space-y-4">
+              <ion-item 
+                *ngFor="let step of selectedTutorial.steps; let i = index" 
+                lines="none"
+                class="step-item rounded-xl"
+                [style.--step-color]="'var(--' + selectedTutorial.color + '-500)'"
+                [style.--step-color-dark]="'var(--' + selectedTutorial.color + '-600)'">
+                <div class="flex items-start w-full py-6">
+                  <div class="step-number w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold mr-6 mt-1">
+                    {{ i + 1 }}
+                  </div>
+                  <ion-label class="leading-relaxed">{{ step }}</ion-label>
+                </div>
+              </ion-item>
+            </ion-list>
+          </div>
+
+          <!-- Tips and Best Practices -->
+          @if (selectedTutorial.tips) {
+            <div class="modal-content-section modal-tips-section rounded-2xl shadow-sm p-8 mb-6">
+              <h2 class="section-header text-2xl font-bold mb-8 flex items-center">
+                <ion-icon icon="bulb-outline" class="text-2xl mr-4"></ion-icon>
+                Consejos y Mejores Prácticas
+              </h2>
+              <div class="space-y-4">
+                @for (tip of selectedTutorial.tips; track tip) {
+                  <div class="tip-item flex items-start space-x-4 p-6 rounded-xl">
+                    <ion-icon icon="checkmark-circle-outline" class="text-xl mt-1 flex-shrink-0"></ion-icon>
+                    <span>{{ tip }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Action Buttons -->
+          <div class="modal-content-section modal-actions-section rounded-2xl shadow-sm p-8">
+            <div class="flex flex-col sm:flex-row gap-6">
+              <ion-button 
+                expand="block" 
+                class="primary-action h-14"
+                [style.--primary-color]="'var(--' + selectedTutorial.color + '-600)'"
+                [style.--primary-color-dark]="'var(--' + selectedTutorial.color + '-700)'"
+                (click)="navigateToInvoices(); closeModal()">
+                <ion-icon icon="arrow-forward-outline" slot="start" class="text-xl"></ion-icon>
+                <span class="text-lg">Ir a la Práctica</span>
+              </ion-button>
+              <ion-button 
+                expand="block" 
+                class="secondary-action h-14"
+                (click)="closeModal()">
+                <ion-icon icon="close-outline" slot="start" class="text-xl"></ion-icon>
+                <span class="text-lg">Cerrar Tutorial</span>
+              </ion-button>
+            </div>
+          </div>
         </div>
-      </div>
-    </ion-content>
-  </ng-template>
-</ion-modal>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

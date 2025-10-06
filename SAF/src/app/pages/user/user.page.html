@@ -1,242 +1,183 @@
 <app-header 
-  title="Perfil de Usuario"
-  titleIcon="person-outline"
-  shadowClass="shadow-sm border-b border-gray-200">
+  title="Usuario"
+  [endButtons]="[
+    {icon: 'notifications', action: 'notifications', class: 'relative', badge: '3'},
+    {icon: 'help-circle', action: 'help', class: 'hidden lg:inline-flex'}
+  ]"
+  (buttonClick)="onHeaderButtonClick($event)">
 </app-header>
 
-<ion-content [fullscreen]="true" class="bg-gray-50">
-  <!-- Modern User Dashboard Layout -->
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
+<ion-content [fullscreen]="true" class="bg-gray-50 user-page">
+  <!-- Desktop Layout Container -->
+  <div class="max-w-6xl mx-auto px-6 py-8">
     
-    <!-- Page Header with Profile Banner -->
-    <div class="bg-white border-b border-gray-200 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Profile Header -->
-        <div class="py-6">
-          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-            <!-- User Info -->
-            <div class="flex items-center space-x-6">
-              <!-- Avatar -->
-              <div class="relative">
-                <div class="w-20 h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
-                  <ion-icon name="person" class="text-3xl lg:text-4xl text-black"></ion-icon>
-                </div>
-                <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-400 border-2 border-white rounded-full"></div>
-              </div>
-              
-              <!-- User Details -->
-              <div>
-                <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">Juan Pérez</h1>
-                <p class="text-lg text-gray-600 font-medium">Administrador de Sistema</p>
-                <div class="flex items-center space-x-4 mt-2">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    Departamento de Finanzas
-                  </span>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    <div class="w-1.5 h-1.5 bg-green-400 rounded-full mr-1"></div>
-                    En línea
-                  </span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Quick Stats -->
-            <div class="flex space-x-6 lg:space-x-8">
-              <div class="text-center">
-                <div class="text-2xl lg:text-3xl font-bold text-blue-600">24</div>
-                <div class="text-sm text-gray-500">Facturas</div>
-              </div>
-              <div class="text-center">
-                <div class="text-2xl lg:text-3xl font-bold text-green-600">18</div>
-                <div class="text-sm text-gray-500">Aprobadas</div>
-              </div>
-              <div class="text-center">
-                <div class="text-2xl lg:text-3xl font-bold text-orange-600">75%</div>
-                <div class="text-sm text-gray-500">Eficiencia</div>
-              </div>
-            </div>
+    <!-- Profile Header -->
+    <div class="gradient-header text-white rounded-xl p-8 mb-8 shadow-lg">
+      <div class="flex items-center justify-between">
+        <!-- Profile Info -->
+        <div class="flex items-center space-x-6">
+          <div class="w-20 h-20 lg:w-24 lg:h-24 bg-white rounded-full flex items-center justify-center card-shadow">
+            <ion-icon name="person" class="text-3xl lg:text-4xl text-blue-600"></ion-icon>
+          </div>
+          <div>
+            <h2 class="text-2xl lg:text-3xl font-bold mb-1">Juan Pérez</h2>
+            <p class="text-blue-100 text-lg">Administrador</p>
+            <p class="text-blue-200 text-sm">Departamento de Finanzas</p>
+          </div>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="hidden lg:flex space-x-8">
+          <div class="text-center">
+            <p class="text-2xl font-bold">24</p>
+            <p class="text-blue-200 text-sm">Facturas</p>
+          </div>
+          <div class="text-center">
+            <p class="text-2xl font-bold">18</p>
+            <p class="text-blue-200 text-sm">Aprobadas</p>
+          </div>
+          <div class="text-center">
+            <p class="text-2xl font-bold">75%</p>
+            <p class="text-blue-200 text-sm">Eficiencia</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Main Dashboard Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <!-- Main Content Area -->
-        <div class="lg:col-span-8 space-y-6">
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Left Column - Personal Information -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-xl card-shadow p-6">
+          <h3 class="text-xl font-semibold text-gray-800 mb-6 border-b pb-3">Información Personal</h3>
           
-          <!-- Personal Information Card -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <h2 class="text-lg font-semibold text-gray-900 flex items-center">
-                <ion-icon name="person-circle-outline" class="mr-3 text-blue-500"></ion-icon>
-                Información Personal
-              </h2>
-            </div>
-            <div class="p-6">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Email -->
-                <div class="group p-4 bg-blue-50 rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors">
-                  <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                      <ion-icon name="mail" class="text-blue-600 text-xl"></ion-icon>
-                    </div>
-                    <div>
-                      <p class="text-sm font-medium text-gray-500">Email</p>
-                      <p class="text-lg font-semibold text-gray-900">juan.perez@empresa.com</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <!-- Phone -->
-                <div class="group p-4 bg-green-50 rounded-lg border border-green-200 hover:bg-green-100 transition-colors">
-                  <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                      <ion-icon name="call" class="text-green-600 text-xl"></ion-icon>
-                    </div>
-                    <div>
-                      <p class="text-sm font-medium text-gray-500">Teléfono</p>
-                      <p class="text-lg font-semibold text-gray-900">+52 555 123 4567</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <!-- Department -->
-                <div class="group p-4 bg-purple-50 rounded-lg border border-purple-200 hover:bg-purple-100 transition-colors">
-                  <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors">
-                      <ion-icon name="business" class="text-purple-600 text-xl"></ion-icon>
-                    </div>
-                    <div>
-                      <p class="text-sm font-medium text-gray-500">Departamento</p>
-                      <p class="text-lg font-semibold text-gray-900">Finanzas</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <!-- Join Date -->
-                <div class="group p-4 bg-orange-50 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors">
-                  <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center group-hover:bg-orange-200 transition-colors">
-                      <ion-icon name="calendar" class="text-orange-600 text-xl"></ion-icon>
-                    </div>
-                    <div>
-                      <p class="text-sm font-medium text-gray-500">Fecha de ingreso</p>
-                      <p class="text-lg font-semibold text-gray-900">15 de Enero, 2023</p>
-                    </div>
-                  </div>
-                </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex items-center space-x-4">
+              <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <ion-icon name="mail" class="text-xl text-blue-600"></ion-icon>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 font-medium">Email</p>
+                <p class="text-gray-800 font-semibold">juan.perez@empresa.com</p>
               </div>
             </div>
-          </div>
-
-          <!-- Performance Overview -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <h2 class="text-lg font-semibold text-gray-900 flex items-center">
-                <ion-icon name="bar-chart-outline" class="mr-3 text-indigo-500"></ion-icon>
-                Resumen de Rendimiento
-              </h2>
+            
+            <div class="flex items-center space-x-4">
+              <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <ion-icon name="call" class="text-xl text-green-600"></ion-icon>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 font-medium">Teléfono</p>
+                <p class="text-gray-800 font-semibold">+52 555 123 4567</p>
+              </div>
             </div>
-            <div class="p-6">
-              <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Processed Invoices -->
-                <div class="text-center p-6 bg-blue-50 rounded-xl border border-blue-200 hover:shadow-md transition-shadow">
-                  <div class="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                    <ion-icon name="document-text" class="text-2xl text-blue-600"></ion-icon>
-                  </div>
-                  <div class="text-3xl font-bold text-gray-900 mb-1">24</div>
-                  <div class="text-sm text-gray-600">Facturas Procesadas</div>
-                </div>
-                
-                <!-- Approved -->
-                <div class="text-center p-6 bg-green-50 rounded-xl border border-green-200 hover:shadow-md transition-shadow">
-                  <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-4">
-                    <ion-icon name="checkmark-circle" class="text-2xl text-green-600"></ion-icon>
-                  </div>
-                  <div class="text-3xl font-bold text-gray-900 mb-1">18</div>
-                  <div class="text-sm text-gray-600">Aprobadas</div>
-                </div>
-                
-                <!-- Pending -->
-                <div class="text-center p-6 bg-yellow-50 rounded-xl border border-yellow-200 hover:shadow-md transition-shadow">
-                  <div class="w-16 h-16 mx-auto bg-yellow-100 rounded-full flex items-center justify-center mb-4">
-                    <ion-icon name="time" class="text-2xl text-yellow-600"></ion-icon>
-                  </div>
-                  <div class="text-3xl font-bold text-gray-900 mb-1">4</div>
-                  <div class="text-sm text-gray-600">Pendientes</div>
-                </div>
-                
-                <!-- Rejected -->
-                <div class="text-center p-6 bg-red-50 rounded-xl border border-red-200 hover:shadow-md transition-shadow">
-                  <div class="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
-                    <ion-icon name="close-circle" class="text-2xl text-red-600"></ion-icon>
-                  </div>
-                  <div class="text-3xl font-bold text-gray-900 mb-1">2</div>
-                  <div class="text-sm text-gray-600">Rechazadas</div>
-                </div>
+            
+            <div class="flex items-center space-x-4">
+              <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <ion-icon name="business" class="text-xl text-purple-600"></ion-icon>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 font-medium">Departamento</p>
+                <p class="text-gray-800 font-semibold">Finanzas</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+              <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                <ion-icon name="calendar" class="text-xl text-orange-600"></ion-icon>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 font-medium">Fecha de ingreso</p>
+                <p class="text-gray-800 font-semibold">15 de Enero, 2023</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Right Sidebar -->
-        <div class="lg:col-span-4 space-y-6">
+        <!-- Detailed Statistics -->
+        <div class="bg-white rounded-xl card-shadow p-6">
+          <h3 class="text-xl font-semibold text-gray-800 mb-6 border-b pb-3">Estadísticas Detalladas</h3>
           
-          <!-- Recent Activity -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Actividad Reciente</h3>
-            <div class="space-y-4">
-              <div class="flex items-start space-x-3">
-                <div class="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                <div class="min-w-0 flex-1">
-                  <p class="text-sm text-gray-900">Procesó factura #1234</p>
-                  <p class="text-xs text-gray-500">Hace 2 horas</p>
-                </div>
-              </div>
-              <div class="flex items-start space-x-3">
-                <div class="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
-                <div class="min-w-0 flex-1">
-                  <p class="text-sm text-gray-900">Actualizó perfil</p>
-                  <p class="text-xs text-gray-500">Hace 1 día</p>
-                </div>
-              </div>
-              <div class="flex items-start space-x-3">
-                <div class="w-2 h-2 bg-orange-400 rounded-full mt-2 flex-shrink-0"></div>
-                <div class="min-w-0 flex-1">
-                  <p class="text-sm text-gray-900">Revisó reportes mensuales</p>
-                  <p class="text-xs text-gray-500">Hace 2 días</p>
-                </div>
-              </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="text-center p-4 bg-blue-50 rounded-lg">
+              <ion-icon name="document-text" class="text-3xl text-blue-600 mb-2"></ion-icon>
+              <p class="text-2xl font-bold text-gray-800">24</p>
+              <p class="text-sm text-gray-600">Facturas Procesadas</p>
+            </div>
+            
+            <div class="text-center p-4 bg-green-50 rounded-lg">
+              <ion-icon name="checkmark-circle" class="text-3xl text-green-600 mb-2"></ion-icon>
+              <p class="text-2xl font-bold text-gray-800">18</p>
+              <p class="text-sm text-gray-600">Aprobadas</p>
+            </div>
+            
+            <div class="text-center p-4 bg-yellow-50 rounded-lg">
+              <ion-icon name="time" class="text-3xl text-yellow-600 mb-2"></ion-icon>
+              <p class="text-2xl font-bold text-gray-800">4</p>
+              <p class="text-sm text-gray-600">Pendientes</p>
+            </div>
+            
+            <div class="text-center p-4 bg-red-50 rounded-lg">
+              <ion-icon name="close-circle" class="text-3xl text-red-600 mb-2"></ion-icon>
+              <p class="text-2xl font-bold text-gray-800">2</p>
+              <p class="text-sm text-gray-600">Rechazadas</p>
             </div>
           </div>
+        </div>
+      </div>
 
-          <!-- User Status -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Estado del Usuario</h3>
-            <div class="space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600">Estado</span>
-                <div class="flex items-center space-x-2">
-                  <div class="w-2 h-2 bg-green-400 rounded-full"></div>
-                  <span class="text-sm font-medium text-green-600">Activo</span>
-                </div>
+      <!-- Right Column - Settings & Actions -->
+      <div class="space-y-6">
+        <!-- Account Settings -->
+        <div class="bg-white rounded-xl card-shadow p-6">
+          <h3 class="text-xl font-semibold text-gray-800 mb-6 border-b pb-3">Configuración</h3>
+          
+          <div class="space-y-2">
+            <ion-item button class="rounded-lg mb-2">
+              <div slot="start" class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <ion-icon name="settings" class="text-gray-600"></ion-icon>
               </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600">Última conexión</span>
-                <span class="text-sm font-medium text-gray-900">Ahora</span>
+              <ion-label>
+                <h3 class="text-gray-800 font-medium">Configuración General</h3>
+                <p class="text-gray-500 text-sm">Personalizar preferencias</p>
+              </ion-label>
+              <ion-icon name="chevron-forward" slot="end" class="text-gray-400"></ion-icon>
+            </ion-item>
+            
+            <ion-item button class="rounded-lg mb-2">
+              <div slot="start" class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <ion-icon name="notifications" class="text-gray-600"></ion-icon>
               </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600">Sesiones activas</span>
-                <span class="text-sm font-medium text-gray-900">2</span>
+              <ion-label>
+                <h3 class="text-gray-800 font-medium">Notificaciones</h3>
+                <p class="text-gray-500 text-sm">Gestionar alertas</p>
+              </ion-label>
+              <ion-icon name="chevron-forward" slot="end" class="text-gray-400"></ion-icon>
+            </ion-item>
+            
+            <ion-item button class="rounded-lg">
+              <div slot="start" class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <ion-icon name="shield-checkmark" class="text-gray-600"></ion-icon>
               </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600">Rol</span>
-                <span class="text-sm font-medium text-blue-600">Administrador</span>
-              </div>
-            </div>
+              <ion-label>
+                <h3 class="text-gray-800 font-medium">Seguridad</h3>
+                <p class="text-gray-500 text-sm">Cambiar contraseña</p>
+              </ion-label>
+              <ion-icon name="chevron-forward" slot="end" class="text-gray-400"></ion-icon>
+            </ion-item>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="bg-white rounded-xl card-shadow p-6">
+          <h3 class="text-xl font-semibold text-gray-800 mb-6 border-b pb-3">Acciones</h3>
+          
+          <div class="space-y-4">
+            <ion-button expand="block" class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg h-12">
+              <ion-icon name="create" slot="start"></ion-icon>
+              Editar Perfil
+            </ion-button>
           </div>
         </div>
       </div>

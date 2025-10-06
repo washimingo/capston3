@@ -40,7 +40,13 @@ import {
   downloadOutline,
   timeOutline as timeIcon,
   checkmarkCircleOutline,
-  closeCircleOutline, analyticsOutline } from 'ionicons/icons';
+  closeCircleOutline, 
+  analyticsOutline,
+  sparklesOutline,
+  bulbOutline as bulbIcon, flashOutline, cameraOutline, cogOutline, createOutline, saveOutline } from 'ionicons/icons';
+
+// Importar servicio de IA
+import { AIService, FacturaExtraida, CategoriaIA, DeteccionDuplicado } from 'src/app/services/ai/ai.service';
 
 @Component({
   selector: 'app-invoices',
@@ -65,10 +71,18 @@ export class InvoicesPage implements OnInit {
     private dbService: Db,
     private sanitizer: DomSanitizer,
     private toastController: ToastController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private aiService: AIService
   ) {
     // Registrar iconos necesarios para el componente
-    addIcons({receiptOutline,cloudUploadOutline,documentOutline,analyticsOutline,funnelOutline,refreshOutline,speedometerOutline,warningOutline,searchOutline,closeCircle,bulbOutline,arrowForwardOutline,calendarOutline,optionsOutline,calendarNumberOutline,cashOutline,flagOutline,checkmarkOutline,closeOutline,funnel,close,timeOutline,documentTextOutline,businessOutline,hourglassOutline,settingsOutline,eyeOutline,downloadOutline,'checkmarkCircleOutline':checkmarkCircleOutline,'closeCircleOutline':closeCircleOutline});
+    addIcons({
+      documentTextOutline,calendarOutline,calendarNumberOutline,timeOutline,speedometerOutline,
+      cloudUploadOutline,documentOutline,analyticsOutline,funnelOutline,refreshOutline,warningOutline,
+      searchOutline,closeCircle,bulbOutline,arrowForwardOutline,optionsOutline,cashOutline,flagOutline,
+      checkmarkOutline,closeOutline,funnel,close,businessOutline,hourglassOutline,settingsOutline,
+      eyeOutline,downloadOutline,sparklesOutline,flashOutline,cameraOutline,cogOutline,
+      checkmarkCircleOutline,createOutline,saveOutline,receiptOutline
+    });
 
     // Leer query param para mostrar facturas por vencer
     this.route.queryParams.subscribe(params => {
@@ -673,6 +687,18 @@ export class InvoicesPage implements OnInit {
   // Variables para filtros avanzados
   mostrarFiltrosAvanzados: boolean = false;
 
+  // ====== PROPIEDADES IA ======
+  archivoIA: File | null = null;
+  datosExtraidosIA: FacturaExtraida | null = null;
+  categoriaIA: CategoriaIA | null = null;
+  verificacionDuplicado: DeteccionDuplicado | null = null;
+  mostrandoPreviewIA: boolean = false;
+  estadisticasIA = {
+    facturasProcesadas: 0,
+    precision: 95,
+    duplicadosDetectados: 0
+  };
+
   // Métodos para la nueva interfaz de filtros
   limpiarTodosFiltros() {
     this.categoriaSeleccionada = null;
@@ -853,6 +879,311 @@ export class InvoicesPage implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  // === MÉTODOS DE IA ===
+
+  // Variables para IA
+  procesandoIA: boolean = false;
+  sugerenciasIA: string[] = [];
+  mostrarPanelIA: boolean = false;
+
+  // Activar procesamiento con IA
+  async activarAsistenteIA(): Promise<void> {
+    this.mostrarPanelIA = !this.mostrarPanelIA;
+  }
+
+  // Manejar archivo seleccionado para IA
+  manejarArchivoIA(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.archivoIA = input.files[0];
+    }
+  }
+
+
+
+  // Activar OCR para procesar imagen (método obsoleto - usar la nueva interfaz)
+  activarOCR(): void {
+    this.mostrarPanelIA = true;
+  }
+
+  // Procesar factura con IA
+  async procesarFacturaConIA(): Promise<void> {
+    if (!this.archivoIA) {
+      const alert = await this.alertController.create({
+        header: '⚠️ Archivo requerido',
+        message: 'Por favor selecciona un archivo para procesar.',
+        buttons: ['OK']
+      });
+      await alert.present();
+      return;
+    }
+
+    try {
+      // Paso 1: OCR
+      const datosExtraidos = await this.aiService.procesarFacturaConOCR(this.archivoIA);
+      this.datosExtraidosIA = datosExtraidos;
+      
+      // Paso 2: Verificar duplicados
+      const verificacion = await this.aiService.verificarDuplicados(datosExtraidos, this.facturas);
+      this.verificacionDuplicado = verificacion;
+
+      if (verificacion.esDuplicado) {
+        await this.mostrarAlertaDuplicado(verificacion);
+        return;
+      }
+
+      // Paso 3: Categorizar
+      const categoria = await this.aiService.categorizarFactura(datosExtraidos as any);
+      this.categoriaIA = categoria;
+      
+      // Mostrar vista previa
+      this.mostrandoPreviewIA = true;
+      this.estadisticasIA.facturasProcesadas++;
+      
+    } catch (error) {
+      console.error('Error IA:', error);
+      
+      const errorAlert = await this.alertController.create({
+        header: '❌ Error IA',
+        message: 'No se pudo procesar la factura. Intenta nuevamente.',
+        buttons: ['OK']
+      });
+      await errorAlert.present();
+    }
+  }
+
+  // Mostrar vista previa de datos extraídos
+  async mostrarVistaPreviewIA(datos: FacturaExtraida, categoria: CategoriaIA): Promise<void> {
+    const alert = await this.alertController.create({
+      header: '🤖 Datos Extraídos',
+      subHeader: `Confianza: ${Math.round(datos.confianza * 100)}%`,
+      message: `
+        <div style="text-align: left; font-size: 14px;">
+          <strong>📄 Folio:</strong> ${datos.folio}<br>
+          <strong>🏢 RUT:</strong> ${datos.rutEmisor}<br>
+          <strong>📅 Fecha:</strong> ${datos.fechaEmision}<br>
+          <strong>💰 Monto:</strong> $${datos.montoTotal.toLocaleString()}<br>
+          <strong>🏷️ Categoría:</strong> ${categoria.categoria}<br>
+          <strong>🎯 Confianza:</strong> ${Math.round(categoria.confianza * 100)}%
+        </div>
+      `,
+      buttons: [
+        {
+          text: '❌ Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: '✏️ Editar',
+          handler: () => this.editarDatosIA(datos, categoria)
+        },
+        {
+          text: '✅ Guardar',
+          handler: () => this.guardarFacturaIA(datos, categoria)
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  // Editar datos extraídos por IA
+  async editarDatosIA(datos: FacturaExtraida, categoria: CategoriaIA): Promise<void> {
+    // Aquí podrías abrir un modal de edición
+    // Por ahora, simplemente guardamos los datos
+    await this.guardarFacturaIA(datos, categoria);
+  }
+
+  // Guardar factura procesada por IA
+  async guardarFacturaIA(datos: FacturaExtraida, categoria: CategoriaIA): Promise<void> {
+    const nuevaFactura: Factura = {
+      id: Date.now(),
+      folio: datos.folio,
+      fechaRecepcion: new Date().toISOString().split('T')[0],
+      proveedor: datos.razonSocial,
+      monto: datos.montoTotal,
+      tipo: 'Factura',
+      estado: 'Pendiente',
+      responsable: 'Sistema IA',
+      comentario: `Procesada con IA - Confianza: ${Math.round(datos.confianza * 100)}%`,
+      diasDesdeRecepcion: 0,
+      mensajeAlerta: '',
+      detalles: `Categoría IA: ${categoria.categoria} - ${categoria.subcategoria}`,
+      ['RUT Emisor']: datos.rutEmisor,
+      ['Fecha Docto.']: datos.fechaEmision,
+      ['Monto Total']: datos.montoTotal,
+      ['Razón Social']: datos.razonSocial
+    } as any;
+
+    // Agregar a la lista
+    this.facturas.unshift(nuevaFactura);
+    
+    // Guardar en base de datos
+    try {
+      await this.dbService.addFactura(nuevaFactura);
+      
+      const toast = await this.toastController.create({
+        message: '🤖 Factura procesada y guardada con IA',
+        duration: 3000,
+        color: 'success',
+        position: 'top'
+      });
+      await toast.present();
+      
+    } catch (error) {
+      console.error('Error guardando factura IA:', error);
+    }
+  }
+
+  // Mostrar alerta de duplicado
+  async mostrarAlertaDuplicado(verificacion: DeteccionDuplicado): Promise<void> {
+    const alert = await this.alertController.create({
+      header: '⚠️ Duplicado Detectado',
+      subHeader: 'IA encontró una factura similar',
+      message: `
+        <div style="text-align: left; font-size: 14px;">
+          <strong>Factura existente:</strong><br>
+          Folio: ${verificacion.facturaOriginal?.folio}<br>
+          Similitud: ${Math.round((verificacion.similitud || 0) * 100)}%<br><br>
+          <strong>Recomendación:</strong><br>
+          ${verificacion.recomendacion}
+        </div>
+      `,
+      buttons: [
+        {
+          text: '🔍 Ver Original',
+          handler: () => {
+            if (verificacion.facturaOriginal) {
+              this.verFactura(verificacion.facturaOriginal);
+            }
+          }
+        },
+        {
+          text: '➕ Continuar',
+          handler: () => {
+            // El usuario decide continuar a pesar del duplicado
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  // Verificar duplicados en facturas existentes
+  async verificarDuplicadosIA(): Promise<void> {
+    if (this.facturas.length < 2) {
+      const toast = await this.toastController.create({
+        message: 'Se necesitan al menos 2 facturas para verificar duplicados',
+        duration: 2000,
+        color: 'warning'
+      });
+      await toast.present();
+      return;
+    }
+
+    const loading = await this.alertController.create({
+      header: '🔍 Verificando Duplicados',
+      message: 'IA analizando facturas...',
+      buttons: []
+    });
+    await loading.present();
+
+    let duplicadosEncontrados = 0;
+
+    // Verificar cada factura contra las demás
+    for (let i = 0; i < this.facturas.length; i++) {
+      for (let j = i + 1; j < this.facturas.length; j++) {
+        const similitud = await this.calcularSimilitudFacturas(this.facturas[i], this.facturas[j]);
+        if (similitud > 0.85) {
+          duplicadosEncontrados++;
+        }
+      }
+    }
+
+    await loading.dismiss();
+
+    const resultado = await this.alertController.create({
+      header: '🔍 Resultado Verificación',
+      message: duplicadosEncontrados > 0 
+        ? `Se encontraron ${duplicadosEncontrados} posibles duplicados`
+        : '✅ No se encontraron duplicados',
+      buttons: ['OK']
+    });
+
+    await resultado.present();
+  }
+
+  // Calcular similitud entre dos facturas
+  private async calcularSimilitudFacturas(factura1: Factura, factura2: Factura): Promise<number> {
+    return this.aiService.verificarDuplicados(factura1, [factura2])
+      .then(resultado => resultado.similitud || 0);
+  }
+
+  // Mostrar análisis predictivo
+  async mostrarAnalisisPredictivoIA(): Promise<void> {
+    const analisis = this.aiService.analizarPatronesFacturacion(this.facturas);
+    
+    const alert = await this.alertController.create({
+      header: '📊 Análisis Predictivo IA',
+      subHeader: 'Insights de tus facturas',
+      message: `
+        <div style="text-align: left; font-size: 14px;">
+          <strong>📈 Proveedores Top:</strong><br>
+          ${analisis.proveedoresRecurrentes.slice(0, 3).map((p: any) => 
+            `• ${p.razonSocial}: ${p.cantidad} facturas`
+          ).join('<br>')}<br><br>
+          
+          <strong>💰 Monto Promedio:</strong><br>
+          $${Math.round(analisis.montosPromedio).toLocaleString()}<br><br>
+          
+          <strong>🤖 Recomendaciones:</strong><br>
+          ${analisis.recomendaciones.slice(0, 2).join('<br>')}<br><br>
+          
+          <strong>🚨 Alertas:</strong><br>
+          ${analisis.alertasImportantes.length > 0 ? analisis.alertasImportantes[0] : 'Sin alertas'}
+        </div>
+      `,
+      buttons: ['✅ Cerrar']
+    });
+
+    await alert.present();
+  }
+
+  // Mostrar sugerencias de IA
+  async mostrarSugerenciasIA(): Promise<void> {
+    const sugerencias = this.aiService.generarSugerenciasOptimizacion(this.facturas);
+    this.sugerenciasIA = sugerencias;
+    
+    const alert = await this.alertController.create({
+      header: '💡 Sugerencias IA',
+      subHeader: 'Optimizaciones recomendadas',
+      message: `
+        <div style="text-align: left; font-size: 14px;">
+          ${sugerencias.map(s => `• ${s}`).join('<br>')}
+        </div>
+      `,
+      buttons: [
+        {
+          text: '📌 Mostrar en Panel',
+          handler: () => {
+            this.mostrarPanelIA = true;
+          }
+        },
+        {
+          text: '✅ Cerrar'
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  // Cerrar panel de IA
+  cerrarPanelIA(): void {
+    this.mostrarPanelIA = false;
+    this.sugerenciasIA = [];
   }
 
   onHeaderButtonClick(action: string): void {
