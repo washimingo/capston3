@@ -38,9 +38,9 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.setMenuType();
   }
-  
-  openSanBernardoPage() {
-    window.open('https://www.sanbernardo.cl/', '_blank');
+
+    home() {
+    this.router.navigate(['/home']);
   }
   // Método eliminado para evitar recargas y mantener SPA
 }
