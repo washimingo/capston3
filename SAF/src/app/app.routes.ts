@@ -33,5 +33,9 @@ export const routes: Routes = [
   {
     path: 'asistente-ia',
     loadComponent: () => import('./pages/asistente-ia/asistente-ia.page').then( m => m.AsistenteIaPage)
+  },
+  {
+    path: 'sii-config',
+    loadComponent: () => import('./components/sii-config/sii-config.component').then( m => m.SiiConfigComponent)
   }
 ];

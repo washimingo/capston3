@@ -1,0 +1,185 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Configuración SII</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  
+  <!-- SECCIÓN 1: Configuración del Certificado -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="cloud-upload-outline" class="mr-2"></ion-icon>
+        Certificado Digital
+      </ion-card-title>
+    </ion-card-header>
+    
+    <ion-card-content>
+      <ion-list>
+        <!-- RUT de la empresa -->
+        <ion-item>
+          <ion-label position="stacked">RUT de la Empresa</ion-label>
+          <ion-input 
+            [(ngModel)]="rut" 
+            (ionChange)="formatearRut()"
+            placeholder="12.345.678-9"
+            [disabled]="configurado">
+          </ion-input>
+        </ion-item>
+
+        <!-- Contraseña del certificado -->
+        <ion-item>
+          <ion-label position="stacked">Contraseña del Certificado</ion-label>
+          <ion-input 
+            type="password"
+            [(ngModel)]="password" 
+            placeholder="Ingresa la contraseña"
+            [disabled]="configurado">
+          </ion-input>
+        </ion-item>
+
+        <!-- Ambiente -->
+        <ion-item>
+          <ion-label position="stacked">Ambiente</ion-label>
+          <ion-select [(ngModel)]="ambiente" [disabled]="configurado">
+            <ion-select-option value="certificacion">Certificación (Pruebas)</ion-select-option>
+            <ion-select-option value="produccion">Producción</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Selector de archivo -->
+        <ion-item>
+          <ion-label position="stacked">Certificado (.pfx / .p12)</ion-label>
+          <div class="file-upload-wrapper">
+            <input 
+              type="file" 
+              id="certificado" 
+              accept=".pfx,.p12"
+              (change)="onFileSelected($event)"
+              [disabled]="configurado"
+              style="display: none;">
+            <ion-button 
+              (click)="abrirSelectorArchivo()" 
+              fill="outline"
+              [disabled]="configurado">
+              <ion-icon slot="start" name="document-text-outline"></ion-icon>
+              Seleccionar Archivo
+            </ion-button>
+            <ion-note *ngIf="certificadoNombre" class="ml-3">
+              {{ certificadoNombre }}
+            </ion-note>
+          </div>
+        </ion-item>
+
+        <!-- Estado de configuración -->
+        <ion-item *ngIf="configurado" color="success" lines="none">
+          <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+          <ion-label>Certificado configurado correctamente</ion-label>
+        </ion-item>
+
+        <!-- Botón de configurar -->
+        <div class="ion-padding-top">
+          <ion-button 
+            expand="block" 
+            (click)="configurarCertificado()"
+            [disabled]="configurado || !certificadoFile || !rut || !password">
+            <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
+            {{ configurado ? 'Ya Configurado' : 'Configurar Certificado' }}
+          </ion-button>
+        </div>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- SECCIÓN 2: Consultar Facturas -->
+  <ion-card [disabled]="!configurado">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="download-outline" class="mr-2"></ion-icon>
+        Consultar Facturas
+      </ion-card-title>
+    </ion-card-header>
+    
+    <ion-card-content>
+      <ion-list>
+        <!-- Fecha desde -->
+        <ion-item>
+          <ion-label position="stacked">Fecha Desde</ion-label>
+          <ion-input 
+            type="date"
+            [(ngModel)]="fechaDesde"
+            [disabled]="!configurado">
+          </ion-input>
+        </ion-item>
+
+        <!-- Fecha hasta -->
+        <ion-item>
+          <ion-label position="stacked">Fecha Hasta</ion-label>
+          <ion-input 
+            type="date"
+            [(ngModel)]="fechaHasta"
+            [disabled]="!configurado">
+          </ion-input>
+        </ion-item>
+
+        <!-- Botón consultar -->
+        <div class="ion-padding-top">
+          <ion-button 
+            expand="block" 
+            (click)="consultarFacturas()"
+            [disabled]="!configurado || cargandoFacturas">
+            <ion-spinner *ngIf="cargandoFacturas" slot="start"></ion-spinner>
+            <ion-icon *ngIf="!cargandoFacturas" slot="start" name="refresh-outline"></ion-icon>
+            {{ cargandoFacturas ? 'Consultando...' : 'Consultar Facturas' }}
+          </ion-button>
+        </div>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- SECCIÓN 3: Resultados -->
+  <ion-card *ngIf="facturas.length > 0">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="document-text-outline" class="mr-2"></ion-icon>
+        Facturas Encontradas ({{ facturas.length }})
+      </ion-card-title>
+    </ion-card-header>
+    
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let factura of facturas">
+          <ion-label>
+            <h2>Folio: {{ factura.folio }}</h2>
+            <p>RUT Receptor: {{ factura.rutReceptor }}</p>
+            <p>Fecha: {{ factura.fechaEmision }}</p>
+            <p>Monto: ${{ factura.montoTotal }}</p>
+            <p>Estado: {{ factura.estado }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Información de ayuda -->
+  <ion-card color="light">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="alert-circle-outline" class="mr-2"></ion-icon>
+        Información Importante
+      </ion-card-title>
+    </ion-card-header>
+    
+    <ion-card-content>
+      <ul>
+        <li>El certificado digital (.pfx) es proporcionado por el SII</li>
+        <li>Usa el ambiente de <strong>Certificación</strong> para pruebas</li>
+        <li>El ambiente de <strong>Producción</strong> solo para operaciones reales</li>
+        <li>La contraseña es la que definiste al exportar el certificado</li>
+        <li>El backend debe estar corriendo en <code>http://localhost:3000</code></li>
+      </ul>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
