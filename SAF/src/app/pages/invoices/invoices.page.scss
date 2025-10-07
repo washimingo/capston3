@@ -2027,3 +2027,156 @@ ion-content {
     padding: 1rem;
   }
 }
+
+// =================== ESTILOS DE PAGINACIÓN ===================
+.pagination-container {
+  background: linear-gradient(135deg, $gray-50 0%, $gray-100 100%);
+  border-top: 1px solid $gray-200;
+  
+  .pagination-info {
+    color: $gray-600;
+    font-weight: 500;
+    
+    @media (max-width: 640px) {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+  }
+  
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    
+    @media (max-width: 640px) {
+      justify-content: center;
+    }
+  }
+  
+  .items-per-page {
+    select {
+      border: 1px solid $gray-300;
+      border-radius: 6px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      background: white;
+      color: $gray-700;
+      transition: all 0.2s ease;
+      
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+      }
+      
+      &:hover {
+        border-color: $gray-400;
+      }
+    }
+    
+    label {
+      color: $gray-600;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+  }
+  
+  .pagination-btn {
+    background: white;
+    border: 1px solid $gray-300;
+    color: $gray-700;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    
+    &:hover:not(:disabled) {
+      background: $gray-50;
+      border-color: $gray-400;
+      transform: translateY(-1px);
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: $gray-100;
+    }
+    
+    ion-icon {
+      font-size: 1rem;
+    }
+  }
+  
+  .page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    
+    .page-number-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      color: $gray-700;
+      transition: all 0.2s ease;
+      font-weight: 500;
+      
+      &:hover {
+        background: $gray-50;
+        border-color: $gray-400;
+        transform: translateY(-1px);
+      }
+      
+      &.active {
+        background: $primary-color !important;
+        color: white !important;
+        border-color: $primary-color !important;
+        box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+        
+        &:hover {
+          background: $primary-dark !important;
+          transform: translateY(-1px);
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments para paginación
+@media (max-width: 640px) {
+  .pagination-container {
+    .pagination-controls {
+      .items-per-page {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.5rem;
+        
+        select {
+          margin-left: 0.5rem;
+        }
+      }
+      
+      .pagination-btn {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+        
+        &:first-of-type,
+        &:last-of-type {
+          span {
+            display: none;
+          }
+        }
+      }
+      
+      .page-numbers {
+        .page-number-btn {
+          width: 2rem;
+          height: 2rem;
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
+}

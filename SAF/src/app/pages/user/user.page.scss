@@ -1,432 +1,453 @@
-// Estilos optimizados para aplicación de escritorio
+// Estilos personalizados para la página de usuario
+// Optimizado para aplicaciones de escritorio con ion-split-pane
+
 .user-page {
-  
-  // Configuración base para escritorio
-  min-height: 100vh;
-  font-size: 16px; // Tamaño base más grande para escritorio
-  
-  // Header con gradiente mejorado para pantallas grandes - Optimized
-  .gradient-header {
-    background: linear-gradient(135deg, #19417C 0%, #2563eb 50%, #1e40af 100%);
-    box-shadow: 0 8px 32px rgba(25, 65, 124, 0.3);
-    transition: box-shadow 0.2s ease;
-    
-    @media (hover: hover) {
-      &:hover {
-        box-shadow: 0 12px 40px rgba(25, 65, 124, 0.4);
-      }
-    }
+  // Asegura que el contenido use todo el espacio disponible
+  ion-content {
+    --padding-start: 0;
+    --padding-end: 0;
+    --padding-top: 0;
+    --padding-bottom: 0;
   }
 
-  // Sombras más pronunciadas para desktop - Optimized
-  .card-shadow {
-    box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.1), 
-      0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s ease;
-    
-    @media (hover: hover) {
-      &:hover {
-        box-shadow: 
-          0 6px 8px -2px rgba(0, 0, 0, 0.1), 
-          0 2px 4px -1px rgba(0, 0, 0, 0.05);
-        transform: translateY(-1px);
-      }
-    }
-  }
-
-  // Mejoras específicas para ion-items en desktop - Optimized
-  ion-item {
-    --transition: transform 0.15s ease-in-out;
+  // Mejoras para los componentes Ionic con Tailwind
+  ion-input {
+    --border-radius: 12px;
     --padding-start: 16px;
     --padding-end: 16px;
-    --min-height: 64px; // Altura mínima mayor para desktop
-    margin-bottom: 8px;
-    border-radius: 8px;
+    --border-width: 2px;
+    --border-color: #e5e7eb;
     
-    @media (hover: hover) {
-      &:hover {
-        --background: #f8fafc;
-        transform: translateX(2px);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      }
-    }
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    ion-label {
-      h3 {
-        font-size: 16px;
-        font-weight: 500;
-        margin-bottom: 4px;
-      }
-      
-      p {
-        font-size: 14px;
-        color: #64748b;
-      }
+    &.ion-focused {
+      --border-color: #6366f1;
+      --highlight-color-focused: #6366f1;
     }
   }
 
-  // Botones optimizados para desktop
+  ion-select {
+    --border-radius: 12px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --border-width: 2px;
+    --border-color: #e5e7eb;
+    
+    &.ion-focused {
+      --border-color: #6366f1;
+    }
+  }
+
   ion-button {
     --border-radius: 12px;
-    --padding-start: 24px;
-    --padding-end: 24px;
-    height: 48px;
-    font-size: 16px;
     font-weight: 500;
-    margin: 0;
-    transition: all 0.3s ease;
     
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    &.button-outline {
-      --border-width: 2px;
-      --border-style: solid;
-    }
-  }
-
-  // Iconos con animaciones mejoradas
-  ion-icon {
-    transition: all 0.3s ease;
-    
-    &:hover {
-      transform: scale(1.1);
-    }
-  }
-
-  // Grid responsivo optimizado para desktop
-  .desktop-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 2rem;
-    
-    @media (max-width: 1024px) {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-  }
-
-  // Tarjetas de estadísticas con efectos especiales
-  .stat-card {
-    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-    border: 1px solid #e2e8f0;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      background: linear-gradient(145deg, #f8fafc 0%, #ffffff 100%);
-      border-color: #cbd5e1;
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-    }
-
-    ion-icon {
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-    }
-  }
-
-  // Contenedor principal con máximo ancho
-  .desktop-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 2rem;
-    
-    @media (max-width: 768px) {
-      padding: 1rem;
-    }
-  }
-
-  // Tipografía mejorada para desktop
-  h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1.2;
-    
-    @media (max-width: 1024px) {
-      font-size: 1.75rem;
-    }
-  }
-
-  h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.3;
-    color: #1f2937;
-  }
-
-  // Espaciado consistente
-  .section-spacing {
-    margin-bottom: 2rem;
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  // Animaciones para entrada de elementos
-  .fade-in {
-    animation: fadeInUp 0.6s ease-out;
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  // Efectos de scroll suaves
-  .smooth-scroll {
-    scroll-behavior: smooth;
-  }
-
-  // Responsive breakpoints específicos para la aplicación
-  @media (min-width: 1440px) {
-    .desktop-container {
-      padding: 3rem;
-    }
-    
-    .gradient-header {
-      padding: 3rem;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    font-size: 14px;
-    
-    .desktop-container {
-      padding: 1.5rem;
-    }
-    
-    ion-item {
-      --min-height: 56px;
-    }
-    
-    ion-button {
-      height: 44px;
-      font-size: 14px;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .grid-cols-2 {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-    
-    .gradient-header {
-      .hidden {
-        display: block !important;
+    &.button-clear {
+      --padding-start: 16px;
+      --padding-end: 16px;
+      text-align: left;
+      
+      &:hover {
+        --background: #f9fafb;
       }
     }
+  }
+
+  // Animaciones suaves
+  .hover\:shadow-lg:hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+
+  // Efectos de hover personalizados
+  .hover\:from-blue-100:hover {
+    background-image: linear-gradient(to right, #dbeafe, #bfdbfe);
+  }
+
+  .hover\:from-green-100:hover {
+    background-image: linear-gradient(to right, #dcfce7, #bbf7d0);
+  }
+
+  .hover\:from-purple-100:hover {
+    background-image: linear-gradient(to right, #f3e8ff, #e9d5ff);
+  }
+
+  .hover\:from-orange-100:hover {
+    background-image: linear-gradient(to right, #fed7aa, #fdba74);
+  }
+
+  // Layout optimizado para una sola columna
+  .grid.grid-cols-1 {
+    max-width: 1200px; // Limita el ancho máximo para mejor legibilidad
+    margin: 0 auto;
+  }
+
+  // Mejora visual para el backdrop del avatar
+  .backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+  }
+
+  .bg-opacity-20 {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .bg-opacity-15 {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .border-opacity-30 {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .border-opacity-20 {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  // Responsive para pantallas más pequeñas
+  @media (max-width: 768px) {
+    .grid-cols-2.lg\:grid-cols-4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    
+    .text-3xl {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+    }
+    
+    .w-28.h-28 {
+      width: 6rem;
+      height: 6rem;
+    }
+    
+    .text-6xl {
+      font-size: 3rem;
+      line-height: 1;
+    }
+
+    .grid-cols-1.md\:grid-cols-2 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+  }
+
+  // Optimización para pantallas grandes
+  @media (min-width: 1024px) {
+    .min-h-full {
+      min-height: calc(100vh - 60px); // Considera la altura del header
+    }
+
+    .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  // Estilos para mejor accesibilidad
+  ion-button:focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+  }
+
+  ion-input:focus-within,
+  ion-select:focus-within {
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
   }
 }
 
-// Dark mode support
-:root.ion-palette-dark {
-  .user-page {
-    // Header styles
-    ion-header ion-toolbar {
-      --background: #1f2937 !important;
-      --color: #f9fafb !important;
-      
-      ion-title {
-        color: #f9fafb !important;
-      }
+// Estilos para el drawer de editar perfil
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.edit-profile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100%;
+  background: white;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  
+  &.open {
+    transform: translateX(0);
+  }
+  
+  .drawer-header {
+    padding: 1.5rem;
+    border-bottom: 2px solid #f1f5f9;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    
+    .drawer-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin: 0;
     }
     
-    // Content background
-    ion-content {
-      --background: #111827 !important;
-    }
-    
-    // Gradient header dark mode
-    .gradient-header {
-      background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 50%, #1e293b 100%) !important;
-      box-shadow: 0 8px 32px rgba(30, 64, 175, 0.4) !important;
-      
-      &:hover {
-        box-shadow: 0 12px 40px rgba(30, 64, 175, 0.5) !important;
-      }
-    }
-    
-    // Cards and containers
-    .bg-white {
-      background: rgba(31, 41, 55, 0.95) !important;
-      border: 1px solid rgba(75, 85, 99, 0.3) !important;
-    }
-    
-    .bg-gray-50 {
-      background: #111827 !important;
-    }
-    
-    .card-shadow {
-      box-shadow: 
-        0 4px 6px -1px rgba(0, 0, 0, 0.3), 
-        0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
-      
-      &:hover {
-        box-shadow: 
-          0 10px 15px -3px rgba(0, 0, 0, 0.4), 
-          0 4px 6px -2px rgba(0, 0, 0, 0.3) !important;
-      }
-    }
-    
-    // Text colors
-    .text-gray-800 {
-      color: rgba(243, 244, 246, 0.95) !important;
-    }
-    
-    .text-gray-600 {
-      color: rgba(209, 213, 219, 0.85) !important;
-    }
-    
-    .text-gray-500 {
-      color: rgba(156, 163, 175, 0.8) !important;
-    }
-    
-    .text-gray-400 {
-      color: rgba(156, 163, 175, 0.7) !important;
-    }
-    
-    // Ion-item dark mode
-    ion-item {
-      --background: rgba(31, 41, 55, 0.6);
-      --color: rgba(243, 244, 246, 0.95);
-      --border-color: rgba(75, 85, 99, 0.3);
+    .close-drawer-btn {
+      --color: #64748b;
+      --padding-start: 8px;
+      --padding-end: 8px;
       
       &:hover {
-        --background: rgba(55, 65, 81, 0.8) !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+        --color: #374151;
+        --background: rgba(0, 0, 0, 0.05);
       }
-      
-      ion-label {
-        color: rgba(243, 244, 246, 0.95) !important;
-      }
-    }
-    
-    // Ion-button dark mode
-    ion-button {
-      --background: rgba(55, 65, 81, 0.8);
-      --color: rgba(243, 244, 246, 0.95);
-      --border-color: rgba(75, 85, 99, 0.4);
-      
-      &[fill="outline"] {
-        --border-color: rgba(75, 85, 99, 0.5);
-        --color: rgba(243, 244, 246, 0.9);
-        
-        &:hover {
-          --background: rgba(75, 85, 99, 0.3);
-        }
-      }
-      
-      &[color="primary"] {
-        --background: rgba(59, 130, 246, 0.8);
-        --color: rgba(255, 255, 255, 0.95);
-        
-        &:hover {
-          --background: rgba(59, 130, 246, 0.9);
-        }
-      }
-    }
-    
-    // Icon backgrounds
-    .bg-blue-100 {
-      background-color: rgba(59, 130, 246, 0.25) !important;
-      
-      ion-icon {
-        color: rgba(147, 197, 253, 0.9) !important;
-      }
-    }
-    
-    .bg-green-100 {
-      background-color: rgba(34, 197, 94, 0.25) !important;
-      
-      ion-icon {
-        color: rgba(134, 239, 172, 0.9) !important;
-      }
-    }
-    
-    .bg-purple-100 {
-      background-color: rgba(168, 85, 247, 0.25) !important;
-      
-      ion-icon {
-        color: rgba(196, 181, 253, 0.9) !important;
-      }
-    }
-    
-    .bg-orange-100 {
-      background-color: rgba(249, 115, 22, 0.25) !important;
-      
-      ion-icon {
-        color: rgba(251, 191, 36, 0.9) !important;
-      }
-    }
-    
-    .bg-red-100 {
-      background-color: rgba(239, 68, 68, 0.25) !important;
-      
-      ion-icon {
-        color: rgba(252, 165, 165, 0.9) !important;
-      }
-    }
-    
-    .bg-yellow-100 {
-      background-color: rgba(245, 158, 11, 0.25) !important;
-      
-      ion-icon {
-        color: rgba(251, 191, 36, 0.9) !important;
-      }
-    }
-    
-    .bg-indigo-100 {
-      background-color: rgba(99, 102, 241, 0.25) !important;
-      
-      ion-icon {
-        color: rgba(165, 180, 252, 0.9) !important;
-      }
-    }
-    
-    .bg-gray-100 {
-      background-color: rgba(107, 114, 128, 0.25) !important;
-      
-      ion-icon {
-        color: rgba(156, 163, 175, 0.9) !important;
-      }
-    }
-    
-    // Avatar and profile specific
-    .profile-avatar {
-      border-color: rgba(75, 85, 99, 0.4) !important;
-    }
-    
-    // Statistics cards
-    .stats-card {
-      background: rgba(31, 41, 55, 0.95) !important;
-      border-color: rgba(75, 85, 99, 0.3) !important;
-      
-      .stats-value {
-        color: rgba(243, 244, 246, 0.95) !important;
-      }
-      
-      .stats-label {
-        color: rgba(156, 163, 175, 0.8) !important;
-      }
-    }
-    
-    // Gradients adjustment for dark mode
-    .gradient-bg {
-      background: linear-gradient(135deg, rgba(31, 41, 55, 0.95) 0%, rgba(17, 24, 39, 0.95) 100%) !important;
     }
   }
+  
+  .drawer-content {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    
+    .avatar-section {
+      text-align: center;
+      margin-bottom: 2rem;
+      
+      .relative {
+        display: inline-block;
+        position: relative;
+      }
+      
+      .absolute {
+        position: absolute;
+      }
+      
+      .-bottom-1 {
+        bottom: -0.25rem;
+      }
+      
+      .-right-1 {
+        right: -0.25rem;
+      }
+      
+      .w-20 {
+        width: 5rem;
+      }
+      
+      .h-20 {
+        height: 5rem;
+      }
+      
+      .w-7 {
+        width: 1.75rem;
+      }
+      
+      .h-7 {
+        height: 1.75rem;
+      }
+      
+      .text-4xl {
+        font-size: 2.25rem;
+      }
+      
+      .text-sm {
+        font-size: 0.875rem;
+      }
+      
+      .rounded-full {
+        border-radius: 9999px;
+      }
+      
+      .bg-gray-200 {
+        background-color: #e5e7eb;
+      }
+      
+      .text-gray-600 {
+        color: #4b5563;
+      }
+      
+      .text-gray-600 {
+        color: #4b5563;
+      }
+      
+      .bg-blue-500 {
+        background-color: #3b82f6;
+      }
+      
+      .text-white {
+        color: white;
+      }
+      
+      .border-2 {
+        border-width: 2px;
+      }
+      
+      .border-white {
+        border-color: white;
+      }
+      
+      .cursor-pointer {
+        cursor: pointer;
+      }
+      
+      .hover\:bg-blue-600:hover {
+        background-color: #2563eb;
+      }
+      
+      .transition-all {
+        transition: all 0.3s ease;
+      }
+      
+      .duration-300 {
+        transition-duration: 300ms;
+      }
+      
+      .flex {
+        display: flex;
+      }
+      
+      .items-center {
+        align-items: center;
+      }
+      
+      .justify-center {
+        justify-content: center;
+      }
+      
+      .mx-auto {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .mb-4 {
+        margin-bottom: 1rem;
+      }
+      
+      .mb-6 {
+        margin-bottom: 1.5rem;
+      }
+      
+      .text-center {
+        text-align: center;
+      }
+    }
+    
+    .edit-form {
+      flex: 1;
+      
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+      
+      .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+      }
+      
+      .form-input, .form-select {
+        --background: #f8fafc;
+        --border-radius: 12px;
+        --padding-start: 16px;
+        --padding-end: 16px;
+        --border-width: 2px;
+        --border-color: #e2e8f0;
+        --color: #1e293b;
+        width: 100%;
+        
+        &.ion-focused {
+          --border-color: #6366f1;
+          --background: #ffffff;
+          box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+      }
+    }
+    
+    .drawer-actions {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      
+      .save-btn {
+        background: linear-gradient(to right, #3b82f6, #8b5cf6);
+        --background: transparent;
+        --color: white;
+        --border-radius: 12px;
+        height: 48px;
+        font-weight: 600;
+        
+        &:hover {
+          background: linear-gradient(to right, #2563eb, #7c3aed);
+        }
+      }
+      
+      .cancel-btn {
+        --border-color: #d1d5db;
+        --color: #6b7280;
+        --border-radius: 12px;
+        height: 48px;
+        font-weight: 600;
+        
+        &:hover {
+          --background: #f9fafb;
+          --color: #374151;
+        }
+      }
+    }
+  }
+  
+  // Responsive para pantallas más pequeñas
+  @media (max-width: 768px) {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 100%;
+  }
+}
+
+// Estilos globales para mejorar la experiencia
+* {
+  box-sizing: border-box;
+}
+
+// Scrollbar personalizado para mejor apariencia
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
 }

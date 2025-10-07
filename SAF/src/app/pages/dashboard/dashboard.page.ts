@@ -20,7 +20,7 @@ import {
   arrowForwardOutline, listOutline, businessOutline, funnelOutline, downloadOutline,
   swapVerticalOutline, cloudDownloadOutline, analyticsOutline, statsChartOutline,
   receiptOutline, timeOutline, trendingUpOutline, printOutline, shareOutline,
-  gridOutline, barChartOutline, settingsOutline, closeCircleOutline
+  gridOutline, barChartOutline, settingsOutline, closeCircleOutline, homeOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -76,7 +76,7 @@ export class DashboardPage implements OnInit {
       alertCircleOutline, checkmarkOutline, warningOutline, arrowForwardOutline,
       expandOutline, contractOutline, cloudDownloadOutline, analyticsOutline, statsChartOutline,
       receiptOutline, timeOutline, trendingUpOutline, printOutline, shareOutline,
-      gridOutline, barChartOutline, settingsOutline, closeCircleOutline
+      gridOutline, barChartOutline, settingsOutline, closeCircleOutline, homeOutline
     });
   }
 

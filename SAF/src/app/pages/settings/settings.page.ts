@@ -1,13 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { 
-  IonButton, 
-  IonContent,
-  IonIcon, 
-  IonToggle
-} from '@ionic/angular/standalone';
 import { HeaderComponent } from 'src/app/components/header/header.component';
+import { IonContent, IonIcon, IonToggle, IonButton, IonRange } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
   settingsOutline,
@@ -27,8 +22,26 @@ import {
   informationCircleOutline,
   codeOutline,
   helpCircleOutline,
-  saveOutline
+  saveOutline, 
+  documentTextOutline, 
+  volumeHighOutline, 
+  alertCircleOutline, 
+  playOutline, 
+  volumeMediumOutline, 
+  volumeLowOutline, 
+  musicalNotesOutline, 
+  refreshOutline 
 } from 'ionicons/icons';
+
+interface SettingsConfig {
+  pushNotifications: boolean;
+  emailNotifications: boolean;
+  overdueInvoiceNotifications: boolean;
+  systemNotifications: boolean;
+  alertSound: boolean;
+  notificationVolume: number;
+  interfaceSounds: boolean;
+}
 
 @Component({
   selector: 'app-settings',
@@ -38,80 +51,149 @@ import {
   imports: [
     CommonModule, 
     FormsModule, 
-    IonButton,
-    IonContent,
+    HeaderComponent,
+    IonContent, 
     IonIcon, 
-    IonToggle,
-    HeaderComponent
+    IonToggle, 
+    IonButton, 
+    IonRange
   ]
 })
 export class SettingsPage implements OnInit {
   paletteToggle = false;
 
+  settings: SettingsConfig = {
+    pushNotifications: true,
+    emailNotifications: true,
+    overdueInvoiceNotifications: true,
+    systemNotifications: false,
+    alertSound: true,
+    notificationVolume: 70,
+    interfaceSounds: true
+  };
+
+  lastSaved: Date | null = null;
+  private audioContext: AudioContext | null = null;
+
   constructor() {
     addIcons({
-      settingsOutline,
       cogOutline,
+      notificationsOutline,
+      phonePortraitOutline,
+      mailOutline,
+      documentTextOutline,
+      informationCircleOutline,
+      volumeHighOutline,
+      alertCircleOutline,
+      playOutline,
+      volumeMediumOutline,
+      volumeLowOutline,
+      musicalNotesOutline,
+      refreshOutline,
+      saveOutline,
+      settingsOutline,
       optionsOutline,
       constructOutline,
       moonOutline,
       colorPaletteOutline,
       languageOutline,
       chevronForwardOutline,
-      notificationsOutline,
-      phonePortraitOutline,
-      mailOutline,
       personOutline,
       personCircleOutline,
       shieldOutline,
-      informationCircleOutline,
       codeOutline,
-      helpCircleOutline,
-      saveOutline
+      helpCircleOutline
     });
   }
 
   ngOnInit() {
-    // Check if user has a saved preference
-    const saved = localStorage.getItem('saf-dark-mode');
-    if (saved !== null) {
-      this.paletteToggle = saved === 'true';
-      this.toggleDarkPalette(this.paletteToggle);
-    } else {
-      // Use matchMedia to check the user preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-      this.paletteToggle = prefersDark.matches;
-      this.toggleDarkPalette(this.paletteToggle);
-      // Listen for changes to the prefers-color-scheme media query only if no user preference
-      prefersDark.addEventListener('change', (mediaQuery) => {
-        if (localStorage.getItem('saf-dark-mode') === null) {
-          this.paletteToggle = mediaQuery.matches;
-          this.toggleDarkPalette(this.paletteToggle);
-        }
-      });
+    this.loadSettings();
+  }
+
+  onSettingChange(setting: keyof SettingsConfig, event: any) {
+    (this.settings as any)[setting] = event.detail.checked;
+    this.saveSettings();
+  }
+
+  onVolumeChange(event: any) {
+    this.settings.notificationVolume = event.detail.value;
+    this.saveSettings();
+  }
+
+  async testAlertSound() {
+    if (!this.settings.alertSound) return;
+
+    try {
+      // Crear un nuevo audio
+      const audio = new Audio('/assets/beep.mp3');
+      audio.volume = this.settings.notificationVolume / 100;
+      
+      // Reproducir el sonido
+      await audio.play();
+    } catch (error) {
+      console.error('Error al reproducir el sonido de alerta:', error);
+      
+      // Fallback: crear un beep sintético
+      this.createSyntheticBeep();
     }
   }
 
-  // Listen for the toggle check/uncheck to toggle the dark palette
-  toggleChange(event: CustomEvent) {
-    this.paletteToggle = event.detail.checked;
-    this.toggleDarkPalette(this.paletteToggle);
-    localStorage.setItem('saf-dark-mode', String(this.paletteToggle));
-  }
+  private createSyntheticBeep() {
+    try {
+      if (!this.audioContext) {
+        this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      }
 
-  // Add or remove the "ion-palette-dark" class on the html element
-  toggleDarkPalette(shouldAdd: boolean) {
-    document.documentElement.classList.remove('ion-palette-dark');
-  }
+      const oscillator = this.audioContext.createOscillator();
+      const gainNode = this.audioContext.createGain();
 
-  onHeaderButtonClick(action: string): void {
-    switch(action) {
-      case 'save':
-        // Guardar configuraciones
-        console.log('Guardar configuraciones');
-        break;
-      default:
-        console.log('Acción de botón no reconocida:', action);
+      oscillator.connect(gainNode);
+      gainNode.connect(this.audioContext.destination);
+
+      oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
+      gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(this.settings.notificationVolume / 100, this.audioContext.currentTime + 0.01);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.3);
+
+      oscillator.start(this.audioContext.currentTime);
+      oscillator.stop(this.audioContext.currentTime + 0.3);
+    } catch (error) {
+      console.error('Error al crear beep sintético:', error);
     }
+  }
+
+  saveSettings() {
+    try {
+      localStorage.setItem('saf-settings', JSON.stringify(this.settings));
+      this.lastSaved = new Date();
+      console.log('Configuraciones guardadas exitosamente');
+    } catch (error) {
+      console.error('Error al guardar configuraciones:', error);
+    }
+  }
+
+  loadSettings() {
+    try {
+      const savedSettings = localStorage.getItem('saf-settings');
+      if (savedSettings) {
+        this.settings = { ...this.settings, ...JSON.parse(savedSettings) };
+        this.lastSaved = new Date();
+      }
+    } catch (error) {
+      console.error('Error al cargar configuraciones:', error);
+    }
+  }
+
+  resetToDefaults() {
+    this.settings = {
+      pushNotifications: true,
+      emailNotifications: true,
+      overdueInvoiceNotifications: true,
+      systemNotifications: false,
+      alertSound: true,
+      notificationVolume: 70,
+      interfaceSounds: true
+    };
+    this.saveSettings();
   }
 }

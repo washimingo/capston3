@@ -43,7 +43,7 @@ import {
   closeCircleOutline, 
   analyticsOutline,
   sparklesOutline,
-  bulbOutline as bulbIcon, flashOutline, cameraOutline, cogOutline, createOutline, saveOutline } from 'ionicons/icons';
+  bulbOutline as bulbIcon, flashOutline, cameraOutline, cogOutline, createOutline, saveOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 
 // Importar servicio de IA
 import { AIService, FacturaExtraida, CategoriaIA, DeteccionDuplicado } from 'src/app/services/ai/ai.service';
@@ -75,14 +75,7 @@ export class InvoicesPage implements OnInit {
     private aiService: AIService
   ) {
     // Registrar iconos necesarios para el componente
-    addIcons({
-      documentTextOutline,calendarOutline,calendarNumberOutline,timeOutline,speedometerOutline,
-      cloudUploadOutline,documentOutline,analyticsOutline,funnelOutline,refreshOutline,warningOutline,
-      searchOutline,closeCircle,bulbOutline,arrowForwardOutline,optionsOutline,cashOutline,flagOutline,
-      checkmarkOutline,closeOutline,funnel,close,businessOutline,hourglassOutline,settingsOutline,
-      eyeOutline,downloadOutline,sparklesOutline,flashOutline,cameraOutline,cogOutline,
-      checkmarkCircleOutline,createOutline,saveOutline,receiptOutline
-    });
+    addIcons({documentTextOutline,calendarOutline,calendarNumberOutline,timeOutline,speedometerOutline,cloudUploadOutline,documentOutline,analyticsOutline,funnelOutline,refreshOutline,warningOutline,searchOutline,closeCircle,bulbOutline,arrowForwardOutline,optionsOutline,cashOutline,flagOutline,checkmarkOutline,closeOutline,funnel,close,businessOutline,hourglassOutline,settingsOutline,eyeOutline,downloadOutline,chevronBackOutline,chevronForwardOutline,sparklesOutline,flashOutline,cameraOutline,cogOutline,checkmarkCircleOutline,createOutline,saveOutline,receiptOutline});
 
     // Leer query param para mostrar facturas por vencer
     this.route.queryParams.subscribe(params => {
@@ -334,6 +327,8 @@ export class InvoicesPage implements OnInit {
   // Método para manejar la búsqueda reactiva desde el campo de búsqueda
   onBuscarFactura() {
     this.buscandoFacturas = true;
+    // Resetear paginación cuando se realiza una búsqueda
+    this.paginaActual = 1;
     setTimeout(() => {
       const texto = (this.filtroBusqueda || '').toLowerCase();
       if (texto.length > 0) {
@@ -364,6 +359,11 @@ export class InvoicesPage implements OnInit {
   abrirModalCarga: boolean = false;
   archivoBase64: string | null = null;
   facturas: Factura[] = [];
+  
+  // Propiedades de paginación
+  paginaActual: number = 1;
+  elementosPorPagina: number = 25;
+  
   // Carga manual de facturas
   nuevaFactura: Partial<Factura> = {};
 
@@ -514,6 +514,80 @@ export class InvoicesPage implements OnInit {
     });
   }
 
+  // ===== MÉTODOS DE PAGINACIÓN =====
+  
+  getFacturasPaginadas(): Factura[] {
+    const facturasFiltradas = this.getFacturasFiltradas();
+    const inicio = (this.paginaActual - 1) * this.elementosPorPagina;
+    const fin = inicio + this.elementosPorPagina;
+    return facturasFiltradas.slice(inicio, fin);
+  }
+
+  getTotalPaginas(): number {
+    const totalFacturas = this.getFacturasFiltradas().length;
+    return Math.ceil(totalFacturas / this.elementosPorPagina);
+  }
+
+  getPaginacionInfo() {
+    const facturasFiltradas = this.getFacturasFiltradas();
+    const inicio = Math.min((this.paginaActual - 1) * this.elementosPorPagina + 1, facturasFiltradas.length);
+    const fin = Math.min(this.paginaActual * this.elementosPorPagina, facturasFiltradas.length);
+    return { inicio, fin };
+  }
+
+  getPaginasVisibles(): number[] {
+    const totalPaginas = this.getTotalPaginas();
+    const paginasVisibles: number[] = [];
+    
+    // Mostrar máximo 5 páginas
+    let inicio = Math.max(1, this.paginaActual - 2);
+    let fin = Math.min(totalPaginas, inicio + 4);
+    
+    // Ajustar si estamos al final
+    if (fin - inicio < 4) {
+      inicio = Math.max(1, fin - 4);
+    }
+    
+    for (let i = inicio; i <= fin; i++) {
+      paginasVisibles.push(i);
+    }
+    
+    return paginasVisibles;
+  }
+
+  irAPagina(pagina: number): void {
+    if (pagina >= 1 && pagina <= this.getTotalPaginas()) {
+      this.paginaActual = pagina;
+    }
+  }
+
+  irAPaginaAnterior(): void {
+    if (this.paginaActual > 1) {
+      this.paginaActual--;
+    }
+  }
+
+  irAPaginaSiguiente(): void {
+    if (this.paginaActual < this.getTotalPaginas()) {
+      this.paginaActual++;
+    }
+  }
+
+  irAPrimeraPagina(): void {
+    this.paginaActual = 1;
+  }
+
+  irAUltimaPagina(): void {
+    this.paginaActual = this.getTotalPaginas();
+  }
+
+  cambiarElementosPorPagina(): void {
+    // Resetear a la primera página cuando se cambia el número de elementos
+    this.paginaActual = 1;
+  }
+
+  // ===== FIN MÉTODOS DE PAGINACIÓN =====
+
   seleccionarCategoria(estado: string) {
     this.mostrarPorVencer = false;
     this.filtroFecha = '';
@@ -522,6 +596,8 @@ export class InvoicesPage implements OnInit {
     } else {
       this.categoriaSeleccionada = estado;
     }
+    // Resetear paginación cuando se cambia el filtro
+    this.paginaActual = 1;
   }
 
   getResumenCount(estado: string): number {

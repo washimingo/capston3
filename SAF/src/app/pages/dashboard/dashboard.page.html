@@ -1,83 +1,84 @@
-<app-header [title]="'Dashboard'"></app-header>
+<app-header title="Dashboard" titleIcon="home-outline"></app-header>
 
-<ion-content [fullscreen]="true" class="dashboard-content">  
-  <!-- Contenedor principal con padding y máximo ancho -->
-  <div class="max-w-7xl mx-auto px-6 py-8">
+<ion-content [fullscreen]="true" class="dashboard-content bg-gray-50">  
+  <!-- Contenedor principal optimizado para panel lateral -->
+  <div class="w-full px-4 lg:px-6 py-6">
     
-    <!-- KPI Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+    <!-- KPI Cards - Grid responsivo optimizado -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
       <!-- Facturas por vencer hoy -->
-      <div class="kpi-card bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
+      <div class="kpi-card bg-white rounded-xl p-4 lg:p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-gray-600">Por Vencer Hoy</p>
-            <p class="text-2xl font-bold text-red-600">{{ getFacturasPorVencerHoy().length }}</p>
+            <p class="text-xs lg:text-sm font-medium text-gray-600">Por Vencer Hoy</p>
+            <p class="text-xl lg:text-2xl font-bold text-red-600">{{ getFacturasPorVencerHoy().length }}</p>
             <p class="text-xs text-gray-500">facturas críticas</p>
           </div>
-          <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-            <ion-icon name="alarm-outline" class="text-xl text-red-600"></ion-icon>
+          <div class="w-10 h-10 lg:w-12 lg:h-12 bg-red-100 rounded-lg flex items-center justify-center">
+            <ion-icon name="alarm-outline" class="text-lg lg:text-xl text-red-600"></ion-icon>
           </div>
         </div>
       </div>
 
       <!-- Total facturas -->
-      <div class="kpi-card bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
+      <div class="kpi-card bg-white rounded-xl p-4 lg:p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-gray-600">Total Facturas</p>
-            <p class="text-2xl font-bold text-blue-600">{{ facturas.length }}</p>
+            <p class="text-xs lg:text-sm font-medium text-gray-600">Total Facturas</p>
+            <p class="text-xl lg:text-2xl font-bold text-blue-600">{{ facturas.length }}</p>
             <p class="text-xs text-gray-500">en sistema</p>
           </div>
-          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-            <ion-icon name="document-text-outline" class="text-xl text-blue-600"></ion-icon>
+          <div class="w-10 h-10 lg:w-12 lg:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+            <ion-icon name="document-text-outline" class="text-lg lg:text-xl text-blue-600"></ion-icon>
           </div>
         </div>
       </div>
 
       <!-- Total proveedores -->
-      <div class="kpi-card bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
+      <div class="kpi-card bg-white rounded-xl p-4 lg:p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-gray-600">Proveedores</p>
-            <p class="text-2xl font-bold text-purple-600">{{ getProveedoresDetallados().length }}</p>
+            <p class="text-xs lg:text-sm font-medium text-gray-600">Proveedores</p>
+            <p class="text-xl lg:text-2xl font-bold text-purple-600">{{ getProveedoresDetallados().length }}</p>
             <p class="text-xs text-gray-500">únicos</p>
           </div>
-          <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-            <ion-icon name="business-outline" class="text-xl text-purple-600"></ion-icon>
+          <div class="w-10 h-10 lg:w-12 lg:h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+            <ion-icon name="business-outline" class="text-lg lg:text-xl text-purple-600"></ion-icon>
           </div>
         </div>
       </div>
 
       <!-- Monto total -->
-      <div class="kpi-card bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
+      <div class="kpi-card bg-white rounded-xl p-4 lg:p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-gray-600">Monto Total</p>
-            <p class="text-2xl font-bold text-green-600">{{ getMontoTotalFacturacion() | currency:'USD':'symbol':'1.0-0' }}</p>
+            <p class="text-xs lg:text-sm font-medium text-gray-600">Monto Total</p>
+            <p class="text-xl lg:text-2xl font-bold text-green-600">{{ getMontoTotalFacturacion() | currency:'USD':'symbol':'1.0-0' }}</p>
             <p class="text-xs text-gray-500">valor acumulado</p>
           </div>
-          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-            <ion-icon name="cash-outline" class="text-xl text-green-600"></ion-icon>
+          <div class="w-10 h-10 lg:w-12 lg:h-12 bg-green-100 rounded-lg flex items-center justify-center">
+            <ion-icon name="cash-outline" class="text-lg lg:text-xl text-green-600"></ion-icon>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Gráfico principal de proveedores (ancho completo) -->
-    <div class="mb-8">
-      <ion-card class="chart-card rounded-xl shadow-sm border-0 h-full">
-        <ion-card-header class="pb-3 p-4">
-          <div class="flex items-center justify-between">
+    <!-- Gráfico principal de proveedores (optimizado para panel lateral) -->
+    <div class="mb-6 lg:mb-8">
+      <ion-card class="chart-card rounded-xl shadow-sm border-0 h-full bg-white">
+        <ion-card-header class="pb-3 p-4 lg:p-6">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div class="flex items-center space-x-3">
               <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                 <ion-icon name="bar-chart-outline" class="text-lg text-purple-600"></ion-icon>
               </div>
               <div>
-                <ion-card-title class="text-xl font-semibold">Top Proveedores por Monto</ion-card-title>
+                <ion-card-title class="text-lg lg:text-xl font-semibold">Top Proveedores por Monto</ion-card-title>
+                <p class="text-sm text-gray-600 mt-1">Análisis de distribución de facturación</p>
               </div>
             </div>
             <div class="flex items-center space-x-2">
-              <span class="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+              <span class="text-xs lg:text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
                 {{ getProveedoresDetallados().length }} proveedores
               </span>
               <ion-button fill="clear" size="small" color="medium" (click)="generarGraficoTorta()">
@@ -86,30 +87,31 @@
             </div>
           </div>
         </ion-card-header>
-        <ion-card-content class="p-6">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Gráfico de barras -->
-            <div class="flex items-center justify-center">
-              <div class="chart-container w-full" style="height: 400px;">
+        <ion-card-content class="p-4 lg:p-6">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Gráfico de barras - Más compacto -->
+            <div class="lg:col-span-2 flex items-center justify-center">
+              <div class="chart-container w-full" style="height: 350px;">
                 <canvas #pieChartCanvas></canvas>
               </div>
             </div>
 
-            <!-- Lista completa de proveedores -->
-            <div class="lg:col-span-1 h-full">
-              <div class="h-full flex flex-col">
+            <!-- Lista de proveedores - Más eficiente espacialmente -->
+            <div class="lg:col-span-1">
+              <div class="h-full flex flex-col bg-gray-50 rounded-lg p-4">
                 <div class="flex items-center justify-between mb-4">
-                  <h3 class="text-sm font-semibold text-gray-700">Todos los Proveedores</h3>
+                  <h3 class="text-sm font-semibold text-gray-700">Ranking de Proveedores</h3>
+                  <span class="text-xs text-gray-500">{{ getProveedoresDetallados().length }} total</span>
                 </div>
                 
-                <!-- Lista con scroll para mostrar todos los proveedores -->
-                <div class="flex-1 overflow-y-auto" style="max-height: 350px;">
+                <!-- Lista con scroll optimizada -->
+                <div class="flex-1 overflow-y-auto" style="max-height: 300px;">
                   <div class="space-y-2">
                     @for (proveedor of getProveedoresDetallados(); track proveedor.rut + proveedor.nombre; let i = $index) {
-                      <div class="bg-gray-50 rounded-lg p-3 border border-gray-200 hover:bg-gray-100 transition-colors">
+                      <div class="bg-white rounded-lg p-3 border border-gray-200 hover:bg-gray-50 transition-colors">
                         <div class="flex items-center justify-between">
                           <div class="flex items-center space-x-2 flex-1 min-w-0">
-                            <div class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                            <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
                                  [class]="i === 0 ? 'bg-yellow-500 text-white' : 
                                          i === 1 ? 'bg-gray-400 text-white' : 
                                          i === 2 ? 'bg-orange-500 text-white' : 
@@ -121,7 +123,7 @@
                                 {{ proveedor.rut || 'Sin RUT' }}
                               </p>
                               <p class="text-xs text-gray-500">
-                                {{ proveedor.cantidad }} fact.
+                                {{ proveedor.cantidad }} facturas
                               </p>
                             </div>
                           </div>
@@ -134,10 +136,10 @@
                             </p>
                           </div>
                         </div>
-                        <!-- Barra de progreso mini -->
-                        <div class="mt-1">
-                          <div class="w-full bg-gray-200 rounded-full h-1">
-                            <div class="bg-blue-600 h-1 rounded-full transition-all duration-300" 
+                        <!-- Barra de progreso -->
+                        <div class="mt-2">
+                          <div class="w-full bg-gray-200 rounded-full h-1.5">
+                            <div class="bg-blue-600 h-1.5 rounded-full transition-all duration-300" 
                                  [style.width.%]="getProveedorPorcentaje(proveedor.monto)">
                             </div>
                           </div>
@@ -153,20 +155,21 @@
       </ion-card>
     </div>
 
-    <!-- Sección de gráficos analíticos -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Sección de gráficos analíticos - Grid optimizado -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6 mb-6">
       
       <!-- Gráfico de estado de facturas -->
-      <div>
-        <ion-card class="chart-card rounded-xl shadow-sm border-0 h-full">
+      <div class="xl:col-span-1">
+        <ion-card class="chart-card rounded-xl shadow-sm border-0 h-full bg-white">
           <ion-card-header class="pb-3 p-4">
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                  <ion-icon name="pie-chart-outline" class="text-lg text-indigo-600"></ion-icon>
+                <div class="w-8 h-8 lg:w-10 lg:h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  <ion-icon name="pie-chart-outline" class="text-sm lg:text-lg text-indigo-600"></ion-icon>
                 </div>
                 <div>
-                  <ion-card-title class="text-lg font-semibold">Estado de Facturas</ion-card-title>
+                  <ion-card-title class="text-sm lg:text-lg font-semibold">Estado de Facturas</ion-card-title>
+                  <p class="text-xs text-gray-600 hidden lg:block">Distribución por estado</p>
                 </div>
               </div>
               <ion-button fill="clear" size="small" color="medium" (click)="generarGraficoEstados()">
@@ -175,7 +178,7 @@
             </div>
           </ion-card-header>
           <ion-card-content class="p-4">
-            <div class="chart-container" style="height: 300px;">
+            <div class="chart-container" style="height: 250px;">
               <canvas #estadosChartCanvas></canvas>
             </div>
           </ion-card-content>
@@ -183,16 +186,17 @@
       </div>
 
       <!-- Gráfico de facturas por mes -->
-      <div>
-        <ion-card class="chart-card rounded-xl shadow-sm border-0 h-full">
+      <div class="xl:col-span-1">
+        <ion-card class="chart-card rounded-xl shadow-sm border-0 h-full bg-white">
           <ion-card-header class="pb-3 p-4">
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <ion-icon name="trending-up-outline" class="text-lg text-green-600"></ion-icon>
+                <div class="w-8 h-8 lg:w-10 lg:h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                  <ion-icon name="trending-up-outline" class="text-sm lg:text-lg text-green-600"></ion-icon>
                 </div>
                 <div>
-                  <ion-card-title class="text-lg font-semibold">Tendencia Mensual</ion-card-title>
+                  <ion-card-title class="text-sm lg:text-lg font-semibold">Tendencia Mensual</ion-card-title>
+                  <p class="text-xs text-gray-600 hidden lg:block">Evolución temporal</p>
                 </div>
               </div>
               <ion-button fill="clear" size="small" color="medium" (click)="generarGraficoMensual()">
@@ -201,7 +205,7 @@
             </div>
           </ion-card-header>
           <ion-card-content class="p-4">
-            <div class="chart-container" style="height: 300px;">
+            <div class="chart-container" style="height: 250px;">
               <canvas #mensualChartCanvas></canvas>
             </div>
           </ion-card-content>
@@ -209,16 +213,17 @@
       </div>
 
       <!-- Gráfico de montos por rango -->
-      <div>
-        <ion-card class="chart-card rounded-xl shadow-sm border-0 h-full">
+      <div class="xl:col-span-1">
+        <ion-card class="chart-card rounded-xl shadow-sm border-0 h-full bg-white">
           <ion-card-header class="pb-3 p-4">
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                  <ion-icon name="analytics-outline" class="text-lg text-orange-600"></ion-icon>
+                <div class="w-8 h-8 lg:w-10 lg:h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <ion-icon name="analytics-outline" class="text-sm lg:text-lg text-orange-600"></ion-icon>
                 </div>
                 <div>
-                  <ion-card-title class="text-lg font-semibold">Distribución de Montos</ion-card-title>
+                  <ion-card-title class="text-sm lg:text-lg font-semibold">Distribución de Montos</ion-card-title>
+                  <p class="text-xs text-gray-600 hidden lg:block">Rangos de facturación</p>
                 </div>
               </div>
               <ion-button fill="clear" size="small" color="medium" (click)="generarGraficoMontos()">
@@ -227,7 +232,7 @@
             </div>
           </ion-card-header>
           <ion-card-content class="p-4">
-            <div class="chart-container" style="height: 300px;">
+            <div class="chart-container" style="height: 250px;">
               <canvas #montosChartCanvas></canvas>
             </div>
           </ion-card-content>

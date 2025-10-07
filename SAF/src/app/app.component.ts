@@ -39,8 +39,8 @@ export class AppComponent implements AfterViewInit {
     this.setMenuType();
   }
 
-    home() {
-    this.router.navigate(['/home']);
+  goToDashboard() {
+    this.router.navigate(['/dashboard']);
   }
   // Método eliminado para evitar recargas y mantener SPA
 }
