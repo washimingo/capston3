@@ -8,8 +8,15 @@ const fs = require('fs');
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 
-// Configuración
-app.use(cors());
+// Configuración de CORS - Permitir peticiones desde el frontend
+const corsOptions = {
+  origin: ['http://localhost:4200', 'http://localhost:8100'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
