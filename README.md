@@ -1,8 +1,8 @@
 # Sistema de Gestión de Facturas  
 
-![Ionic](https://img.shields.io/badge/Ionic-v8.7.5-3880FF?logo=ionic&logoColor=white)
-![Angular](https://img.shields.io/badge/Angular-v20.3.3-DD0031?logo=angular&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-v12.3.0-FFCA28?logo=firebase&logoColor=black)
+![Ionic](https://img.shields.io/badge/Ionic-v8.7.6-3880FF?logo=ionic&logoColor=white)
+![Angular](https://img.shields.io/badge/Angular-v20.3.4-DD0031?logo=angular&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-v12.4.0-FFCA28?logo=firebase&logoColor=black)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4.1.14-06B6D4?logo=tailwindcss&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?logo=typescript&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
@@ -27,11 +27,11 @@ Permite listar facturas, enviar notificaciones (email, push o dentro de la app),
 
 ## Tecnologías principales
 
-- [Ionic v8.7.5](https://ionicframework.com/)  
-- [Angular v20.3.3](https://angular.io/)  
-- [Firebase v12.3.0](https://firebase.google.com/)  
+- [Ionic v8.7.6](https://ionicframework.com/)  
+- [Angular v20.3.4](https://angular.io/)  
+- [Firebase v12.4.0](https://firebase.google.com/)  
 - [TailwindCSS v4.1.14](https://tailwindcss.com/)  
-- Capacitor / AngularFire / TypeScript  
+- [TypeScript v5.9.3](https://www.typescriptlang.org/)  
 
 ---
 
