@@ -587,10 +587,11 @@
                   </tr>
                 </thead>
                 <tbody class="table-body">
-                  <tr *ngFor="let factura of getFacturasPaginadas(); trackBy: trackByFolio; let i = index"
-                      class="table-row"
-                      [class.priority-row]="getDiasRestantes(factura) !== null && getDiasRestantes(factura)! <= 2"
-                      [class.warning-row]="getDiasRestantes(factura) !== null && getDiasRestantes(factura)! > 2 && getDiasRestantes(factura)! <= 5">
+          <tr *ngFor="let factura of getFacturasPaginadas(); trackBy: trackByFolio; let i = index"
+            class="table-row cursor-pointer"
+            [class.priority-row]="getDiasRestantes(factura) !== null && getDiasRestantes(factura)! <= 2"
+            [class.warning-row]="getDiasRestantes(factura) !== null && getDiasRestantes(factura)! > 2 && getDiasRestantes(factura)! <= 5"
+            (click)="verFactura(factura)">
                     
                     <!-- Folio (sticky) -->
                     <td class="table-td sticky-col">

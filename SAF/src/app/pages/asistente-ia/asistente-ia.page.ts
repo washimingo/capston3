@@ -14,6 +14,15 @@ import { Factura } from 'src/app/models/factura.model';
   imports: [IonicModule, CommonModule, FormsModule]
 })
 export class AsistenteIaPage implements OnInit {
+  // Chatbot y sugerencias
+  mensajesChat: {usuario: string, mensaje: string}[] = [];
+  preguntaUsuario: string = '';
+  sugerenciasIA: string[] = [
+    '¿Cómo importar facturas?',
+    '¿Cómo detectar duplicados?',
+    '¿Qué significa la categorización automática?',
+    '¿Cómo exportar los resultados?'
+  ];
   
   // Variables principales
   archivoCsv: File | null = null;
@@ -43,6 +52,31 @@ export class AsistenteIaPage implements OnInit {
 
   ngOnInit() {
     this.cargarFacturasIA();
+    // Mensaje de bienvenida IA
+    this.mensajesChat.push({usuario: 'IA', mensaje: '¡Hola! ¿En qué puedo ayudarte con tus facturas hoy?'});
+  }
+
+  // Enviar mensaje al chatbot
+  enviarMensajeChat() {
+    if (!this.preguntaUsuario.trim()) return;
+    this.mensajesChat.push({usuario: 'Tú', mensaje: this.preguntaUsuario});
+    // Respuesta simulada IA
+    let respuesta = 'Estoy procesando tu consulta...';
+    if (this.preguntaUsuario.toLowerCase().includes('importar')) {
+      respuesta = 'Para importar facturas, selecciona tu archivo CSV y presiona "Procesar con IA".';
+    } else if (this.preguntaUsuario.toLowerCase().includes('duplicado')) {
+      respuesta = 'La IA detecta duplicados comparando folio y proveedor. Puedes ver los duplicados en la vista previa.';
+    } else if (this.preguntaUsuario.toLowerCase().includes('categor')) {
+      respuesta = 'La categorización automática agrupa facturas según su tipo y proveedor usando IA.';
+    } else if (this.preguntaUsuario.toLowerCase().includes('exportar')) {
+      respuesta = 'Puedes exportar los resultados desde la sección de análisis o guardar las facturas procesadas.';
+    } else {
+      respuesta = '¡Gracias por tu pregunta! Pronto tendremos más respuestas inteligentes.';
+    }
+    setTimeout(() => {
+      this.mensajesChat.push({usuario: 'IA', mensaje: respuesta});
+    }, 800);
+    this.preguntaUsuario = '';
   }
 
   // Abrir menú hamburguesa

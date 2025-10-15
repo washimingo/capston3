@@ -10,6 +10,38 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Sugerencias IA -->
+  <div class="bg-blue-50 rounded-xl p-4 mb-6 border border-blue-200">
+    <h2 class="text-lg font-semibold text-blue-700 mb-2 flex items-center">
+      <ion-icon name="bulb-outline" class="mr-2"></ion-icon>
+      Sugerencias rápidas
+    </h2>
+    <div class="flex flex-wrap gap-2">
+      <ion-chip *ngFor="let sugerencia of sugerenciasIA" (click)="preguntaUsuario = sugerencia; enviarMensajeChat()" color="primary">
+        {{sugerencia}}
+      </ion-chip>
+    </div>
+  </div>
+
+  <!-- Chatbot IA -->
+  <div class="bg-white rounded-xl shadow-md border border-gray-200 mb-6 p-4">
+    <h2 class="text-lg font-semibold text-gray-900 mb-2 flex items-center">
+      <ion-icon name="chatbubbles-outline" class="mr-2"></ion-icon>
+      Chat IA
+    </h2>
+    <div class="chat-mensajes mb-3 max-h-48 overflow-y-auto">
+      <div *ngFor="let msg of mensajesChat">
+        <div [ngClass]="{'text-right': msg.usuario === 'Tú', 'text-left': msg.usuario === 'IA'}">
+          <span class="font-bold" [ngClass]="{'text-blue-600': msg.usuario === 'IA', 'text-gray-800': msg.usuario === 'Tú'}">{{msg.usuario}}:</span>
+          <span class="ml-2">{{msg.mensaje}}</span>
+        </div>
+      </div>
+    </div>
+    <form (ngSubmit)="enviarMensajeChat()" class="flex gap-2">
+      <ion-input [(ngModel)]="preguntaUsuario" name="preguntaUsuario" placeholder="Escribe tu pregunta..." class="flex-1"></ion-input>
+      <ion-button type="submit" color="primary">Enviar</ion-button>
+    </form>
+  </div>
   
   <!-- Header con estadísticas -->
   <div class="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl p-6 mb-6 border border-blue-200">

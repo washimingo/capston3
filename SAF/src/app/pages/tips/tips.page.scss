@@ -1,3 +1,16 @@
+// Animación flotante para la ampolleta
+.bulb-anim {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
 // Estilos para la página de Tips y Tutoriales
 .tips-page {
   // Asegura que el contenido use todo el espacio disponible
