@@ -1,3 +1,29 @@
+<!-- Modal de gráfico expandido -->
+<div *ngIf="graficoExpandido" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+  <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-3xl relative">
+    <ion-button fill="clear" color="medium" class="absolute top-2 right-2" (click)="contraerGrafico()">
+      <ion-icon name="contract-outline"></ion-icon>
+    </ion-button>
+    <div *ngIf="graficoExpandido === 'estados'">
+      <h2 class="text-lg font-bold mb-4">Facturas por Estado</h2>
+      <div class="chart-container" style="height: 400px;">
+        <canvas #estadosChartCanvas></canvas>
+      </div>
+    </div>
+    <div *ngIf="graficoExpandido === 'mensual'">
+      <h2 class="text-lg font-bold mb-4">Tendencia Mensual</h2>
+      <div class="chart-container" style="height: 400px;">
+        <canvas #mensualChartCanvas></canvas>
+      </div>
+    </div>
+    <div *ngIf="graficoExpandido === 'montos'">
+      <h2 class="text-lg font-bold mb-4">Distribución de Montos</h2>
+      <div class="chart-container" style="height: 400px;">
+        <canvas #montosChartCanvas></canvas>
+      </div>
+    </div>
+  </div>
+</div>
 <app-header title="Dashboard" titleIcon="home-outline"></app-header>
 
 <ion-content [fullscreen]="true" class="dashboard-content bg-gray-50">  
@@ -108,7 +134,8 @@
                 <div class="flex-1 overflow-y-auto" style="max-height: 300px;">
                   <div class="space-y-2">
                     @for (proveedor of getProveedoresDetallados(); track proveedor.rut + proveedor.nombre; let i = $index) {
-                      <div class="bg-white rounded-lg p-3 border border-gray-200 hover:bg-gray-50 transition-colors">
+          <div class="bg-white rounded-lg p-3 border border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
+            (click)="irAInvoicesProveedor(proveedor.rut)">
                         <div class="flex items-center justify-between">
                           <div class="flex items-center space-x-2 flex-1 min-w-0">
                             <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
@@ -172,9 +199,14 @@
                   <p class="text-xs text-gray-600 hidden lg:block">Distribución por estado</p>
                 </div>
               </div>
-              <ion-button fill="clear" size="small" color="medium" (click)="generarGraficoEstados()">
-                <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
-              </ion-button>
+              <div class="flex items-center gap-1">
+                <ion-button fill="clear" size="small" color="medium" (click)="generarGraficoEstados()">
+                  <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" size="small" color="medium" (click)="expandirGrafico('estados')">
+                  <ion-icon name="expand-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+              </div>
             </div>
           </ion-card-header>
           <ion-card-content class="p-4">
@@ -199,9 +231,14 @@
                   <p class="text-xs text-gray-600 hidden lg:block">Evolución temporal</p>
                 </div>
               </div>
-              <ion-button fill="clear" size="small" color="medium" (click)="generarGraficoMensual()">
-                <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
-              </ion-button>
+              <div class="flex items-center gap-1">
+                <ion-button fill="clear" size="small" color="medium" (click)="generarGraficoMensual()">
+                  <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" size="small" color="medium" (click)="expandirGrafico('mensual')">
+                  <ion-icon name="expand-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+              </div>
             </div>
           </ion-card-header>
           <ion-card-content class="p-4">
@@ -226,9 +263,14 @@
                   <p class="text-xs text-gray-600 hidden lg:block">Rangos de facturación</p>
                 </div>
               </div>
-              <ion-button fill="clear" size="small" color="medium" (click)="generarGraficoMontos()">
-                <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
-              </ion-button>
+              <div class="flex items-center gap-1">
+                <ion-button fill="clear" size="small" color="medium" (click)="generarGraficoMontos()">
+                  <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" size="small" color="medium" (click)="expandirGrafico('montos')">
+                  <ion-icon name="expand-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+              </div>
             </div>
           </ion-card-header>
           <ion-card-content class="p-4">

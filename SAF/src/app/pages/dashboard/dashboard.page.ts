@@ -35,6 +35,30 @@ import {
   ]
 })
 export class DashboardPage implements OnInit {
+  graficoExpandido: 'estados' | 'mensual' | 'montos' | null = null;
+
+  expandirGrafico(tipo: 'estados' | 'mensual' | 'montos') {
+    this.graficoExpandido = tipo;
+    setTimeout(() => {
+      if (tipo === 'estados') this.generarGraficoEstados();
+      if (tipo === 'mensual') this.generarGraficoMensual();
+      if (tipo === 'montos') this.generarGraficoMontos();
+    }, 100);
+  }
+
+  contraerGrafico() {
+    this.graficoExpandido = null;
+    setTimeout(() => {
+      this.generarGraficoTorta();
+      this.generarGraficoEstados();
+      this.generarGraficoMensual();
+      this.generarGraficoMontos();
+    }, 100);
+  }
+  // Navegar a invoices filtrando por proveedor
+  irAInvoicesProveedor(rut: string) {
+    this.router.navigate(['/invoices'], { queryParams: { proveedor: rut } });
+  }
   @ViewChild('pieChartCanvas', { static: false }) pieChartCanvas!: ElementRef;
   @ViewChild('estadosChartCanvas', { static: false }) estadosChartCanvas!: ElementRef;
   @ViewChild('mensualChartCanvas', { static: false }) mensualChartCanvas!: ElementRef;
@@ -408,6 +432,16 @@ export class DashboardPage implements OnInit {
                   `Porcentaje: ${percentage}%`
                 ];
               }
+            }
+          }
+        },
+        onClick: (event: any, elements: any[]) => {
+          if (elements && elements.length > 0) {
+            const index = elements[0].index;
+            // Si es "Otros", no filtrar
+            if (labels[index] && !labels[index].startsWith('Otros')) {
+              // El label es el rut del proveedor
+              this.irAInvoicesProveedor(top8[index].nombre);
             }
           }
         },

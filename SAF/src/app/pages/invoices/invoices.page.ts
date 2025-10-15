@@ -89,6 +89,11 @@ export class InvoicesPage implements OnInit {
         this.filtroFecha = params['fecha'];
         this.categoriaSeleccionada = null;
         this.mostrarPorVencer = false;
+      } else if (params['proveedor']) {
+        this.filtroBusqueda = params['proveedor'];
+        this.campoBusqueda = 'rut';
+        this.categoriaSeleccionada = null;
+        this.mostrarPorVencer = false;
       } else {
         this.categoriaSeleccionada = null;
         this.filtroFecha = '';
@@ -481,7 +486,8 @@ export class InvoicesPage implements OnInit {
       } else if (this.campoBusqueda === 'responsable') {
         facturasFiltradas = facturasFiltradas.filter(f => f.responsable && regex.test(f.responsable));
       } else if (this.campoBusqueda === 'rut') {
-        facturasFiltradas = facturasFiltradas.filter(f => f['RUT Emisor'] && regex.test(f['RUT Emisor']));
+        // Comparación exacta para RUT
+        facturasFiltradas = facturasFiltradas.filter(f => f['RUT Emisor'] && f['RUT Emisor'].toLowerCase() === texto);
       } else {
         // 'todos': buscar por folio, RUT Emisor, proveedor y responsable
         facturasFiltradas = facturasFiltradas.filter(f =>

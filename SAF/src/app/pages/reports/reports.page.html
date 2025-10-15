@@ -1,3 +1,23 @@
+<!-- Modal de gráfico expandido -->
+<div *ngIf="graficoExpandido" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+  <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-3xl relative">
+    <ion-button fill="clear" color="medium" class="absolute top-2 right-2" (click)="contraerGrafico()">
+      <ion-icon icon="contract-outline"></ion-icon>
+    </ion-button>
+    <div *ngIf="graficoExpandido === 'estado'">
+      <h2 class="text-lg font-bold mb-4">Facturas por Estado</h2>
+      <div class="chart-container" style="height: 400px;">
+        <canvas #barChartCanvas></canvas>
+      </div>
+    </div>
+    <div *ngIf="graficoExpandido === 'dia'">
+      <h2 class="text-lg font-bold mb-4">Tendencia Diaria</h2>
+      <div class="chart-container" style="height: 400px;">
+        <canvas id="barChartPorDia"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
 <app-header 
   title="Reportes" 
   [endButtons]="[{icon: 'refresh-outline', action: 'refresh', iconOnly: true}]"
@@ -108,7 +128,7 @@
                 <p class="text-sm">Distribución actual de documentos</p>
               </div>
             </div>
-            <ion-button fill="clear" size="small" color="medium">
+            <ion-button fill="clear" size="small" color="medium" (click)="expandirGrafico('estado')">
               <ion-icon icon="expand-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </div>
@@ -133,7 +153,7 @@
                 <p class="text-sm">Facturas ingresadas por día</p>
               </div>
             </div>
-            <ion-button fill="clear" size="small" color="medium">
+            <ion-button fill="clear" size="small" color="medium" (click)="expandirGrafico('dia')">
               <ion-icon icon="expand-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </div>

@@ -41,6 +41,23 @@ import {
   imports: [IonContent, CommonModule, FormsModule, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon, HeaderComponent]
 })
 export class ReportsPage implements OnInit {
+  graficoExpandido: 'estado' | 'dia' | null = null;
+
+  expandirGrafico(tipo: 'estado' | 'dia') {
+    this.graficoExpandido = tipo;
+    setTimeout(() => {
+      if (tipo === 'estado') this.generarGrafico();
+      if (tipo === 'dia') this.generarGraficoPorDia();
+    }, 100);
+  }
+
+  contraerGrafico() {
+    this.graficoExpandido = null;
+    setTimeout(() => {
+      this.generarGrafico();
+      this.generarGraficoPorDia();
+    }, 100);
+  }
   // Importar los headers y función de invoices
   csvHeaders: string[] = [
     'Nro.',
