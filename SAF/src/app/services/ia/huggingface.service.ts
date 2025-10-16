@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class HuggingFaceService {
   private apiUrl = 'https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct';
-  private apiKey = 'REMOVED';
+  private apiKey = '';
 
   constructor() {}
 
