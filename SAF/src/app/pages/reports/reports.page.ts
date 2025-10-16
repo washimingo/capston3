@@ -153,12 +153,39 @@ export class ReportsPage implements OnInit {
     
     console.log('Facturas cargadas:', this.facturas.length);
     
-    const estados = ['Pendiente', 'Aceptada', 'Rechazada', 'Vencida'];
-    this.resumenEstados = estados.map(estado => ({
-      estado,
-      cantidad: this.facturas.filter(f => (f.estado || '').toLowerCase() === estado.toLowerCase()).length
-    }));
-    
+    // Estados personalizados igual que invoices
+    const estados = [
+      'Pendiente',
+      'Por Vencer',
+      'Recibido',
+      'Acuse Recibo',
+      'Reclamado',
+      'Rechazado',
+      'Recibido con Aceptación Tácita'
+    ];
+    this.resumenEstados = estados.map(estado => {
+      if (estado === 'Por Vencer') {
+        // Facturas pendientes que están por vencer
+        const hoy = new Date();
+        const cantidad = this.facturas.filter(f => {
+          if ((f.estado || '').toLowerCase() === 'pendiente') {
+            const fechaEmision = f.fechaRecepcion || f.fecha || '';
+            if (!fechaEmision) return false;
+            const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
+            const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diasRestantes = 8 - diffDias;
+            return diasRestantes <= 7 && diasRestantes > 0;
+          }
+          return false;
+        }).length;
+        return { estado, cantidad };
+      } else {
+        return {
+          estado,
+          cantidad: this.facturas.filter(f => (f.estado || '').toLowerCase() === estado.toLowerCase()).length
+        };
+      }
+    });
     console.log('Resumen de estados:', this.resumenEstados);
     
     // Agrupar por fecha de recepción

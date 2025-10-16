@@ -70,47 +70,6 @@
   <div class="max-w-7xl mx-auto px-6 py-8">
     
     <!-- Resumen de estadísticas -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <div 
-        *ngFor="let item of resumenEstados; let i = index" 
-        class="stats-card rounded-xl p-6 shadow-sm transition-all duration-200 cursor-pointer"
-        [ngClass]="{
-          'border-l-4 border-l-yellow-400': item.estado === 'Pendiente',
-          'border-l-4 border-l-green-400': item.estado === 'Aceptada',
-          'border-l-4 border-l-red-400': item.estado === 'Rechazada',
-          'border-l-4 border-l-gray-400': item.estado === 'Vencida'
-        }">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium">{{ item.estado }}</p>
-            <p class="text-2xl font-bold">{{ item.cantidad }}</p>
-          </div>
-          <div class="w-12 h-12 rounded-full flex items-center justify-center"
-               [ngClass]="{
-                 'bg-yellow-100': item.estado === 'Pendiente',
-                 'bg-green-100': item.estado === 'Aceptada',
-                 'bg-red-100': item.estado === 'Rechazada',
-                 'bg-gray-100': item.estado === 'Vencida'
-               }">
-            <ion-icon 
-              [ngClass]="{
-                'text-yellow-600': item.estado === 'Pendiente',
-                'text-green-600': item.estado === 'Aceptada',
-                'text-red-600': item.estado === 'Rechazada',
-                'text-gray-600': item.estado === 'Vencida'
-              }"
-              [icon]="
-                item.estado === 'Pendiente' ? 'time-outline' :
-                item.estado === 'Aceptada' ? 'checkmark-circle-outline' :
-                item.estado === 'Rechazada' ? 'close-circle-outline' :
-                'alert-circle-outline'
-              "
-              class="text-xl">
-            </ion-icon>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Gráficos -->
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">

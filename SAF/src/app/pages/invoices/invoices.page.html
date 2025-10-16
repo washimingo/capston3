@@ -206,44 +206,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Resumen de Estados - Optimizado -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:p-6">
-          <h3 class="text-base lg:text-lg font-semibold text-gray-900 mb-4 flex items-center">
-            <ion-icon name="analytics-outline" class="mr-2 text-blue-600 text-lg lg:text-xl"></ion-icon>
-            Resumen por Estado
-          </h3>
-          <div class="grid grid-cols-2 gap-3 lg:gap-4">
-            <div *ngFor="let categoria of categoriasResumen" 
-                 class="summary-card"
-                 [attr.data-status]="categoria.estado.toLowerCase()"
-                 [class.active]="categoriaSeleccionada === categoria.estado"
-                 (click)="seleccionarCategoria(categoria.estado)">
-              
-              <!-- Icono del estado -->
-              <div class="summary-icon">
-                <ion-icon [name]="getIconoEstado(categoria.estado)"></ion-icon>
-              </div>
-              
-              <!-- Número y label -->
-              <div class="summary-content">
-                <div class="summary-number">
-                  {{ getResumenCount(categoria.estado) }}
-                </div>
-                <div class="summary-label">
-                  {{ categoria.nombre }}
-                </div>
-              </div>
-              
-              <!-- Indicador de progreso -->
-              <div class="summary-progress">
-                <div class="progress-bar" 
-                     [style.width.%]="getProgressPercentage(categoria.estado)">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- ====== FILTROS Y BÚSQUEDA OPTIMIZADOS ====== -->
@@ -278,7 +240,7 @@
             <button *ngFor="let categoria of categoriasResumen"
                     class="quick-filter-chip"
                     [class.active]="categoriaSeleccionada === categoria.estado"
-                    [attr.data-status]="categoria.estado.toLowerCase()"
+                    [attr.data-status]="normalizarEstado(categoria.estado)"
                     (click)="seleccionarCategoria(categoria.estado)">
               <div class="chip-icon">
                 <ion-icon [name]="getIconoEstado(categoria.estado || '')"></ion-icon>
@@ -286,19 +248,6 @@
               <div class="chip-content">
                 <span class="chip-label">{{ categoria.nombre }}</span>
                 <span class="chip-count">{{ getResumenCount(categoria.estado) }}</span>
-              </div>
-            </button>
-            
-            <!-- Chip especial para "Por Vencer" -->
-            <button class="quick-filter-chip special-chip"
-                    [class.active]="mostrarPorVencer"
-                    (click)="mostrarPorVencer = !mostrarPorVencer; categoriaSeleccionada = null;">
-              <div class="chip-icon">
-                <ion-icon name="warning-outline"></ion-icon>
-              </div>
-              <div class="chip-content">
-                <span class="chip-label">Por Vencer</span>
-                <span class="chip-count">{{ getFacturasPorVencer() }}</span>
               </div>
             </button>
           </div>

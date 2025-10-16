@@ -1,3 +1,151 @@
+// ====== FILTROS RÁPIDOS COLORES PERSONALIZADOS ======
+.quick-filter-chip {
+  background: #f1f5f9;
+  border: 2px solid #e2e8f0;
+  color: #334155;
+  transition: background 0.2s, border 0.2s, color 0.2s;
+  .chip-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.5rem;
+    background: #e0e7ef;
+    transition: background 0.2s;
+  }
+}
+.quick-filter-chip.active[data-status="pendiente"] {
+  background: #fef3c7 !important;
+  border: 2px solid #fbbf24 !important;
+  color: #b45309 !important;
+  .chip-icon {
+    background: #fef3c7 !important;
+    color: #b45309 !important;
+  }
+}
+.quick-filter-chip.active[data-status="por-vencer"] {
+  background: #ffedd5 !important;
+  border: 2px solid #ea580c !important;
+  color: #b45309 !important;
+  .chip-icon {
+    background: #ffedd5 !important;
+    color: #b45309 !important;
+  }
+}
+.quick-filter-chip.active[data-status="recibido"] {
+  background: #dcfce7 !important;
+  border: 2px solid #16a34a !important;
+  color: #166534 !important;
+  .chip-icon {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+  }
+}
+.quick-filter-chip.active[data-status="acuse-recibo"] {
+  background: #bbf7d0 !important;
+  border: 2px solid #4ade80 !important;
+  color: #166534 !important;
+  .chip-icon {
+    background: #bbf7d0 !important;
+    color: #166534 !important;
+  }
+}
+.quick-filter-chip.active[data-status="reclamado"] {
+  background: #ede9fe !important;
+  border: 2px solid #8b5cf6 !important;
+  color: #6d28d9 !important;
+  .chip-icon {
+    background: #ede9fe !important;
+    color: #6d28d9 !important;
+  }
+}
+.quick-filter-chip.active[data-status="rechazado"] {
+  background: #e0f2fe !important;
+  border: 2px solid #38bdf8 !important;
+  color: #0ea5e9 !important;
+  .chip-icon {
+    background: #e0f2fe !important;
+    color: #0ea5e9 !important;
+  }
+}
+.quick-filter-chip.active[data-status="recibido-con-aceptación-tácita"] {
+  background: #f5f5dc !important;
+  border: 2px solid #a0522d !important;
+  color: #7b3f00 !important;
+  .chip-icon {
+    background: #f5f5dc !important;
+    color: #7b3f00 !important;
+  }
+}
+.quick-filter-chip {
+  background: #f1f5f9;
+  border: 2px solid #e2e8f0;
+  color: #334155;
+  transition: background 0.2s, border 0.2s, color 0.2s;
+}
+// Colores para filtros rápidos activos
+.quick-filter-chip.active[data-status="pendiente"] {
+  background: #fef3c7;
+  border: 2px solid #fbbf24;
+  color: #b45309;
+}
+ .quick-filter-chip.active[data-status="por-vencer"] {
+  background: #ffedd5;
+  border: 2px solid #ea580c;
+  color: #b45309;
+}
+.quick-filter-chip.active[data-status="recibido"] {
+  background: #dcfce7;
+  border: 2px solid #16a34a;
+  color: #166534;
+}
+ .quick-filter-chip.active[data-status="acuse-recibo"] {
+  background: #bbf7d0;
+  border: 2px solid #4ade80;
+  color: #166534;
+}
+.quick-filter-chip.active[data-status="reclamado"] {
+  background: #ede9fe;
+  border: 2px solid #8b5cf6;
+  color: #6d28d9;
+}
+.quick-filter-chip.active[data-status="rechazado"] {
+  background: #e0f2fe;
+  border: 2px solid #38bdf8;
+  color: #0ea5e9;
+}
+ .quick-filter-chip.active[data-status="recibido-con-aceptación-tácita"] {
+  background: #f5f5dc;
+  border: 2px solid #a0522d;
+  color: #7b3f00;
+}
+.quick-filter-chip.active[data-status="recibido"] {
+  background: #e0e7ff;
+  border: 2px solid #6366f1;
+  color: #3730a3;
+}
+.quick-filter-chip.active[data-status="acuse recibo"] {
+  background: #dcfce7;
+  border: 2px solid #22c55e;
+  color: #166534;
+}
+.quick-filter-chip.active[data-status="reclamado"] {
+  background: #fef9c3;
+  border: 2px solid #facc15;
+  color: #a16207;
+}
+.quick-filter-chip.active[data-status="rechazado"] {
+  background: #fee2e2;
+  border: 2px solid #ef4444;
+  color: #991b1b;
+}
+.quick-filter-chip.active[data-status="recibido con aceptación tácita"] {
+  background: #cffafe;
+  border: 2px solid #06b6d4;
+  color: #0e7490;
+}
 // =================== COMPONENTE FACTURAS - ESTILOS MODERNOS ===================
 
 // ====== VARIABLES DE COLORES Y ESPACIADO ======

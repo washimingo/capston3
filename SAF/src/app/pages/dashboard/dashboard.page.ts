@@ -37,6 +37,14 @@ import {
 export class DashboardPage implements OnInit {
   graficoExpandido: 'estados' | 'mensual' | 'montos' | null = null;
 
+  // Navegación a invoices con filtros
+  irAInvoicesPorVencerHoy() {
+    this.router.navigate(['/invoices'], { queryParams: { estado: 'Por Vencer' } });
+  }
+  irAInvoicesTotal() {
+    this.router.navigate(['/invoices']);
+  }
+
   expandirGrafico(tipo: 'estados' | 'mensual' | 'montos') {
     this.graficoExpandido = tipo;
     setTimeout(() => {
@@ -159,11 +167,43 @@ export class DashboardPage implements OnInit {
     if (!this.estadosChartCanvas?.nativeElement) return;
     if (this.estadosChart) this.estadosChart.destroy();
 
-    const estados = ['Pendiente', 'Aceptada', 'Rechazada', 'Vencida'];
-    const colores = ['#ffc409', '#2dd36f', '#eb445a', '#92949c'];
-    const datos = estados.map(estado => 
-      this.facturas.filter(f => (f.estado || '').toLowerCase() === estado.toLowerCase()).length
-    );
+    // Estados personalizados igual que invoices
+    const estados = [
+      'Pendiente',
+      'Por Vencer',
+      'Recibido',
+      'Acuse Recibo',
+      'Reclamado',
+      'Rechazado',
+      'Recibido con Aceptación Tácita'
+    ];
+    const colores = [
+      '#ffc409', // Pendiente
+      '#3dc2ff', // Por Vencer
+      '#3880ff', // Recibido
+      '#2dd36f', // Acuse Recibo
+      '#ffc409', // Reclamado
+      '#eb445a', // Rechazado
+      '#2dd36f'  // Recibido con Aceptación Tácita
+    ];
+    const hoy = new Date();
+    const datos = estados.map(estado => {
+      if (estado === 'Por Vencer') {
+        return this.facturas.filter(f => {
+          if ((f.estado || '').toLowerCase() === 'pendiente') {
+            const fechaEmision = f.fechaRecepcion || f.fecha || '';
+            if (!fechaEmision) return false;
+            const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
+            const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diasRestantes = 8 - diffDias;
+            return diasRestantes <= 7 && diasRestantes > 0;
+          }
+          return false;
+        }).length;
+      } else {
+        return this.facturas.filter(f => (f.estado || '').toLowerCase() === estado.toLowerCase()).length;
+      }
+    });
 
     this.estadosChart = new Chart(this.estadosChartCanvas.nativeElement, {
       type: 'pie',
@@ -209,7 +249,15 @@ export class DashboardPage implements OnInit {
             }
           }
         },
-        layout: { padding: 10 }
+        layout: { padding: 10 },
+        onClick: (event: any, elements: any[]) => {
+          if (elements && elements.length > 0) {
+            const index = elements[0].index;
+            const estado = estados[index];
+            // Navegar a invoices filtrando por estado
+            this.router.navigate(['/invoices'], { queryParams: { estado: estado } });
+          }
+        }
       }
     });
   }

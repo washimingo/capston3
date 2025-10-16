@@ -33,7 +33,7 @@
     <!-- KPI Cards - Grid responsivo optimizado -->
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
       <!-- Facturas por vencer hoy -->
-      <div class="kpi-card bg-white rounded-xl p-4 lg:p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+  <div class="kpi-card bg-white rounded-xl p-4 lg:p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer" (click)="irAInvoicesPorVencerHoy()">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-xs lg:text-sm font-medium text-gray-600">Por Vencer Hoy</p>
@@ -47,7 +47,7 @@
       </div>
 
       <!-- Total facturas -->
-      <div class="kpi-card bg-white rounded-xl p-4 lg:p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+  <div class="kpi-card bg-white rounded-xl p-4 lg:p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer" (click)="irAInvoicesTotal()">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-xs lg:text-sm font-medium text-gray-600">Total Facturas</p>

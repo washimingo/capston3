@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, AlertController, ToastController, MenuController } from '@ionic/angular';
 import { AIService, FacturaExtraida, CategoriaIA, DeteccionDuplicado } from 'src/app/services/ia/ai.service';
+import { HuggingFaceService } from 'src/app/services/ia/huggingface.service';
 import { Db } from 'src/app/services/Database/db';
 import { Factura } from 'src/app/models/factura.model';
 
@@ -47,7 +48,8 @@ export class AsistenteIaPage implements OnInit {
     private dbService: Db,
     private alertController: AlertController,
     private toastController: ToastController,
-    private menuController: MenuController
+    private menuController: MenuController,
+    private huggingFaceService: HuggingFaceService
   ) { }
 
   ngOnInit() {
@@ -57,25 +59,12 @@ export class AsistenteIaPage implements OnInit {
   }
 
   // Enviar mensaje al chatbot
-  enviarMensajeChat() {
+  async enviarMensajeChat() {
     if (!this.preguntaUsuario.trim()) return;
     this.mensajesChat.push({usuario: 'Tú', mensaje: this.preguntaUsuario});
-    // Respuesta simulada IA
-    let respuesta = 'Estoy procesando tu consulta...';
-    if (this.preguntaUsuario.toLowerCase().includes('importar')) {
-      respuesta = 'Para importar facturas, selecciona tu archivo CSV y presiona "Procesar con IA".';
-    } else if (this.preguntaUsuario.toLowerCase().includes('duplicado')) {
-      respuesta = 'La IA detecta duplicados comparando folio y proveedor. Puedes ver los duplicados en la vista previa.';
-    } else if (this.preguntaUsuario.toLowerCase().includes('categor')) {
-      respuesta = 'La categorización automática agrupa facturas según su tipo y proveedor usando IA.';
-    } else if (this.preguntaUsuario.toLowerCase().includes('exportar')) {
-      respuesta = 'Puedes exportar los resultados desde la sección de análisis o guardar las facturas procesadas.';
-    } else {
-      respuesta = '¡Gracias por tu pregunta! Pronto tendremos más respuestas inteligentes.';
-    }
-    setTimeout(() => {
-      this.mensajesChat.push({usuario: 'IA', mensaje: respuesta});
-    }, 800);
+    this.mensajesChat.push({usuario: 'IA', mensaje: 'Procesando tu pregunta con IA gratuita...'});
+    const respuesta = await this.huggingFaceService.preguntar(this.preguntaUsuario);
+    this.mensajesChat.push({usuario: 'IA', mensaje: respuesta});
     this.preguntaUsuario = '';
   }
 
