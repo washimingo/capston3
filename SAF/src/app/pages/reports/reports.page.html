@@ -5,12 +5,11 @@
 </app-header>
 
 <ion-content [fullscreen]="true">
-  <!-- Hero Section -->
+  <!-- 
   <div class="hero-section text-white py-8 px-6"
        style="background: linear-gradient(135deg, #19417C 0%, #2563eb 50%, #1e40af 100%);">
     <div class="max-w-7xl mx-auto">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-        <!-- Título y descripción -->
         <div>
           <div class="flex items-center space-x-3 mb-4">
             <div class="w-12 h-12 bg-white/20 bg-opacity-20 rounded-full flex items-center justify-center">
@@ -22,8 +21,7 @@
             </div>
           </div>
         </div>
-        
-        <!-- Acciones rápidas -->
+      
         <div class="flex flex-wrap gap-3 justify-end">
           <ion-button 
             fill="outline" 
@@ -45,6 +43,7 @@
       </div>
     </div>
   </div>
+  -->
 
   <!-- Contenido principal -->
   <div class="max-w-7xl mx-auto px-6 py-8">
@@ -53,7 +52,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <div 
         *ngFor="let item of resumenEstados; let i = index" 
-        class="stats-card rounded-xl p-6 shadow-sm transition-all duration-200 cursor-pointer"
+        class="stats-card rounded-xl p-6 shadow-sm bg-white transition-all duration-200 cursor-pointer"
         [ngClass]="{
           'border-l-4 border-l-yellow-400': item.estado === 'Pendiente',
           'border-l-4 border-l-green-400': item.estado === 'Aceptada',
