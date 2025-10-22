@@ -45,9 +45,6 @@ import {
   sparklesOutline,
   bulbOutline as bulbIcon, flashOutline, cameraOutline, cogOutline, createOutline, saveOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 
-// Importar servicio de IA
-import { AIService, FacturaExtraida, CategoriaIA, DeteccionDuplicado } from 'src/app/services/ai/ai.service';
-
 @Component({
   selector: 'app-invoices',
   templateUrl: './invoices.page.html',
@@ -104,40 +101,12 @@ export class InvoicesPage implements OnInit {
     return factura.folio || factura.id || index;
   }
 
-  // Métodos y propiedades para IA (stubs básicos)
-  mostrarPanelIA: boolean = false;
-
-  activarAsistenteIA(): void {
-    this.mostrarPanelIA = !this.mostrarPanelIA;
-  }
-
-  manejarArchivoIA(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.archivoIA = input.files[0];
-    }
-  }
-
-  async procesarFacturaConIA(): Promise<void> {
-    // Implementación básica
-    alert('Procesar factura con IA (stub)');
-  }
-
-  async editarDatosIA(datos: any, categoria: any): Promise<void> {
-    alert('Editar datos IA (stub)');
-  }
-
-  async guardarFacturaIA(datos: any, categoria: any): Promise<void> {
-    alert('Guardar factura IA (stub)');
-  }
-
   constructor(
     private route: ActivatedRoute,
     private dbService: Db,
     private sanitizer: DomSanitizer,
     private toastController: ToastController,
-    private alertController: AlertController,
-    private aiService: AIService
+    private alertController: AlertController
   ) {
     // Registrar iconos necesarios para el componente
     addIcons({documentTextOutline,calendarOutline,calendarNumberOutline,timeOutline,speedometerOutline,cloudUploadOutline,documentOutline,analyticsOutline,funnelOutline,refreshOutline,warningOutline,searchOutline,closeCircle,bulbOutline,arrowForwardOutline,optionsOutline,cashOutline,flagOutline,checkmarkOutline,closeOutline,funnel,close,businessOutline,hourglassOutline,settingsOutline,eyeOutline,downloadOutline,chevronBackOutline,chevronForwardOutline,sparklesOutline,flashOutline,cameraOutline,cogOutline,checkmarkCircleOutline,createOutline,saveOutline,receiptOutline});
@@ -865,18 +834,6 @@ export class InvoicesPage implements OnInit {
 
   // Variables para filtros avanzados
   mostrarFiltrosAvanzados: boolean = false;
-
-  // ====== PROPIEDADES IA ======
-  archivoIA: File | null = null;
-  datosExtraidosIA: FacturaExtraida | null = null;
-  categoriaIA: CategoriaIA | null = null;
-  verificacionDuplicado: DeteccionDuplicado | null = null;
-  mostrandoPreviewIA: boolean = false;
-  estadisticasIA = {
-    facturasProcesadas: 0,
-    precision: 95,
-    duplicadosDetectados: 0
-  };
 
   // Métodos para la nueva interfaz de filtros
   limpiarTodosFiltros() {

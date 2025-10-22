@@ -128,24 +128,4 @@ export class Db {
       req.onerror = () => reject(req.error);
     });
   }
-
-  // === MÉTODOS ESPECÍFICOS PARA FACTURAS IA ===
-
-  // Agregar factura procesada por IA
-  async addFacturaIA(factura: any): Promise<void> {
-    // Por ahora usamos el mismo store pero marcamos que es de IA
-    const facturaConMarcaIA = { ...factura, origenIA: true, tipoFactura: 'IA' };
-    await this.addFactura(facturaConMarcaIA);
-  }
-
-  // Obtener solo facturas procesadas por IA
-  async getFacturasIA(): Promise<any[]> {
-    const todasLasFacturas = await this.getFacturas();
-    return todasLasFacturas.filter(factura => factura.origenIA === true || factura.tipoFactura === 'IA');
-  }
-
-  // Eliminar factura de IA
-  async deleteFacturaIA(id_factura: number): Promise<void> {
-    return this.deleteFactura(id_factura);
-  }
 }

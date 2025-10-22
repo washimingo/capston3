@@ -30,8 +30,5 @@ export const routes: Routes = [
     path: 'invoices',
     loadComponent: () => import('./pages/invoices/invoices.page').then( m => m.InvoicesPage)
   },
-  {
-    path: 'asistente-ia',
-    loadComponent: () => import('./pages/asistente-ia/asistente-ia.page').then( m => m.AsistenteIaPage)
-  }
+  
 ];
