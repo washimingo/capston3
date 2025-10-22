@@ -9,41 +9,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Db } from 'src/app/services/Database/db';
 import { ToastController } from '@ionic/angular';
 import { HeaderComponent } from 'src/app/components/header/header.component';
-import { addIcons } from 'ionicons';
-import { 
-  receiptOutline,
-  cloudUploadOutline,
-  documentOutline,
-  funnelOutline,
-  funnel,
-  refreshOutline,
-  speedometerOutline,
-  warningOutline,
-  searchOutline,
-  closeCircle,
-  bulbOutline,
-  arrowForwardOutline,
-  calendarOutline,
-  optionsOutline,
-  calendarNumberOutline,
-  cashOutline,
-  flagOutline,
-  checkmarkOutline,
-  closeOutline,
-  close,
-  timeOutline,
-  documentTextOutline,
-  businessOutline,
-  hourglassOutline,
-  settingsOutline,
-  eyeOutline,
-  downloadOutline,
-  timeOutline as timeIcon,
-  checkmarkCircleOutline,
-  closeCircleOutline, 
-  analyticsOutline,
-  sparklesOutline,
-  bulbOutline as bulbIcon, flashOutline, cameraOutline, cogOutline, createOutline, saveOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-invoices',
@@ -108,9 +73,8 @@ export class InvoicesPage implements OnInit {
     private toastController: ToastController,
     private alertController: AlertController
   ) {
-    // Registrar iconos necesarios para el componente
-    addIcons({documentTextOutline,calendarOutline,calendarNumberOutline,timeOutline,speedometerOutline,cloudUploadOutline,documentOutline,analyticsOutline,funnelOutline,refreshOutline,warningOutline,searchOutline,closeCircle,bulbOutline,arrowForwardOutline,optionsOutline,cashOutline,flagOutline,checkmarkOutline,closeOutline,funnel,close,businessOutline,hourglassOutline,settingsOutline,eyeOutline,downloadOutline,chevronBackOutline,chevronForwardOutline,sparklesOutline,flashOutline,cameraOutline,cogOutline,checkmarkCircleOutline,createOutline,saveOutline,receiptOutline});
-
+    // Los iconos ahora se registran en IconsComponent
+    
     // Leer query param para mostrar facturas por vencer
     this.route.queryParams.subscribe(params => {
       if (params['porVencer'] === 'true') {

@@ -9,29 +9,6 @@ import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
 import autoTable from 'jspdf-autotable';
 import { HeaderComponent } from 'src/app/components/header/header.component';
-import { addIcons } from 'ionicons';
-import { 
-  documentTextOutline, 
-  cloudDownloadOutline, 
-  analyticsOutline, 
-  statsChartOutline,
-  receiptOutline,
-  alertCircleOutline,
-  checkmarkCircleOutline,
-  timeOutline,
-  trendingUpOutline,
-  printOutline,
-  shareOutline,
-  eyeOutline,
-  downloadOutline,
-  refreshOutline,
-  barChartOutline,
-  expandOutline,
-  gridOutline,
-  filterOutline,
-  settingsOutline,
-  closeCircleOutline
-} from 'ionicons/icons';
 
 @Component({
   selector: 'app-reports',
@@ -107,30 +84,7 @@ export class ReportsPage implements OnInit {
   constructor(private db: Db, private router: Router) {
     // Registrar componentes de Chart.js
     Chart.register(...registerables);
-    
-    addIcons({
-      'document-text-outline': documentTextOutline,
-      'cloud-download-outline': cloudDownloadOutline,
-      'analytics-outline': analyticsOutline,
-      'stats-chart-outline': statsChartOutline,
-      'receipt-outline': receiptOutline,
-      'alert-circle-outline': alertCircleOutline,
-      'checkmark-circle-outline': checkmarkCircleOutline,
-      'time-outline': timeOutline,
-      'trending-up-outline': trendingUpOutline,
-      'print-outline': printOutline,
-      'share-outline': shareOutline,
-      'eye-outline': eyeOutline,
-      'download-outline': downloadOutline,
-      'document-outline': documentTextOutline,
-      'grid-outline': gridOutline,
-      'refresh-outline': refreshOutline,
-      'bar-chart-outline': barChartOutline,
-      'expand-outline': expandOutline,
-      'filter-outline': filterOutline,
-      'settings-outline': settingsOutline,
-      'close-circle-outline': closeCircleOutline
-    });
+    // Los iconos ahora se registran en IconsComponent
   }
 
   async ngAfterViewInit() {

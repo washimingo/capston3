@@ -4,37 +4,6 @@ import { FormsModule } from "@angular/forms";
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { addIcons } from 'ionicons';
-import { 
-  searchOutline,
-  bookmarkOutline,
-  helpCircleOutline,
-  cloudUploadOutline,
-  documentTextOutline,
-  settingsOutline,
-  barChartOutline,
-  filterOutline,
-  alertCircleOutline,
-  shieldCheckmarkOutline,
-  timeOutline,
-  eyeOutline,
-  arrowForwardOutline,
-  playCircleOutline,
-  checkmarkCircleOutline,
-  starOutline,
-  trendingUpOutline,
-  bulbOutline,
-  schoolOutline,
-  closeOutline,
-  menuOutline, 
-  chevronBackOutline, 
-  chevronForwardOutline, 
-  libraryOutline, 
-  rocketOutline,
-  gridOutline,
-  analyticsOutline,
-  notificationsOutline
-} from 'ionicons/icons';
 import { Tutorial, TutorialCategory, ViewMode } from '../../interfaces/tutorial';
 import { TUTORIALS_DATA } from '../../data/tutorials.data';
 
@@ -65,36 +34,7 @@ export class TipsPage {
   viewMode: ViewMode = 'grid';
 
   constructor(private router: Router) {
-    addIcons({
-      bulbOutline,
-      searchOutline,
-      libraryOutline,
-      timeOutline,
-      checkmarkCircleOutline,
-      chevronForwardOutline,
-      rocketOutline,
-      bookmarkOutline,
-      helpCircleOutline,
-      chevronBackOutline,
-      eyeOutline,
-      starOutline,
-      playCircleOutline,
-      cloudUploadOutline,
-      documentTextOutline,
-      settingsOutline,
-      barChartOutline,
-      filterOutline,
-      alertCircleOutline,
-      shieldCheckmarkOutline,
-      arrowForwardOutline,
-      trendingUpOutline,
-      schoolOutline,
-      closeOutline,
-      menuOutline,
-      gridOutline,
-      analyticsOutline,
-      notificationsOutline
-    });
+    // Los iconos ahora se registran en IconsComponent
   }
 
   ngOnInit(): void {

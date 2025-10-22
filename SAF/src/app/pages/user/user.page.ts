@@ -4,8 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonContent, IonIcon, IonButton, IonInput, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
 import { HeaderComponent } from 'src/app/components/header/header.component';
-import { addIcons } from 'ionicons';
-import { person, mail, call, business, calendar, settings, notifications, shieldCheckmark, chevronForward, documentText, checkmarkCircle, create, logOut, time, closeCircle, download, helpCircle, chevronDown, personCircleOutline, camera, briefcaseOutline, businessOutline, personOutline, mailOutline, callOutline, calendarOutline, cardOutline, analyticsOutline, documentTextOutline, checkmarkCircleOutline, timeOutline, closeCircleOutline, createOutline, saveOutline, closeOutline, flashOutline, settingsOutline, shieldCheckmarkOutline, notificationsOutline, helpCircleOutline, close } from 'ionicons/icons';
 
 @Component({
   selector: 'app-user',
@@ -47,7 +45,7 @@ export class UserPage implements OnInit {
   };
 
   constructor(private router: Router) {
-    addIcons({personCircleOutline,camera,briefcaseOutline,businessOutline,personOutline,createOutline,mailOutline,callOutline,calendarOutline,cardOutline,analyticsOutline,documentTextOutline,checkmarkCircleOutline,timeOutline,closeCircleOutline,close,saveOutline,closeOutline,flashOutline,settingsOutline,shieldCheckmarkOutline,notificationsOutline,helpCircleOutline,person,mail,call,business,calendar,settings,notifications,shieldCheckmark,chevronForward,documentText,checkmarkCircle,create,logOut,time,closeCircle,download,helpCircle,chevronDown});
+    // Los iconos ahora se registran en IconsComponent
   }
 
   ngOnInit() {

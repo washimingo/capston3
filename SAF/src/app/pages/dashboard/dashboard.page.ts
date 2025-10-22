@@ -9,19 +9,9 @@ import {
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { Chart, registerables } from 'chart.js';
 import { Db } from 'src/app/services/Database/db';
-import { addIcons } from 'ionicons';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import {
-  refreshOutline, alarmOutline, documentTextOutline, cashOutline, calendarOutline,
-  pieChartOutline, expandOutline, contractOutline, trophyOutline, checkmarkCircleOutline,
-  alertCircleOutline, filterOutline, eyeOutline, checkmarkOutline, warningOutline,
-  arrowForwardOutline, listOutline, businessOutline, funnelOutline, downloadOutline,
-  swapVerticalOutline, cloudDownloadOutline, analyticsOutline, statsChartOutline,
-  receiptOutline, timeOutline, trendingUpOutline, printOutline, shareOutline,
-  gridOutline, barChartOutline, settingsOutline, closeCircleOutline, homeOutline
-} from 'ionicons/icons';
 
 @Component({
   selector: 'app-dashboard',
@@ -101,15 +91,7 @@ export class DashboardPage implements OnInit {
 
   constructor(private dbService: Db, private router: Router) {
     Chart.register(...registerables);
-    addIcons({
-      refreshOutline, alarmOutline, documentTextOutline, cashOutline, calendarOutline,
-      pieChartOutline, listOutline, businessOutline, funnelOutline, downloadOutline,
-      swapVerticalOutline, eyeOutline, filterOutline, trophyOutline, checkmarkCircleOutline,
-      alertCircleOutline, checkmarkOutline, warningOutline, arrowForwardOutline,
-      expandOutline, contractOutline, cloudDownloadOutline, analyticsOutline, statsChartOutline,
-      receiptOutline, timeOutline, trendingUpOutline, printOutline, shareOutline,
-      gridOutline, barChartOutline, settingsOutline, closeCircleOutline, homeOutline
-    });
+    // Los iconos ahora se registran en IconsComponent
   }
 
   async ngOnInit() {

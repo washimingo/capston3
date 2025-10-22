@@ -3,35 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { IonContent, IonIcon, IonToggle, IonButton, IonRange } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { 
-  settingsOutline,
-  cogOutline,
-  optionsOutline,
-  constructOutline,
-  moonOutline,
-  colorPaletteOutline,
-  languageOutline,
-  chevronForwardOutline,
-  notificationsOutline,
-  phonePortraitOutline,
-  mailOutline,
-  personOutline,
-  personCircleOutline,
-  shieldOutline,
-  informationCircleOutline,
-  codeOutline,
-  helpCircleOutline,
-  saveOutline, 
-  documentTextOutline, 
-  volumeHighOutline, 
-  alertCircleOutline, 
-  playOutline, 
-  volumeMediumOutline, 
-  volumeLowOutline, 
-  musicalNotesOutline, 
-  refreshOutline 
-} from 'ionicons/icons';
 
 interface SettingsConfig {
   pushNotifications: boolean;
@@ -76,34 +47,7 @@ export class SettingsPage implements OnInit {
   private audioContext: AudioContext | null = null;
 
   constructor() {
-    addIcons({
-      cogOutline,
-      notificationsOutline,
-      phonePortraitOutline,
-      mailOutline,
-      documentTextOutline,
-      informationCircleOutline,
-      volumeHighOutline,
-      alertCircleOutline,
-      playOutline,
-      volumeMediumOutline,
-      volumeLowOutline,
-      musicalNotesOutline,
-      refreshOutline,
-      saveOutline,
-      settingsOutline,
-      optionsOutline,
-      constructOutline,
-      moonOutline,
-      colorPaletteOutline,
-      languageOutline,
-      chevronForwardOutline,
-      personOutline,
-      personCircleOutline,
-      shieldOutline,
-      codeOutline,
-      helpCircleOutline
-    });
+    // Los iconos ahora se registran en IconsComponent
   }
 
   ngOnInit() {
