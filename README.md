@@ -1,4 +1,4 @@
-# Sistema de Gestión de Facturas  
+# Sistema de Administración de Facturas (SAF)
 
 ![Ionic](https://img.shields.io/badge/Ionic-v8.7.6-3880FF?logo=ionic&logoColor=white)
 ![Angular](https://img.shields.io/badge/Angular-v20.3.4-DD0031?logo=angular&logoColor=white)
@@ -7,7 +7,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?logo=typescript&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-Aplicación **web y móvil** para la gestión y seguimiento de facturas.  
+Aplicación **web y móvil** para la administración y seguimiento de facturas.  
 Permite listar facturas, enviar notificaciones (email, push o dentro de la app), acceder a un **dashboard interactivo**, generar reportes y configurar tanto la aplicación como los usuarios de forma flexible.
 
 ---
