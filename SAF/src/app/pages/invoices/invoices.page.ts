@@ -325,6 +325,13 @@ export class InvoicesPage implements OnInit {
       this.archivoSeleccionado = null;
       return;
     }
+    // Mitigación de seguridad: limitar tamaño de archivos XLSX para evitar ReDoS
+    if (ext === 'xlsx' && file.size > 5 * 1024 * 1024) {
+      this.errorCarga = 'El archivo Excel es demasiado grande para procesar de forma segura (máx. 5 MB).';
+      this.exitoCarga = '';
+      this.archivoSeleccionado = null;
+      return;
+    }
     this.archivoSeleccionado = file;
     this.errorCarga = '';
   }
@@ -686,14 +693,20 @@ export class InvoicesPage implements OnInit {
           base64 = base64.split(',')[1];
         }
         const binary = atob(base64);
+        // Mitigación: tamaño máximo para vista previa (evita ReDoS al parsear)
+        if (binary.length > 5 * 1024 * 1024) {
+          this.excelPreviewError = 'El Excel es demasiado grande para la vista previa (máx. 5 MB). Descárguelo para verlo completo.';
+          return;
+        }
         const bytes = new Uint8Array(binary.length);
         for (let i = 0; i < binary.length; i++) {
           bytes[i] = binary.charCodeAt(i);
         }
-        const workbook = XLSX.read(bytes, { type: 'array' });
+        // Mitigación: desactivar fórmulas y limitar filas para reducir superficie
+        const workbook = XLSX.read(bytes, { type: 'array', dense: true, cellFormula: false, sheetRows: 1000 });
         const firstSheet = workbook.SheetNames[0];
         const sheet = workbook.Sheets[firstSheet];
-        const data: any[][] = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        const data: any[][] = XLSX.utils.sheet_to_json(sheet, { header: 1, blankrows: false, defval: '' });
         this.excelPreviewData = data;
       } catch (e) {
         this.excelPreviewError = 'No se pudo mostrar la vista previa del Excel.';

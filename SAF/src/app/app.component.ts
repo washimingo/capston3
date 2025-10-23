@@ -38,11 +38,18 @@ export class AppComponent implements AfterViewInit {
   showMenu = false;
   
   constructor() {
+    // Deshabilitar menú por defecto para evitar parpadeos en la primera carga
+    // Se volverá a habilitar según la ruta una vez que termine la navegación
+    this.menuCtrl.enable(false, 'main-menu');
+
     // Escuchar cambios de ruta para mostrar/ocultar el menú
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      this.showMenu = !event.url.includes('/authentication');
+    ).subscribe((event: NavigationEnd) => {
+      const currentUrl = event.urlAfterRedirects || event.url;
+      this.showMenu = !currentUrl.includes('/authentication');
+      // Sincronizar también el estado real del menú
+      this.menuCtrl.enable(this.showMenu, 'main-menu');
     });
   }
   

@@ -1,22 +1,23 @@
-import { Injectable, inject } from '@angular/core';
-// @ts-ignore - @angular/fire v20 exports from firebase/auth internally
-import { Auth, signInWithEmailAndPassword, signOut, User, authState } from '@angular/fire/auth';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { getAuth, signInWithEmailAndPassword, signOut, User, onAuthStateChanged } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Firedb {
-  private auth = inject(Auth);
+  private auth = getAuth();
   private currentUser: User | null = null;
   private authState$!: Observable<User | null>;
 
   constructor() {
-    // Inicializar dentro del contexto de inyección
-    this.authState$ = authState(this.auth);
-    // Escuchar cambios en el estado de autenticación usando authState (compatible con Angular)
-    this.authState$.subscribe((user: User | null) => {
-      this.currentUser = user;
+    // Crear un Observable a partir de onAuthStateChanged del SDK modular
+    this.authState$ = new Observable<User | null>((subscriber) => {
+      const unsubscribe = onAuthStateChanged(this.auth, (user) => {
+        this.currentUser = user;
+        subscriber.next(user);
+      }, (error) => subscriber.error(error));
+      return unsubscribe;
     });
   }
 
