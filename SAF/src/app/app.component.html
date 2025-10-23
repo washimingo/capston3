@@ -2,7 +2,7 @@
   <!-- Componente centralizado de iconos -->
   <app-icons></app-icons>
   
-  <ion-split-pane contentId="main-content">
+  <ion-split-pane contentId="main-content" *ngIf="showMenu">
     <ion-menu side="start" menuId="main-menu" contentId="main-content" class="custom-menu">
       <ion-content class="menu-content bg-white flex flex-col h-full relative">
           <div class="relative">
@@ -94,6 +94,18 @@
               </div>
             </div>
           </ion-item>
+
+          <!-- Botón de cerrar sesión -->
+          <ion-item (click)="logout()" class="menu-item rounded-xl mx-2 mb-2 transition-all duration-200 hover:bg-red-50 hover:scale-105 cursor-pointer" lines="none">
+            <div class="flex items-center space-x-4 w-full py-2">
+              <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                <ion-icon name="log-out-outline" class="text-lg text-red-600"></ion-icon>
+              </div>
+              <div class="flex-1">
+                <span class="font-medium text-gray-800">Cerrar Sesión</span>
+              </div>
+            </div>
+          </ion-item>
         </div>
       </div>
 
@@ -116,4 +128,7 @@
 
     <ion-router-outlet id="main-content"></ion-router-outlet>
   </ion-split-pane>
+
+  <!-- Router outlet para cuando no hay menú (página de autenticación) -->
+  <ion-router-outlet *ngIf="!showMenu"></ion-router-outlet>
 </ion-app>

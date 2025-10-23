@@ -3,6 +3,9 @@ import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } 
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { environment } from './environments/environment';
 
 // Register Swiper custom elements
 import { register } from 'swiper/element/bundle';
@@ -14,5 +17,8 @@ bootstrapApplication(AppComponent, {
     // Desactivar animaciones nativas de Ionic (transiciones, overlays, etc.)
     provideIonicAngular({ animated: false }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
+    // Configurar Firebase
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideAuth(() => getAuth()),
   ],
 });

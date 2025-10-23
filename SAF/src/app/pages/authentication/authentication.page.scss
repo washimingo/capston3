@@ -1,0 +1,35 @@
+// Fondo
+.authentication-bg {
+  --background: #f3f4f6;
+}
+
+// Tarjeta de login
+.login-card {
+  margin: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  border-top: 4px solid #2563eb; /* primary blue accent */
+}
+
+// Inputs
+.custom-input {
+  --border-radius: 6px;
+  --border-color: #d1d5db;
+  --border-width: 1px;
+  --background: #ffffff;
+  
+  &:focus-within {
+    --border-color: #3b82f6;
+  }
+}
+
+// Botón de login
+.login-btn {
+  --background: #3b82f6;
+  --background-hover: #2563eb;
+  --background-activated: #1d4ed8;
+  --border-radius: 6px;
+  font-weight: 600;
+  text-transform: none;
+}

@@ -1,8 +1,11 @@
 import { Component, ViewChild, AfterViewInit, inject } from '@angular/core';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { IonApp, IonRouterOutlet, IonMenu, IonContent, IonItem, IonIcon, IonSplitPane, IonButton, IonMenuToggle } from '@ionic/angular/standalone';
 import { MenuController } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs/operators';
 import { IconsComponent } from './components/icons/icons.component';
+import { Firedb } from './services/Firebase/firedb';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +23,8 @@ import { IconsComponent } from './components/icons/icons.component';
     IonSplitPane,
     IonButton,
     IonMenuToggle,
-    IconsComponent
+    IconsComponent,
+    CommonModule
   ],
 })
 export class AppComponent implements AfterViewInit {
@@ -28,8 +32,19 @@ export class AppComponent implements AfterViewInit {
   
   router = inject(Router);
   menuCtrl = inject(MenuController);
+  firedb = inject(Firedb);
   
   menuType: 'overlay' | 'side' = 'side';
+  showMenu = false;
+  
+  constructor() {
+    // Escuchar cambios de ruta para mostrar/ocultar el menú
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      this.showMenu = !event.url.includes('/authentication');
+    });
+  }
   
   setMenuType() {
     this.menuType = window.innerWidth <= 1024 ? 'overlay' : 'side';
@@ -42,5 +57,9 @@ export class AppComponent implements AfterViewInit {
   goToDashboard() {
     this.router.navigate(['/dashboard']);
   }
-  // Método eliminado para evitar recargas y mantener SPA
+
+  async logout() {
+    await this.firedb.logout();
+    this.router.navigate(['/authentication']);
+  }
 }

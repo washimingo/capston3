@@ -1,0 +1,77 @@
+<ion-content [fullscreen]="true" class="authentication-bg">
+  <div class="flex items-center justify-center min-h-screen px-4">
+    <div class="w-full max-w-md">
+
+      <!-- Encabezado básico con logo -->
+      <div class="text-center mb-6">
+        <img src="assets/icon/logo_muni.png" alt="Logo SAF" class="mx-auto h-16 w-auto mb-2" />
+        <p class="text-gray-600 text-sm">Sistema de Administración de Facturas</p>
+      </div>
+
+      <!-- Tarjeta de Login -->
+      <ion-card class="login-card">
+        <ion-card-header class="pb-2">
+          <ion-card-title class="text-center text-xl text-blue-700">Iniciar Sesión</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content class="pt-4">
+          <form (ngSubmit)="onLogin()" class="space-y-4">
+            <!-- Email -->
+            <ion-input
+              type="email"
+              label="Correo electrónico"
+              labelPlacement="stacked"
+              [(ngModel)]="email"
+              name="email"
+              required
+              [disabled]="loading"
+              fill="outline"
+              class="custom-input"
+            ></ion-input>
+
+            <!-- Contraseña -->
+            <ion-input
+              type="password"
+              label="Contraseña"
+              labelPlacement="stacked"
+              [(ngModel)]="password"
+              name="password"
+              required
+              [disabled]="loading"
+              fill="outline"
+              class="custom-input"
+            ></ion-input>
+
+            <!-- Mensaje de error -->
+            @if (errorMessage) {
+              <div class="bg-red-50 border border-red-300 rounded-md p-3">
+                <ion-text color="danger">
+                  <p class="text-sm m-0">{{ errorMessage }}</p>
+                </ion-text>
+              </div>
+            }
+
+            <!-- Botón -->
+            <ion-button
+              expand="block"
+              type="submit"
+              [disabled]="loading"
+              class="login-btn mt-6"
+            >
+              @if (loading) {
+                <ion-spinner name="crescent"></ion-spinner>
+              } @else {
+                <span>Iniciar Sesión</span>
+              }
+            </ion-button>
+          </form>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Información -->
+      <p class="text-center text-xs text-gray-500 mt-4">
+        Los usuarios son gestionados por el administrador
+      </p>
+    </div>
+  </div>
+</ion-content>

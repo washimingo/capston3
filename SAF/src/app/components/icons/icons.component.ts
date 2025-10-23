@@ -136,6 +136,7 @@ import {
   
   // Iconos de acciones de usuario
   logOut,
+  logOutOutline,
   codeOutline
 } from 'ionicons/icons';
 
@@ -284,6 +285,7 @@ export class IconsComponent {
       
       // Acciones de usuario
       logOut,
+      logOutOutline,
       codeOutline
     });
   }
