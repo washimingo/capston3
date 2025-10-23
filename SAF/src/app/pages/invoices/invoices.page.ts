@@ -283,6 +283,21 @@ export class InvoicesPage implements OnInit {
                 }
                 // Guardar también la fecha de vencimiento para alertas
                 factura._porVencer = this.esPorVencer(factura['Fecha Docto.']);
+                // Intentar detectar si existe una columna relacionada con cesión/cedida y marcar el estado
+                try {
+                  // normalizar keys del headerMap para buscar coincidencias como 'cedida' o 'cesion'
+                  const cedKeys = Object.keys(headerMap || {}).filter(k => /ced|cesi|cedid/i.test(k));
+                  if (cedKeys.length > 0) {
+                    const cedVal = values[headerMap[cedKeys[0]]];
+                    if (cedVal && /^(si|sí|true|1|cedida|cedido|cesion)$/i.test(String(cedVal).trim())) {
+                      factura.estado = 'Cedida';
+                    } else if (cedVal && String(cedVal).trim() !== '') {
+                      factura.cedida = String(cedVal).trim();
+                    }
+                  }
+                } catch (err) {
+                  console.warn('Error detectando columna cedida:', err);
+                }
                 if (i < 6) {
                   console.log('Factura generada:', factura);
                 }
@@ -396,11 +411,9 @@ export class InvoicesPage implements OnInit {
   categoriasResumen = [
     { nombre: 'Pendientes', estado: 'Pendiente', color: 'warning', selected: false },
     { nombre: 'Por Vencer', estado: 'Por Vencer', color: 'medium', selected: false },
-    { nombre: 'Recibido', estado: 'Recibido', color: 'primary', selected: false },
     { nombre: 'Acuse Recibo', estado: 'Acuse Recibo', color: 'success', selected: false },
     { nombre: 'Reclamado', estado: 'Reclamado', color: 'warning', selected: false },
-    { nombre: 'Rechazado', estado: 'Rechazado', color: 'danger', selected: false },
-    { nombre: 'Recibido con Aceptación Tácita', estado: 'Recibido con Aceptación Tácita', color: 'success', selected: false },
+    { nombre: 'Cedidas', estado: 'Cedida', color: 'dark', selected: false },
   ];
 
   categoriaSeleccionada: string | null = null;
@@ -617,6 +630,15 @@ export class InvoicesPage implements OnInit {
       this.categoriaSeleccionada = estado;
     }
     // Resetear paginación cuando se cambia el filtro
+    this.paginaActual = 1;
+  }
+
+  // Sincroniza el array de estados seleccionados (usado por filtros avanzados de checkboxes)
+  syncFiltroEstados() {
+    this.filtroEstados = this.categoriasResumen
+      .filter(c => !!c.selected)
+      .map(c => c.estado);
+    // resetear paginación
     this.paginaActual = 1;
   }
 
@@ -850,11 +872,9 @@ export class InvoicesPage implements OnInit {
     switch ((estado || '').toLowerCase()) {
       case 'pendiente': return 'time-outline';
       case 'por vencer': return 'warning-outline';
-      case 'recibido': return 'document-text-outline';
       case 'acuse recibo': return 'checkmark-circle-outline';
       case 'reclamado': return 'flag-outline';
-      case 'rechazado': return 'close-circle-outline';
-      case 'recibido con aceptación tácita': return 'sparkles-outline';
+      case 'cedida': return 'swap-horizontal-outline';
       default: return 'document-text-outline';
     }
   }
@@ -864,11 +884,9 @@ export class InvoicesPage implements OnInit {
     switch ((estado || '').toLowerCase()) {
       case 'pendiente': return 'warning';
       case 'por vencer': return 'medium';
-      case 'recibido': return 'primary';
       case 'acuse recibo': return 'success';
       case 'reclamado': return 'warning';
-      case 'rechazado': return 'danger';
-      case 'recibido con aceptación tácita': return 'success';
+      case 'cedida': return 'dark';
       default: return 'primary';
     }
   }

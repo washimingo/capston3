@@ -381,12 +381,13 @@
                   Estados (selección múltiple)
                 </label>
                 <div class="multi-select-chips">
-                  <label *ngFor="let categoria of categoriasResumen" 
-                         class="multi-select-chip">
-                    <input type="checkbox" 
-                           [value]="categoria.estado"
-                           [(ngModel)]="categoria.selected"
-                           class="chip-checkbox" />
+        <label *ngFor="let categoria of categoriasResumen" 
+          class="multi-select-chip">
+          <input type="checkbox" 
+            [value]="categoria.estado"
+            [(ngModel)]="categoria.selected"
+            (change)="syncFiltroEstados()"
+            class="chip-checkbox" />
                     <span class="chip-checkmark">
                       <ion-icon [name]="getIconoEstado(categoria.estado)" class="mr-1"></ion-icon>
                       {{ categoria.nombre }}

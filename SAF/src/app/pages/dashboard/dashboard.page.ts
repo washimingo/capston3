@@ -7,6 +7,7 @@ import {
   IonButton, IonIcon
 } from '@ionic/angular/standalone';
 import { HeaderComponent } from 'src/app/components/header/header.component';
+import { Factura } from 'src/app/models/factura.model';
 import { Chart, registerables } from 'chart.js';
 import { Db } from 'src/app/services/Database/db';
 import * as XLSX from 'xlsx';
@@ -92,6 +93,190 @@ export class DashboardPage implements OnInit, AfterViewInit {
     'Valor Otro Impto', 'Tasa Otro Impto'
   ];
 
+  // ---- Filtros (equivalentes a Invoices) ----
+  categoriasResumen = [
+    { nombre: 'Pendientes', estado: 'Pendiente', color: 'warning', selected: false },
+    { nombre: 'Por Vencer', estado: 'Por Vencer', color: 'medium', selected: false },
+    { nombre: 'Acuse Recibo', estado: 'Acuse Recibo', color: 'success', selected: false },
+    { nombre: 'Reclamado', estado: 'Reclamado', color: 'warning', selected: false },
+    { nombre: 'Cedidas', estado: 'Cedida', color: 'dark', selected: false },
+  ];
+
+  filtroFechaInicio: string = '';
+  filtroFechaFin: string = '';
+  filtroMontoMin: number | null = null;
+  filtroMontoMax: number | null = null;
+  filtroEstados: string[] = [];
+  filtroBusqueda = '';
+  campoBusqueda: string = 'todos';
+  filtroFecha = '';
+  categoriaSeleccionada: string | null = null;
+  mostrarPorVencer: boolean = false;
+  mostrarFiltrosAvanzados: boolean = false;
+  paginaActual: number = 1;
+  elementosPorPagina: number = 25;
+
+  // Sincroniza el array de estados seleccionados (usado por checkboxes)
+  syncFiltroEstados() {
+    this.filtroEstados = this.categoriasResumen
+      .filter(c => !!c.selected)
+      .map(c => c.estado);
+    // refrescar gráficos/resumen
+    this.aplicarFiltrosAvanzados();
+  }
+
+  limpiarTodosFiltros() {
+    this.categoriaSeleccionada = null;
+    this.filtroBusqueda = '';
+    this.filtroFecha = '';
+    this.filtroFechaInicio = '';
+    this.filtroFechaFin = '';
+    this.filtroMontoMin = null;
+    this.filtroMontoMax = null;
+    this.filtroEstados = [];
+    this.mostrarPorVencer = false;
+    this.categoriasResumen.forEach(c => c.selected = false);
+    this.aplicarFiltrosAvanzados();
+  }
+
+  aplicarFiltrosAvanzados() {
+    // Recalcular resúmenes y regenerar gráficos con los datos filtrados
+    this.calcularMontosPorProveedor();
+    this.calcularEvolucionMensual();
+    this.calcularResumenEstados();
+    this.calcularResumenPorDia();
+    // Regenerar los gráficos visibles
+    setTimeout(() => {
+      this.generarGraficoTorta();
+      this.generarGraficoEstados();
+      this.generarGraficoMensual();
+      this.generarGraficoMontos();
+    }, 50);
+  }
+
+  // Obtener facturas aplicando los mismos filtros que en Invoices
+  getFacturasFiltradas(): Factura[] {
+    let facturasFiltradas: any[] = [...this.facturas];
+    const hoy = new Date();
+
+    // Filtro por fecha exacta (legacy)
+    if (this.filtroFecha) {
+      facturasFiltradas = facturasFiltradas.filter(f => {
+        const fecha = (f.fechaRecepcion || f.fecha || '').slice(0, 10);
+        return fecha === this.filtroFecha;
+      });
+    }
+
+    // Rango de fechas
+    if (this.filtroFechaInicio) {
+      facturasFiltradas = facturasFiltradas.filter(f => {
+        const fecha = (f.fechaRecepcion || f.fecha || '').slice(0, 10);
+        return fecha >= this.filtroFechaInicio;
+      });
+    }
+    if (this.filtroFechaFin) {
+      facturasFiltradas = facturasFiltradas.filter(f => {
+        const fechaRecepcion = (f.fechaRecepcion || f.fecha || '').slice(0, 10);
+        if (!fechaRecepcion) return false;
+        const fechaVencimiento = new Date(fechaRecepcion);
+        fechaVencimiento.setDate(fechaVencimiento.getDate() + 8);
+        const fechaVencimientoStr = fechaVencimiento.toISOString().slice(0, 10);
+        return fechaVencimientoStr === this.filtroFechaFin;
+      });
+    }
+
+    // Monto
+    if (this.filtroMontoMin !== null && this.filtroMontoMin !== undefined) {
+      facturasFiltradas = facturasFiltradas.filter(f => f.monto >= this.filtroMontoMin!);
+    }
+    if (this.filtroMontoMax !== null && this.filtroMontoMax !== undefined) {
+      facturasFiltradas = facturasFiltradas.filter(f => f.monto <= this.filtroMontoMax!);
+    }
+
+    // Estado múltiple
+    if (this.filtroEstados && this.filtroEstados.length > 0) {
+      facturasFiltradas = facturasFiltradas.filter(f => this.filtroEstados.includes((f.estado || '').trim()));
+    }
+
+    // Categoría seleccionada
+    if (this.categoriaSeleccionada) {
+      if (this.categoriaSeleccionada === 'Por Vencer') {
+        facturasFiltradas = facturasFiltradas.filter(f => {
+          if ((f.estado || '').toLowerCase() === 'pendiente') {
+            const fechaEmision = f.fechaRecepcion || f.fecha || '';
+            if (!fechaEmision) return false;
+            const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
+            const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diasRestantes = 8 - diffDias;
+            return diasRestantes <= 7 && diasRestantes > 0;
+          }
+          return false;
+        });
+      } else {
+        facturasFiltradas = facturasFiltradas.filter(f =>
+          (f.estado || '').toLowerCase() === this.categoriaSeleccionada!.toLowerCase()
+        );
+      }
+    }
+
+    // Por vencer flag
+    if (this.mostrarPorVencer) {
+      facturasFiltradas = facturasFiltradas.filter(f => {
+        if ((f.estado || '').toLowerCase() === 'pendiente') {
+          const fechaEmision = f.fechaRecepcion || f.fecha || '';
+          if (!fechaEmision) return false;
+          const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
+          const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          const diasRestantes = 8 - diffDias;
+          return diasRestantes <= 7 && diasRestantes > 0;
+        }
+        return false;
+      });
+    }
+
+    // Búsqueda textual
+    if (this.filtroBusqueda && this.filtroBusqueda.trim() !== '') {
+      const texto = this.filtroBusqueda.trim().toLowerCase();
+      const regex = new RegExp(`(^|\\s|\\W)${texto}($|\\s|\\W)`, 'i');
+      if (this.campoBusqueda === 'folio') {
+        facturasFiltradas = facturasFiltradas.filter(f => f.folio && regex.test(f.folio));
+      } else if (this.campoBusqueda === 'proveedor') {
+        facturasFiltradas = facturasFiltradas.filter(f => f.proveedor && regex.test(f.proveedor));
+      } else if (this.campoBusqueda === 'responsable') {
+        facturasFiltradas = facturasFiltradas.filter(f => f.responsable && regex.test(f.responsable));
+      } else if (this.campoBusqueda === 'rut') {
+        facturasFiltradas = facturasFiltradas.filter(f => f['RUT Emisor'] && f['RUT Emisor'].toLowerCase() === texto);
+      } else {
+        facturasFiltradas = facturasFiltradas.filter(f =>
+          (f.folio && regex.test(f.folio)) ||
+          (f['RUT Emisor'] && regex.test(f['RUT Emisor'])) ||
+          (f.proveedor && regex.test(f.proveedor)) ||
+          (f.responsable && regex.test(f.responsable))
+        );
+      }
+    }
+
+    // Ordenar similar a Invoices
+    return facturasFiltradas.sort((a, b) => {
+      const getDiasRestantes = (factura: Factura) => {
+        const fechaEmision = factura.fechaRecepcion || factura.fecha || '';
+        if (!fechaEmision) return 9999;
+        const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
+        const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        return 8 - diffDias;
+      };
+      const diasA = getDiasRestantes(a);
+      const diasB = getDiasRestantes(b);
+      const aPorVencer = diasA > 0 && diasA <= 2;
+      const bPorVencer = diasB > 0 && diasB <= 2;
+      if (aPorVencer && !bPorVencer) return -1;
+      if (!aPorVencer && bPorVencer) return 1;
+      const fechaA = new Date(a.fechaRecepcion || a.fecha || 0).getTime();
+      const fechaB = new Date(b.fechaRecepcion || b.fecha || 0).getTime();
+      return fechaB - fechaA;
+    });
+  }
+
   dbService = inject(Db);
   router = inject(Router);
 
@@ -150,29 +335,23 @@ export class DashboardPage implements OnInit, AfterViewInit {
     if (!this.estadosChartCanvas?.nativeElement) return;
     if (this.estadosChart) this.estadosChart.destroy();
 
-    // Estados personalizados igual que invoices
-    const estados = [
-      'Pendiente',
-      'Por Vencer',
-      'Recibido',
-      'Acuse Recibo',
-      'Reclamado',
-      'Rechazado',
-      'Recibido con Aceptación Tácita'
-    ];
-    const colores = [
-      '#ffc409', // Pendiente
-      '#3dc2ff', // Por Vencer
-      '#3880ff', // Recibido
-      '#2dd36f', // Acuse Recibo
-      '#ffc409', // Reclamado
-      '#eb445a', // Rechazado
-      '#2dd36f'  // Recibido con Aceptación Tácita
-    ];
+    // Usar categoriasResumen como fuente única de estados y colores
+    const estados = this.categoriasResumen.map(c => c.estado);
+    const colores = this.categoriasResumen.map(c => {
+      switch ((c.color || '').toLowerCase()) {
+        case 'warning': return '#ffc409';
+        case 'medium': return '#3dc2ff';
+        case 'success': return '#2dd36f';
+        case 'dark': return '#334155';
+        case 'primary': return '#3b82f6';
+        default: return '#9CA3AF';
+      }
+    });
     const hoy = new Date();
+    const datosFuente = this.getFacturasFiltradas();
     const datos = estados.map(estado => {
       if (estado === 'Por Vencer') {
-        return this.facturas.filter(f => {
+        return datosFuente.filter(f => {
           if ((f.estado || '').toLowerCase() === 'pendiente') {
             const fechaEmision = f.fechaRecepcion || f.fecha || '';
             if (!fechaEmision) return false;
@@ -184,7 +363,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
           return false;
         }).length;
       } else {
-        return this.facturas.filter(f => (f.estado || '').toLowerCase() === estado.toLowerCase()).length;
+        return datosFuente.filter(f => (f.estado || '').toLowerCase() === estado.toLowerCase()).length;
       }
     });
 
@@ -250,11 +429,12 @@ export class DashboardPage implements OnInit, AfterViewInit {
     if (!this.mensualChartCanvas?.nativeElement) return;
     if (this.mensualChart) this.mensualChart.destroy();
 
-    // Agrupar facturas por mes
+    // Agrupar facturas por mes usando facturas filtradas
     const facturasPorMes: { [key: string]: number } = {};
-    this.facturas.forEach(factura => {
-      if (factura.fechaEmision) {
-        const fecha = new Date(factura.fechaEmision);
+    const datosFuente = this.getFacturasFiltradas();
+    datosFuente.forEach(factura => {
+      if (factura['fechaEmision']) {
+        const fecha = new Date(factura['fechaEmision']);
         const mes = fecha.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });
         facturasPorMes[mes] = (facturasPorMes[mes] || 0) + 1;
       }
@@ -313,7 +493,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
     if (!this.montosChartCanvas?.nativeElement) return;
     if (this.montosChart) this.montosChart.destroy();
 
-    // Rangos de montos
+    // Rangos de montos (etiquetas para visual)
     const rangos = [
       { label: '< $100K', min: 0, max: 100000 },
       { label: '$100K - $500K', min: 100000, max: 500000 },
@@ -322,58 +502,81 @@ export class DashboardPage implements OnInit, AfterViewInit {
       { label: '> $5M', min: 5000000, max: Infinity }
     ];
 
-    const cantidadesPorRango = rangos.map(rango => 
-      this.facturas.filter(f => {
-        const monto = f.montoTotal || 0;
+    const datosFuente = this.getFacturasFiltradas();
+
+    // Calcular monto total y cantidad por rango
+    const montoPorRango = rangos.map(rango => {
+      const items = datosFuente.filter(f => {
+        const monto = Number(f['Monto Total'] || f['monto'] || f['montoTotal'] || 0);
         return monto >= rango.min && monto < rango.max;
-      }).length
-    );
+      });
+      const suma = items.reduce((s, it) => s + Number(it['Monto Total'] || it['monto'] || 0), 0);
+      return { suma, count: items.length };
+    });
+
+    const labels = rangos.map(r => r.label);
+    const dataMontos = montoPorRango.map(r => r.suma);
+    const dataCounts = montoPorRango.map(r => r.count);
+    const totalMontos = dataMontos.reduce((a, b) => a + b, 0);
+
+    // Crear degradado
+    const ctx = this.montosChartCanvas.nativeElement.getContext('2d');
+    const grad = ctx.createLinearGradient(0, 0, ctx.canvas.width, 0);
+    grad.addColorStop(0, '#06b6d4');
+    grad.addColorStop(0.5, '#8b5cf6');
+    grad.addColorStop(1, '#ef4444');
 
     this.montosChart = new Chart(this.montosChartCanvas.nativeElement, {
-      type: 'doughnut',
+      type: 'bar',
       data: {
-        labels: rangos.map(r => r.label),
+        labels,
         datasets: [{
-          data: cantidadesPorRango,
-          backgroundColor: [
-            '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#10b981'
-          ],
-          borderColor: '#ffffff',
-          borderWidth: 2,
-          hoverOffset: 8
+          label: 'Monto total por rango (CLP)',
+          data: dataMontos,
+          backgroundColor: grad,
+          borderRadius: 8,
+          barThickness: 18,
+          maxBarThickness: 36
         }]
       },
       options: {
+        indexAxis: 'y' as const,
         responsive: true,
         maintainAspectRatio: false,
-        cutout: '60%',
         plugins: {
-          legend: {
-            display: true,
-            position: 'bottom',
-            labels: {
-              padding: 15,
-              usePointStyle: true,
-              font: { size: 10 }
-            }
-          },
+          legend: { display: false },
           tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            titleColor: '#ffffff',
-            bodyColor: '#ffffff',
-            cornerRadius: 8,
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            titleColor: '#fff',
+            bodyColor: '#fff',
             callbacks: {
-              label: function(context) {
-                const label = context.label || '';
-                const value = context.parsed || 0;
-                const total = (context.dataset.data as number[]).reduce((a: number, b: number) => a + b, 0);
-                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
-                return `${label}: ${value} facturas (${percentage}%)`;
+              title: (ctx) => ctx[0].label || '',
+              label: (context) => {
+                const idx = context.dataIndex;
+                const monto = dataMontos[idx] || 0;
+                const cantidad = dataCounts[idx] || 0;
+                const porcentaje = totalMontos > 0 ? ((monto / totalMontos) * 100).toFixed(1) : '0.0';
+                return [`Monto: $${monto.toLocaleString('es-CL')}`, `Cantidad: ${cantidad} facturas`, `Share: ${porcentaje}%`];
               }
             }
           }
         },
-        layout: { padding: 10 }
+        scales: {
+          x: {
+            ticks: {
+              callback: (val) => {
+                const v = Number(val);
+                if (isNaN(v)) return val;
+                if (v >= 1000000) return '$' + (v / 1000000).toFixed(1) + 'M';
+                if (v >= 1000) return '$' + (v / 1000).toFixed(0) + 'K';
+                return '$' + v.toLocaleString('es-CL');
+              }
+            },
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          y: { grid: { display: false } }
+        },
+        layout: { padding: { top: 6, right: 10, bottom: 6, left: 10 } }
       }
     });
   }
@@ -513,16 +716,17 @@ export class DashboardPage implements OnInit, AfterViewInit {
   // Utilidades y lógica de datos
   calcularMontosPorProveedor(): void {
     const resumen: { [proveedor: string]: number } = {};
-    
-    this.facturas.forEach((f) => {
+    const datosFuente = this.getFacturasFiltradas();
+
+    datosFuente.forEach((f) => {
       const rut = this.getRutFromFactura(f);
       const nombre = this.getNombreProveedor(f);
       const clave = rut && rut !== '-' ? rut : nombre;
-      const monto = Number(f['Monto Total'] || f.monto || f.total || f['Monto Neto'] || 0);
-      
+  const monto = Number(f['Monto Total'] || f['monto'] || f['total'] || f['Monto Neto'] || 0);
+
       resumen[clave] = (resumen[clave] || 0) + monto;
     });
-    
+
     this.proveedores = Object.keys(resumen);
     this.montosPorProveedor = Object.values(resumen);
   }
@@ -579,7 +783,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
       const rut = this.getRutFromFactura(f);
       const nombre = this.getNombreProveedor(f);
       const clave = rut && rut !== '-' ? rut : nombre;
-      const monto = Number(f['Monto Total'] || f.monto || f.total || f['Monto Neto'] || 0);
+  const monto = Number(f['Monto Total'] || f['monto'] || f['total'] || f['Monto Neto'] || 0);
       
       if (!resumen[clave]) {
         resumen[clave] = { 
@@ -617,8 +821,9 @@ export class DashboardPage implements OnInit, AfterViewInit {
 
   calcularEvolucionMensual(): void {
     const resumenMeses: { [mes: string]: { cantidad: number, monto: number } } = {};
-    this.facturas.forEach(f => {
-      const fecha = f.fechaRecepcion || f.fecha || f.fecha_recepcion || '';
+    const datosFuente = this.getFacturasFiltradas();
+    datosFuente.forEach(f => {
+      const fecha = f['fechaRecepcion'] || f['fecha'] || f['fecha_recepcion'] || '';
       if (!fecha) return;
       const mes = fecha.slice(0, 7);
       if (!resumenMeses[mes]) resumenMeses[mes] = { cantidad: 0, monto: 0 };
@@ -632,16 +837,18 @@ export class DashboardPage implements OnInit, AfterViewInit {
 
   calcularResumenEstados(): void {
     const estados = ['Pendiente', 'Aceptada', 'Rechazada', 'Vencida'];
+    const datosFuente = this.getFacturasFiltradas();
     this.resumenEstados = estados.map(estado => ({
       estado,
-      cantidad: this.facturas.filter(f => (f.estado || '').toLowerCase() === estado.toLowerCase()).length
+      cantidad: datosFuente.filter(f => (f.estado || '').toLowerCase() === estado.toLowerCase()).length
     }));
   }
 
   calcularResumenPorDia(): void {
     const agrupado: { [fecha: string]: number } = {};
-    this.facturas.forEach(f => {
-      const fecha = (f.fechaRecepcion || f.fecha_recepcion || '').slice(0, 10);
+    const datosFuente = this.getFacturasFiltradas();
+    datosFuente.forEach(f => {
+      const fecha = (f['fechaRecepcion'] || f['fecha_recepcion'] || '').slice(0, 10);
       if (fecha) {
         agrupado[fecha] = (agrupado[fecha] || 0) + 1;
       }
@@ -659,10 +866,6 @@ export class DashboardPage implements OnInit, AfterViewInit {
     const noSpaces = header.replace(/\s+/g, '');
     if (factura[noSpaces] !== undefined && factura[noSpaces] !== null && factura[noSpaces] !== '') return factura[noSpaces];
     return '';
-  }
-
-  getFacturasFiltradas(): any[] {
-    return this.facturas;
   }
 
   exportarExcel() {

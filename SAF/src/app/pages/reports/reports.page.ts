@@ -5,6 +5,8 @@ import { IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonBu
 import { Db } from 'src/app/services/Database/db';
 import { Router } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
+// Registrar Chart.js (asegura que los componentes estén disponibles aunque otra página no se haya cargado)
+Chart.register(...registerables);
 import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
 import autoTable from 'jspdf-autotable';
@@ -63,9 +65,191 @@ export class ReportsPage implements OnInit, AfterViewInit {
   }
   // Devuelve las facturas filtradas (por ahora todas, pero aquí puedes aplicar filtros activos)
   getFacturasFiltradas(): any[] {
-    // Aquí puedes aplicar lógica de filtrado según los filtros activos en la UI
-    // Por defecto retorna todas
-    return this.facturas;
+    // Implementación de filtrado similar a Invoices/Dashboard
+    let facturasFiltradas: any[] = [...this.facturas];
+    const hoy = new Date();
+
+    // Filtro por fecha exacta (legacy)
+    if (this.filtroFecha) {
+      facturasFiltradas = facturasFiltradas.filter(f => {
+        const fecha = (f.fechaRecepcion || f.fecha || '').slice(0, 10);
+        return fecha === this.filtroFecha;
+      });
+    }
+
+    // Rango de fechas
+    if (this.filtroFechaInicio) {
+      facturasFiltradas = facturasFiltradas.filter(f => {
+        const fecha = (f.fechaRecepcion || f.fecha || '').slice(0, 10);
+        return fecha >= this.filtroFechaInicio;
+      });
+    }
+    if (this.filtroFechaFin) {
+      facturasFiltradas = facturasFiltradas.filter(f => {
+        const fechaRecepcion = (f.fechaRecepcion || f.fecha || '').slice(0, 10);
+        if (!fechaRecepcion) return false;
+        const fechaVencimiento = new Date(fechaRecepcion);
+        fechaVencimiento.setDate(fechaVencimiento.getDate() + 8);
+        const fechaVencimientoStr = fechaVencimiento.toISOString().slice(0, 10);
+        return fechaVencimientoStr === this.filtroFechaFin;
+      });
+    }
+
+    // Monto
+    if (this.filtroMontoMin !== null && this.filtroMontoMin !== undefined) {
+      facturasFiltradas = facturasFiltradas.filter(f => f.monto >= this.filtroMontoMin!);
+    }
+    if (this.filtroMontoMax !== null && this.filtroMontoMax !== undefined) {
+      facturasFiltradas = facturasFiltradas.filter(f => f.monto <= this.filtroMontoMax!);
+    }
+
+    // Estado múltiple
+    if (this.filtroEstados && this.filtroEstados.length > 0) {
+      facturasFiltradas = facturasFiltradas.filter(f => this.filtroEstados.includes((f.estado || '').trim()));
+    }
+
+    // Categoría seleccionada
+    if (this.categoriaSeleccionada) {
+      if (this.categoriaSeleccionada === 'Por Vencer') {
+        facturasFiltradas = facturasFiltradas.filter(f => {
+          if ((f.estado || '').toLowerCase() === 'pendiente') {
+            const fechaEmision = f.fechaRecepcion || f.fecha || '';
+            if (!fechaEmision) return false;
+            const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
+            const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diasRestantes = 8 - diffDias;
+            return diasRestantes <= 7 && diasRestantes > 0;
+          }
+          return false;
+        });
+      } else {
+        facturasFiltradas = facturasFiltradas.filter(f =>
+          (f.estado || '').toLowerCase() === this.categoriaSeleccionada!.toLowerCase()
+        );
+      }
+    }
+
+    // Por vencer flag
+    if (this.mostrarPorVencer) {
+      facturasFiltradas = facturasFiltradas.filter(f => {
+        if ((f.estado || '').toLowerCase() === 'pendiente') {
+          const fechaEmision = f.fechaRecepcion || f.fecha || '';
+          if (!fechaEmision) return false;
+          const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
+          const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          const diasRestantes = 8 - diffDias;
+          return diasRestantes <= 7 && diasRestantes > 0;
+        }
+        return false;
+      });
+    }
+
+    // Búsqueda textual
+    if (this.filtroBusqueda && this.filtroBusqueda.trim() !== '') {
+      const texto = this.filtroBusqueda.trim().toLowerCase();
+      const regex = new RegExp(`(^|\\s|\\W)${texto}($|\\s|\\W)`, 'i');
+      if (this.campoBusqueda === 'folio') {
+        facturasFiltradas = facturasFiltradas.filter(f => f.folio && regex.test(f.folio));
+      } else if (this.campoBusqueda === 'proveedor') {
+        facturasFiltradas = facturasFiltradas.filter(f => f.proveedor && regex.test(f.proveedor));
+      } else if (this.campoBusqueda === 'responsable') {
+        facturasFiltradas = facturasFiltradas.filter(f => f.responsable && regex.test(f.responsable));
+      } else if (this.campoBusqueda === 'rut') {
+        facturasFiltradas = facturasFiltradas.filter(f => f['RUT Emisor'] && f['RUT Emisor'].toLowerCase() === texto);
+      } else {
+        facturasFiltradas = facturasFiltradas.filter(f =>
+          (f.folio && regex.test(f.folio)) ||
+          (f['RUT Emisor'] && regex.test(f['RUT Emisor'])) ||
+          (f.proveedor && regex.test(f.proveedor)) ||
+          (f.responsable && regex.test(f.responsable))
+        );
+      }
+    }
+
+    // Ordenamiento simple: por fecha desc
+    return facturasFiltradas.sort((a, b) => {
+      const fechaA = new Date(a.fechaRecepcion || a.fecha || 0).getTime();
+      const fechaB = new Date(b.fechaRecepcion || b.fecha || 0).getTime();
+      return fechaB - fechaA;
+    });
+  }
+
+  // --- Filtros y helpers ---
+  categoriasResumen = [
+    { nombre: 'Pendientes', estado: 'Pendiente', color: 'warning', selected: false },
+    { nombre: 'Por Vencer', estado: 'Por Vencer', color: 'medium', selected: false },
+    { nombre: 'Acuse Recibo', estado: 'Acuse Recibo', color: 'success', selected: false },
+    { nombre: 'Reclamado', estado: 'Reclamado', color: 'warning', selected: false },
+    { nombre: 'Cedidas', estado: 'Cedida', color: 'dark', selected: false }
+  ];
+
+  filtroFechaInicio: string = '';
+  filtroFechaFin: string = '';
+  filtroMontoMin: number | null = null;
+  filtroMontoMax: number | null = null;
+  filtroEstados: string[] = [];
+  filtroBusqueda: string = '';
+  campoBusqueda: string = 'todos';
+  filtroFecha: string = '';
+  categoriaSeleccionada: string | null = null;
+  mostrarPorVencer: boolean = false;
+
+  syncFiltroEstados() {
+    this.filtroEstados = this.categoriasResumen.filter(c => !!c.selected).map(c => c.estado);
+    this.aplicarFiltrosAvanzados();
+  }
+
+  limpiarTodosFiltros() {
+    this.categoriaSeleccionada = null;
+    this.filtroBusqueda = '';
+    this.filtroFecha = '';
+    this.filtroFechaInicio = '';
+    this.filtroFechaFin = '';
+    this.filtroMontoMin = null;
+    this.filtroMontoMax = null;
+    this.filtroEstados = [];
+    this.mostrarPorVencer = false;
+    this.categoriasResumen.forEach(c => c.selected = false);
+    this.aplicarFiltrosAvanzados();
+  }
+
+  aplicarFiltrosAvanzados() {
+    // Recalcular resumen y resúmenes por día con la fuente filtrada
+    const datos = this.getFacturasFiltradas();
+    // Resumen de estados según categoriasResumen
+    const estados = this.categoriasResumen.map(c => c.estado);
+    this.resumenEstados = estados.map(estado => {
+      if (estado === 'Por Vencer') {
+        const hoy = new Date();
+        const cantidad = datos.filter(f => {
+          if ((f.estado || '').toLowerCase() === 'pendiente') {
+            const fechaEmision = f.fechaRecepcion || f.fecha || '';
+            if (!fechaEmision) return false;
+            const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
+            const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diasRestantes = 8 - diffDias;
+            return diasRestantes <= 7 && diasRestantes > 0;
+          }
+          return false;
+        }).length;
+        return { estado, cantidad };
+      }
+      return { estado, cantidad: datos.filter(f => (f.estado || '').toLowerCase() === estado.toLowerCase()).length };
+    });
+
+    // Resumen por día
+    const agrupado: { [fecha: string]: number } = {};
+    datos.forEach(f => {
+      const fecha = (f.fechaRecepcion || f.fecha_recepcion || '').slice(0, 10);
+      if (fecha) agrupado[fecha] = (agrupado[fecha] || 0) + 1;
+    });
+    this.resumenPorDia = Object.entries(agrupado).map(([fecha, cantidad]) => ({ fecha, cantidad })).sort((a, b) => a.fecha.localeCompare(b.fecha));
+
+    // Regenerar gráficos
+    setTimeout(() => {
+      this.generarGrafico();
+      this.generarGraficoPorDia();
+    }, 50);
   }
 
   getPercentage(cantidad: number): string {
@@ -107,54 +291,8 @@ export class ReportsPage implements OnInit, AfterViewInit {
     
     console.log('Facturas cargadas:', this.facturas.length);
     
-    // Estados personalizados igual que invoices
-    const estados = [
-      'Pendiente',
-      'Por Vencer',
-      'Recibido',
-      'Acuse Recibo',
-      'Reclamado',
-      'Rechazado',
-      'Recibido con Aceptación Tácita'
-    ];
-    this.resumenEstados = estados.map(estado => {
-      if (estado === 'Por Vencer') {
-        // Facturas pendientes que están por vencer
-        const hoy = new Date();
-        const cantidad = this.facturas.filter(f => {
-          if ((f.estado || '').toLowerCase() === 'pendiente') {
-            const fechaEmision = f.fechaRecepcion || f.fecha || '';
-            if (!fechaEmision) return false;
-            const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
-            const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-            const diasRestantes = 8 - diffDias;
-            return diasRestantes <= 7 && diasRestantes > 0;
-          }
-          return false;
-        }).length;
-        return { estado, cantidad };
-      } else {
-        return {
-          estado,
-          cantidad: this.facturas.filter(f => (f.estado || '').toLowerCase() === estado.toLowerCase()).length
-        };
-      }
-    });
-    console.log('Resumen de estados:', this.resumenEstados);
-    
-    // Agrupar por fecha de recepción
-    const agrupado: { [fecha: string]: number } = {};
-    this.facturas.forEach(f => {
-      const fecha = (f.fechaRecepcion || f.fecha_recepcion || '').slice(0, 10);
-      if (fecha) {
-        agrupado[fecha] = (agrupado[fecha] || 0) + 1;
-      }
-    });
-    this.resumenPorDia = Object.entries(agrupado)
-      .map(([fecha, cantidad]) => ({ fecha, cantidad }))
-      .sort((a, b) => a.fecha.localeCompare(b.fecha));
-      
-    console.log('Resumen por día:', this.resumenPorDia);
+    // Inicializar resúmenes y gráficos usando los filtros por defecto
+    this.aplicarFiltrosAvanzados();
   }
   graficoPorDia: any;
   generarGraficoPorDia() {
