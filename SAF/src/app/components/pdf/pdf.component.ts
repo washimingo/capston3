@@ -1,5 +1,5 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, OnChanges, ViewChild } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import * as pdfjsLib from 'pdfjs-dist';
 
@@ -25,7 +25,7 @@ import * as pdfjsLib from 'pdfjs-dist';
   standalone: true,
   imports: [CommonModule, DecimalPipe],
 })
-export class PdfComponent implements OnInit {
+export class PdfComponent implements OnInit, OnChanges {
   @Input() pdfSrc: string | SafeResourceUrl | null = null;
   @ViewChild('pdfCanvas', { static: true }) pdfCanvas!: ElementRef<HTMLCanvasElement>;
 

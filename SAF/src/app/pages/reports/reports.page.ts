@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon } from '@ionic/angular/standalone';
@@ -17,7 +17,7 @@ import { HeaderComponent } from 'src/app/components/header/header.component';
   standalone: true,
   imports: [IonContent, CommonModule, FormsModule, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon, HeaderComponent]
 })
-export class ReportsPage implements OnInit {
+export class ReportsPage implements OnInit, AfterViewInit {
   graficoExpandido: 'estado' | 'dia' | null = null;
 
   expandirGrafico(tipo: 'estado' | 'dia') {
@@ -81,11 +81,11 @@ export class ReportsPage implements OnInit {
   facturas: any[] = [];
   resumenPorDia: { fecha: string, cantidad: number }[] = [];
 
-  constructor(private db: Db, private router: Router) {
-    // Registrar componentes de Chart.js
-    Chart.register(...registerables);
-    // Los iconos ahora se registran en IconsComponent
-  }
+  db = inject(Db);
+  router = inject(Router);
+
+  // Registrar componentes de Chart.js a nivel de módulo (si no está ya registrado en otro lugar)
+  // Chart.register(...registerables) ya se ha ejecutado en otros módulos donde aplica
 
   async ngAfterViewInit() {
     await this.cargarDatos();

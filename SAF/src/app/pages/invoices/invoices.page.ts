@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonIcon, IonRefresher, IonRefresherContent, IonSpinner, IonBadge, AlertController } from '@ionic/angular/standalone';
@@ -66,16 +66,23 @@ export class InvoicesPage implements OnInit {
     return factura.folio || factura.id || index;
   }
 
-  constructor(
-    private route: ActivatedRoute,
-    private dbService: Db,
-    private sanitizer: DomSanitizer,
-    private toastController: ToastController,
-    private alertController: AlertController
-  ) {
-    // Los iconos ahora se registran en IconsComponent
-    
-    // Leer query param para mostrar facturas por vencer
+  route = inject(ActivatedRoute);
+  dbService = inject(Db);
+  sanitizer = inject(DomSanitizer);
+  toastController = inject(ToastController);
+  alertController = inject(AlertController);
+
+  getNombreArchivo(): string {
+    if (!this.archivoSeleccionado) return '';
+    if (typeof this.archivoSeleccionado === 'string') return this.archivoSeleccionado;
+    return this.archivoSeleccionado.name;
+  }
+  ngOnInit() {
+    // Recuperar archivo guardado
+    const archivoGuardado = localStorage.getItem('archivoCSV');
+    this.archivoSeleccionado = archivoGuardado ? archivoGuardado : null;
+
+    // Leer query param para mostrar facturas por vencer o aplicar filtros iniciales
     this.route.queryParams.subscribe(params => {
       if (params['porVencer'] === 'true') {
         this.mostrarPorVencer = true;
@@ -98,18 +105,9 @@ export class InvoicesPage implements OnInit {
         this.mostrarPorVencer = false;
       }
     });
-    this.cargarFacturas();
-  }
 
-  getNombreArchivo(): string {
-    if (!this.archivoSeleccionado) return '';
-    if (typeof this.archivoSeleccionado === 'string') return this.archivoSeleccionado;
-    return this.archivoSeleccionado.name;
-  }
-  ngOnInit() {
-    // Recuperar archivo guardado
-    const archivoGuardado = localStorage.getItem('archivoCSV');
-    this.archivoSeleccionado = archivoGuardado ? archivoGuardado : null;
+    // Cargar facturas al inicializar
+    this.cargarFacturas();
   }
   quitarArchivo() {
     this.archivoSeleccionado = null;

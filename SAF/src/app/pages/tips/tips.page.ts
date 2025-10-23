@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, OnInit, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
@@ -19,7 +19,7 @@ import { TUTORIALS_DATA } from '../../data/tutorials.data';
     FormsModule
   ]
 })
-export class TipsPage {
+export class TipsPage implements OnInit {
 
   // Datos
   tutorials: Tutorial[] = TUTORIALS_DATA;
@@ -33,9 +33,7 @@ export class TipsPage {
   // Vista
   viewMode: ViewMode = 'grid';
 
-  constructor(private router: Router) {
-    // Los iconos ahora se registran en IconsComponent
-  }
+  router = inject(Router);
 
   ngOnInit(): void {
     this.filterTutorials();

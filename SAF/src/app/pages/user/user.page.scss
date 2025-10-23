@@ -51,16 +51,7 @@
     }
   }
 
-  // Animaciones suaves
-  .hover\:shadow-lg:hover {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .transition-all {
-    transition-property: all;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms;
-  }
+  // Animaciones suaves (eliminadas)
 
   // Efectos de hover personalizados
   .hover\:from-blue-100:hover {
@@ -166,7 +157,7 @@
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  // transición eliminada
   
   &.active {
     opacity: 1;
@@ -184,7 +175,7 @@
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
   z-index: 1001;
   transform: translateX(100%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  // transición eliminada
   display: flex;
   flex-direction: column;
   
@@ -312,9 +303,7 @@
         background-color: #2563eb;
       }
       
-      .transition-all {
-        transition: all 0.3s ease;
-      }
+      // .transition-all eliminada
       
       .duration-300 {
         transition-duration: 300ms;

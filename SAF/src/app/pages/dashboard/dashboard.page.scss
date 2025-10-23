@@ -36,7 +36,7 @@
 
 // KPI Cards - Optimized
 .kpi-card {
-  transition: transform 0.2s ease;
+  // transición eliminada
   border: 1px solid rgba(255, 255, 255, 0.2);
   
   @media (hover: hover) {
@@ -47,9 +47,7 @@
   }
   
   // Icon containers - Optimized
-  .w-12.h-12 {
-    transition: transform 0.2s ease;
-  }
+  // .w-12.h-12 transición eliminada
   
   @media (hover: hover) {
     &:hover .w-12.h-12 {
@@ -100,7 +98,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   
   .space-y-4 > div {
-    transition: all 0.2s ease;
+    // transición eliminada
     
     &:hover {
       transform: translateX(4px);
@@ -121,7 +119,7 @@
     }
     
     tbody tr {
-      transition: all 0.2s ease;
+      // transición eliminada
       
       &:hover {
         background-color: rgba(59, 130, 246, 0.05);
@@ -147,7 +145,7 @@
   
   ion-card-content {
     .w-12.h-12 {
-      animation: pulse 2s infinite;
+      // animación eliminada
     }
   }
 }
@@ -167,41 +165,17 @@
   }
 }
 
-// Animations
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
+// Animations eliminadas
 
 // Loading states
 .loading-placeholder {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
-  animation: loading 1.5s infinite;
+  // animación eliminada
   border-radius: 8px;
 }
 
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
+// @keyframes loading eliminado
 
 // Custom scrollbar for table
 .overflow-x-auto {

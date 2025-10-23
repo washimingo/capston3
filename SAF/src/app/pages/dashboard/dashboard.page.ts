@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -13,6 +13,9 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
+// Registrar componentes de Chart.js una sola vez a nivel de módulo
+Chart.register(...registerables);
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
@@ -24,7 +27,7 @@ import autoTable from 'jspdf-autotable';
     IonCardContent, IonButton, IonIcon, HeaderComponent
   ]
 })
-export class DashboardPage implements OnInit {
+export class DashboardPage implements OnInit, AfterViewInit {
   graficoExpandido: 'estados' | 'mensual' | 'montos' | null = null;
 
   // Navegación a invoices con filtros
@@ -89,10 +92,8 @@ export class DashboardPage implements OnInit {
     'Valor Otro Impto', 'Tasa Otro Impto'
   ];
 
-  constructor(private dbService: Db, private router: Router) {
-    Chart.register(...registerables);
-    // Los iconos ahora se registran en IconsComponent
-  }
+  dbService = inject(Db);
+  router = inject(Router);
 
   async ngOnInit() {
     const facturasGuardadas = localStorage.getItem('facturasCSV');

@@ -1,16 +1,4 @@
-// Animación flotante para la ampolleta
-.bulb-anim {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
+// Animación flotante para la ampolleta (eliminada por política sin animaciones)
 // Estilos para la página de Tips y Tutoriales
 .tips-page {
   // Asegura que el contenido use todo el espacio disponible
@@ -33,18 +21,7 @@
     transform: translateY(-2px);
   }
 
-  // Transiciones suaves
-  .transition-all {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .duration-300 {
-    transition-duration: 300ms;
-  }
-
-  .duration-500 {
-    transition-duration: 500ms;
-  }
+  // Transiciones suaves (eliminadas)
 
   // Clases de utilidad personalizadas
   .line-clamp-2 {
@@ -55,10 +32,8 @@
     overflow: hidden;
   }
 
-  // Mejoras para los inputs y selects
+  // Mejoras para los inputs y selects (sin transiciones)
   input[type="text"], select {
-    transition: all 0.3s ease;
-    
     &:focus {
       box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
       border-color: #6366f1;
@@ -173,10 +148,7 @@
     }
   }
 
-  // Animaciones para los iconos
-  ion-icon {
-    transition: all 0.3s ease;
-  }
+  // Animaciones para los iconos (eliminadas)
 
   // Hover effects para botones
   button:hover {

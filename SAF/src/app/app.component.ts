@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, inject } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { IonApp, IonRouterOutlet, IonMenu, IonContent, IonItem, IonIcon, IonSplitPane, IonButton, IonMenuToggle } from '@ionic/angular/standalone';
 import { MenuController } from '@ionic/angular';
@@ -26,9 +26,8 @@ import { IconsComponent } from './components/icons/icons.component';
 export class AppComponent implements AfterViewInit {
   @ViewChild(IonMenu) menu?: IonMenu;
   
-  constructor(private router: Router, private menuCtrl: MenuController) {
-    // Los iconos ahora se registran en IconsComponent
-  }
+  router = inject(Router);
+  menuCtrl = inject(MenuController);
   
   menuType: 'overlay' | 'side' = 'side';
   

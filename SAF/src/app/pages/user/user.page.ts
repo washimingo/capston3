@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ import { HeaderComponent } from 'src/app/components/header/header.component';
     HeaderComponent
   ]
 })
-export class UserPage implements OnInit {
+export class UserPage {
 
   // Estado del modal de editar perfil
   isEditProfileOpen = false;
@@ -44,12 +44,7 @@ export class UserPage implements OnInit {
     }
   };
 
-  constructor(private router: Router) {
-    // Los iconos ahora se registran en IconsComponent
-  }
-
-  ngOnInit() {
-  }
+  router = inject(Router);
 
   // Métodos para el modal de editar perfil
   openEditProfileDrawer() {

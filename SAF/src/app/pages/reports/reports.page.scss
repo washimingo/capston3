@@ -20,7 +20,7 @@
 
 // Stats cards animations
 .stats-card {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  // transición eliminada
   
   &:hover {
     transform: translateY(-4px);
@@ -28,14 +28,11 @@
                 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
   
-  .stats-number {
-    animation: countUp 0.8s ease-out;
-  }
 }
 
 // Chart cards enhancements
 .chart-card {
-  transition: all 0.3s ease;
+  // transición eliminada
   
   &:hover {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 
@@ -74,7 +71,7 @@
     
     tbody {
       tr {
-        transition: all 0.15s ease;
+        // transición eliminada
         
         &:hover {
           background-color: #f8fafc;
@@ -87,7 +84,7 @@
 
 // Buttons and interactions
 ion-button {
-  transition: all 0.2s ease;
+  // transición eliminada
   
   &:hover {
     transform: translateY(-1px);
@@ -104,28 +101,7 @@ ion-button {
   }
 }
 
-// Animations
-@keyframes countUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+// Animations eliminadas
 
 // Progressive enhancement for charts
 .chart-container {
@@ -139,7 +115,7 @@ ion-button {
     right: 0;
     bottom: 0;
     background: linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.1) 50%, transparent 52%);
-    animation: shimmer 2s infinite;
+  // animación eliminada
     pointer-events: none;
     opacity: 0;
   }
@@ -149,14 +125,7 @@ ion-button {
   }
 }
 
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
+// shimmer eliminado
 
 // Dark mode support
 :root.ion-palette-dark {
@@ -384,18 +353,10 @@ ion-button {
   .chart-container {
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;
-    animation: loading 1.5s infinite;
+    // animación eliminada
   }
 }
-
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
+// loading eliminado
 
 // Print styles
 @media print {

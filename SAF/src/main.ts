@@ -11,7 +11,8 @@ register();
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
+    // Desactivar animaciones nativas de Ionic (transiciones, overlays, etc.)
+    provideIonicAngular({ animated: false }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
   ],
 });
