@@ -412,3 +412,93 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
   &[data-urgency="warning"] { background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%); color: #9a3412; }
   &[data-urgency="normal"] { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #065f46; }
 }
+
+/* ========================================
+   Animaciones de Transición de Páginas
+   ======================================== */
+
+// Variables para las transiciones
+:root {
+  --page-transition-duration: 600ms;
+  --page-transition-easing: cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+// Animación de entrada - fade in desde la derecha
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Animación de salida - fade out hacia la izquierda
+@keyframes pageLeave {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+}
+
+// Aplicar animaciones a las páginas de Ionic
+ion-router-outlet {
+  .ion-page {
+    // Transición suave para todas las páginas
+    transition: opacity var(--page-transition-duration) var(--page-transition-easing),
+                transform var(--page-transition-duration) var(--page-transition-easing);
+  }
+
+  // Cuando una página está entrando
+  .ion-page-entering {
+    animation: pageEnter var(--page-transition-duration) var(--page-transition-easing);
+  }
+
+  // Cuando una página está saliendo
+  .ion-page-leaving {
+    animation: pageLeave var(--page-transition-duration) var(--page-transition-easing);
+  }
+}
+
+// Transiciones específicas para el contenido de las páginas
+ion-content {
+  --transition-duration: 400ms;
+  --transition-easing: cubic-bezier(0.4, 0.0, 0.2, 1);
+  
+  &.content-enter {
+    animation: fadeIn 400ms cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+}
+
+// Animación fade in general
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Mejorar transiciones de elementos internos
+.fade-in-up {
+  animation: fadeIn 500ms cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+// Delay escalonado para múltiples elementos
+.stagger-animation {
+  &:nth-child(1) { animation-delay: 0ms; }
+  &:nth-child(2) { animation-delay: 50ms; }
+  &:nth-child(3) { animation-delay: 100ms; }
+  &:nth-child(4) { animation-delay: 150ms; }
+  &:nth-child(5) { animation-delay: 200ms; }
+  &:nth-child(6) { animation-delay: 250ms; }
+}

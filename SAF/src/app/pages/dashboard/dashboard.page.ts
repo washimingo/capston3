@@ -125,6 +125,15 @@ export class DashboardPage implements OnInit, AfterViewInit {
     this.aplicarFiltrosAvanzados();
   }
 
+  // Función para selección múltiple de categorías (chips)
+  seleccionarCategoria(categoriaSeleccionada: any) {
+    // Toggle: activar/desactivar la categoría seleccionada
+    categoriaSeleccionada.selected = !categoriaSeleccionada.selected;
+    
+    // Actualizar filtros
+    this.syncFiltroEstados();
+  }
+
   limpiarTodosFiltros() {
     this.categoriaSeleccionada = null;
     this.filtroBusqueda = '';

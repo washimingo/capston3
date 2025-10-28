@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-spinner {
+  width: 56px;
+  height: 56px;
+  color: #0ea5e9; // Color cyan/azul
+  
+  // Animación de fade in con escala
+  animation: fadeInScale 250ms ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

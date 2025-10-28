@@ -1,5 +1,11 @@
 // Menu Lateral SCSS - Complementing Tailwind CSS
 
+// Variables de animación para el menú
+:root {
+  --ion-menu-overlay-transition: 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+  --ion-menu-reveal-transition: 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+  --ion-menu-push-transition: 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+}
 
 /* Menu Lateral - Responsive  */
 
@@ -8,6 +14,30 @@ ion-menu.custom-menu {
   width: 280px ;
   min-width: 280px ;
   max-width: 280px ;
+  
+  // Animaciones suaves para el menú overlay
+  &.menu-type-overlay {
+    // Ocultar el backdrop (sin sombra oscura)
+    ion-backdrop {
+      display: none !important;
+      opacity: 0 !important;
+    }
+    
+    .menu-inner {
+      transition: transform 600ms cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+  }
+}
+
+// Backdrop deshabilitado globalmente para el menú
+ion-menu ion-backdrop {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+// Contenedor del menú con transición suave
+.menu-content-wrapper {
+  transition: transform 600ms cubic-bezier(0.32, 0.72, 0, 1) !important;
 }
 @media (max-width: 768px) {
   ion-menu.custom-menu {
@@ -67,6 +97,133 @@ ion-menu.custom-menu {
     .w-10.h-10 {
       width: 2.25rem;
       height: 2.25rem;
+    }
+  }
+}
+// Contenedor del router con posición relativa para el overlay
+.router-content-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+// Spinner overlay solo en el área de contenido (no sobre menú/header)
+.content-spinner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.9); // Fondo semi-transparente blanco
+  animation: fadeIn 200ms ease-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &.hiding {
+    animation: fadeOut 200ms ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+// Estilos para el alert de confirmación de logout
+:host ::ng-deep {
+  .custom-alert {
+    --backdrop-opacity: 0.6;
+    
+    .alert-wrapper {
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .alert-head {
+      padding: 20px 20px 20px;
+      text-align: center;
+      
+      h2 {
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: #1f2937;
+      }
+    }
+    
+    .alert-message {
+      padding: 10px 20px 20px;
+      color: #000000;
+      font-size: 1.25 rem;
+      text-align: center;
+    }
+    
+    .alert-button-group {
+      padding: 8px;
+      gap: 8px;
+      display: flex;
+      justify-content: center;
+      
+      button {
+        flex: 1;
+        max-width: 150px;
+        margin: 0 4px;
+        border-radius: 8px;
+        font-weight: 500;
+        text-align: center !important;
+        justify-content: center !important;
+        display: flex !important;
+        align-items: center !important;
+      }
+      
+      .alert-button-cancel,
+      .alert-button-confirm {
+        flex: 1;
+        max-width: 150px;
+        margin: 0 4px;
+        border-radius: 8px;
+        font-weight: 500;
+        text-align: center;
+        
+        .alert-button-inner {
+          justify-content: center !important;
+        }
+      }
+      
+      .alert-button-cancel {
+        background: #d4d5d6;
+        color: #32363b;
+        
+        &:hover {
+          background: #e5e7eb;
+        }
+      }
+      
+      .alert-button-confirm {
+        background: #ef4444;
+        color: white;
+        font-weight: 600;
+        
+        &:hover {
+          background: #dc2626;
+        }
+      }
     }
   }
 }

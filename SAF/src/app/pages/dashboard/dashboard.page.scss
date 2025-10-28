@@ -248,3 +248,86 @@
     display: none !important;
   }
 }
+// Estilos para chips de filtro
+.chip-filter {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px; // rounded-full
+  font-size: 0.875rem; // text-sm
+  font-weight: 500;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background: #f3f4f6;
+  color: #6b7280;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.chip-default {
+  background: #f3f4f6;
+  color: #6b7280;
+  border-color: #e5e7eb;
+  
+  &:hover {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+  }
+}
+
+.chip-selected {
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  
+  // Colores específicos cuando está seleccionado
+  &.chip-warning {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+    border-color: #f59e0b;
+  }
+  
+  &.chip-medium {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1e40af;
+    border-color: #3b82f6;
+  }
+  
+  &.chip-success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+    border-color: #10b981;
+  }
+  
+  &.chip-dark {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    color: #1f2937;
+    border-color: #6b7280;
+  }
+}
+
+// Scrollbar personalizado para la lista de proveedores
+.custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #9333ea 0%, #7e22ce 100%);
+    border-radius: 10px;
+    
+    &:hover {
+      background: linear-gradient(180deg, #7e22ce 0%, #6b21a8 100%);
+    }
+  }
+}
