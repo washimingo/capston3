@@ -1,2 +1,7 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+/* Configuración del backdrop del menú */
+:root {
+  --ion-backdrop-opacity: 0.5;
+  --ion-backdrop-color: #000000;
+}

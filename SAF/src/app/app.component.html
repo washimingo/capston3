@@ -2,8 +2,14 @@
   <!-- Componente centralizado de iconos -->
   <app-icons></app-icons>
   
-  <ion-split-pane contentId="main-content" *ngIf="showMenu">
-    <ion-menu side="start" menuId="main-menu" contentId="main-content" [type]="menuType" class="custom-menu">
+  <!-- Backdrop personalizado para móvil - PRIMER HIJO de ion-app -->
+  <div class="custom-mobile-backdrop" 
+       [class.active]="menuOpen && !useSplitPane"
+       (click)="closeMenu()">
+  </div>
+  
+  <ion-split-pane contentId="main-content" *ngIf="showMenu" when="lg">
+    <ion-menu side="start" menuId="main-menu" contentId="main-content" [type]="menuType" class="custom-menu" [swipeGesture]="true">
       <ion-content class="menu-content bg-white flex flex-col h-full relative">
           <div class="relative">
             <ion-menu-toggle auto-hide="true">

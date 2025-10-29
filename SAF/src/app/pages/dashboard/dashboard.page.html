@@ -125,31 +125,9 @@
               <ion-icon name="chevron-down-outline" class="text-gray-400 text-sm"></ion-icon>
             </div>
           </div>
-          
-          <!-- Botón de limpiar -->
-          <button 
-            (click)="limpiarTodosFiltros()"
-            class="px-5 py-2.5 
-            bg-gray-50 
-            hover:bg-gray-100 
-            border border-gray-200 
-            hover:border-gray-300 
-            text-gray-700 
-            rounded-lg 
-            font-medium 
-            text-sm 
-            transition-all 
-            inline-flex 
-            items-center 
-            gap-2 
-            active:scale-95 shadow-sm whitespace-nowrap self-start"
-          >
-            <ion-icon name="close-circle-outline" class="text-base"></ion-icon>
-            Limpiar
-          </button>
         </div>
 
-        <!-- Estados como chips (selección múltiple) -->
+        <!-- Estados como chips (selección múltiple) + Botón Limpiar -->
         <div class="flex flex-wrap gap-2">
           <button 
             *ngFor="let categoria of categoriasResumen" 
@@ -157,6 +135,15 @@
             [class]="'chip-filter ' + (categoria.selected ? 'chip-selected chip-' + categoria.color : 'chip-default')"
           >
             {{ categoria.nombre }}
+          </button>
+          
+          <!-- Chip de Limpiar -->
+          <button 
+            (click)="limpiarTodosFiltros()"
+            class="chip-filter chip-limpiar"
+          >
+            <ion-icon name="close-circle-outline" class="text-sm mr-1"></ion-icon>
+            Limpiar filtros
           </button>
         </div>
       </div>

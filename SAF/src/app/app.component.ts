@@ -42,11 +42,21 @@ export class AppComponent implements AfterViewInit {
   menuType: 'overlay' | 'side' | 'push' | 'reveal' = 'side';
   showMenu = false;
   isLoading = false;
+  useSplitPane = false;
+  menuOpen = false; // Estado del menú para el backdrop personalizado
   
   constructor() {
     // Deshabilitar menú por defecto para evitar parpadeos en la primera carga
     // Se volverá a habilitar según la ruta una vez que termine la navegación
     this.menuCtrl.enable(false, 'main-menu');
+    
+    // Configurar split-pane basado en el tamaño de pantalla
+    this.checkScreenSize();
+    
+    // Escuchar eventos del menú para el backdrop personalizado
+    this.menuCtrl.isOpen('main-menu').then(isOpen => {
+      this.menuOpen = isOpen;
+    });
 
     // Mostrar spinner al iniciar navegación
     this.router.events.pipe(
@@ -78,10 +88,29 @@ export class AppComponent implements AfterViewInit {
   setMenuType() {
     // Usar 'overlay' para animación suave en mobile
     this.menuType = window.innerWidth <= 1024 ? 'overlay' : 'side';
+    this.useSplitPane = window.innerWidth > 1024;
+  }
+
+  checkScreenSize() {
+    this.useSplitPane = window.innerWidth > 1024;
   }
 
   ngAfterViewInit() {
     this.setMenuType();
+    
+    // Escuchar cambios en el estado del menú
+    if (this.menu) {
+      this.menu.ionDidOpen.subscribe(() => {
+        this.menuOpen = true;
+      });
+      this.menu.ionDidClose.subscribe(() => {
+        this.menuOpen = false;
+      });
+    }
+  }
+
+  closeMenu() {
+    this.menuCtrl.close('main-menu');
   }
 
   @HostListener('window:resize', ['$event'])

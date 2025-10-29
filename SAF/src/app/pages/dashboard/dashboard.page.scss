@@ -331,3 +331,17 @@
     }
   }
 }
+
+// Chip especial para limpiar filtros
+.chip-limpiar {
+  background: #fef2f2;
+  color: #991b1b;
+  border-color: #fecaca;
+  
+  &:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.15);
+  }
+}

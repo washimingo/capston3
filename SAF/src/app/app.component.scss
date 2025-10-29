@@ -17,22 +17,41 @@ ion-menu.custom-menu {
   
   // Animaciones suaves para el menú overlay
   &.menu-type-overlay {
-    // Ocultar el backdrop (sin sombra oscura)
-    ion-backdrop {
-      display: none !important;
-      opacity: 0 !important;
-    }
-    
     .menu-inner {
       transition: transform 600ms cubic-bezier(0.4, 0.0, 0.2, 1);
     }
   }
 }
 
-// Backdrop deshabilitado globalmente para el menú
-ion-menu ion-backdrop {
-  display: none !important;
-  opacity: 0 !important;
+// Backdrop personalizado para móvil
+.custom-mobile-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  
+  &.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+
+// Asegurar que el menú esté por encima del backdrop
+ion-menu {
+  z-index: 10000 !important;
+}
+
+// Habilitar backdrop con oscurecimiento cuando el menú está abierto
+ion-menu {
+  --backdrop-opacity: 0.5;
 }
 
 // Contenedor del menú con transición suave
