@@ -243,7 +243,8 @@
                     [attr.data-status]="normalizarEstado(categoria.estado)"
                     (click)="seleccionarCategoria(categoria.estado)">
               <div class="chip-icon">
-                <ion-icon [name]="getIconoEstado(categoria.estado || '')"></ion-icon>
+                <!-- Usar icono explícito de la categoría si existe, sino fallback a la función getIconoEstado -->
+                <ion-icon [name]="categoria.icono || getIconoEstado(categoria.estado || '')"></ion-icon>
               </div>
               <div class="chip-content">
                 <span class="chip-label">{{ categoria.nombre }}</span>
@@ -380,20 +381,21 @@
                   <ion-icon name="flag-outline" class="mr-1"></ion-icon>
                   Estados (selección múltiple)
                 </label>
-                <div class="multi-select-chips">
-        <label *ngFor="let categoria of categoriasResumen" 
-          class="multi-select-chip">
-          <input type="checkbox" 
-            [value]="categoria.estado"
-            [(ngModel)]="categoria.selected"
-            (change)="syncFiltroEstados()"
-            class="chip-checkbox" />
-                    <span class="chip-checkmark">
-                      <ion-icon [name]="getIconoEstado(categoria.estado)" class="mr-1"></ion-icon>
-                      {{ categoria.nombre }}
-                    </span>
-                  </label>
-                </div>
+                      <div class="multi-select-chips">
+                        <label *ngFor="let categoria of categoriasResumen" 
+                          class="multi-select-chip">
+                          <input type="checkbox" 
+                            [value]="categoria.estado"
+                            [(ngModel)]="categoria.selected"
+                            (change)="syncFiltroEstados()"
+                            class="chip-checkbox" />
+                            <span class="chip-checkmark">
+                              <!-- Igual que en los chips rápidos: priorizar icono declarado en la categoría -->
+                              <ion-icon [name]="categoria.icono || getIconoEstado(categoria.estado)" class="mr-1"></ion-icon>
+                              {{ categoria.nombre }}
+                            </span>
+                        </label>
+                      </div>
               </div>
             </div>
 

@@ -416,11 +416,12 @@ export class InvoicesPage implements OnInit {
   }
 
   categoriasResumen = [
-    { nombre: 'Pendientes', estado: 'Pendiente', color: 'warning', selected: false },
-    { nombre: 'Por Vencer', estado: 'Por Vencer', color: 'medium', selected: false },
-    { nombre: 'Acuse Recibo', estado: 'Acuse Recibo', color: 'success', selected: false },
-    { nombre: 'Reclamado', estado: 'Reclamado', color: 'warning', selected: false },
-    { nombre: 'Cedidas', estado: 'Cedida', color: 'dark', selected: false },
+    { nombre: 'Pendientes', estado: 'Pendiente', color: 'warning', selected: false, icono: 'time-outline' },
+    { nombre: 'Por Vencer', estado: 'Por Vencer', color: 'medium', selected: false, icono: 'warning-outline' },
+    { nombre: 'Acuse Recibo', estado: 'Acuse Recibo', color: 'success', selected: false, icono: 'checkmark-circle-outline' },
+    { nombre: 'Reclamado', estado: 'Reclamado', color: 'warning', selected: false, icono: 'flag-outline' },
+    // Se añade icono explícito para Cedidas para asegurar que siempre se muestre
+    { nombre: 'Cedidas', estado: 'Cedida', color: 'dark', selected: false, icono: 'people-outline' },
   ];
 
   categoriaSeleccionada: string | null = null;
