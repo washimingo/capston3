@@ -208,283 +208,271 @@
         </div>
       </div>
 
-      <!-- ====== FILTROS Y BÚSQUEDA OPTIMIZADOS ====== -->
-      <div class="filters-container modern-filters-card mb-4 lg:mb-6">
-        <!-- Header de filtros -->
-        <div class="filters-header">
-          <div class="filters-title-section">
-            <h3 class="filters-title">
-              <ion-icon name="funnel-outline" class="title-icon"></ion-icon>
-              Filtros y Búsqueda
-            </h3>
-            <div class="filters-stats">
-              <span class="results-count">{{ getFacturasFiltradas().length }}</span>
-              <span class="results-label">resultados</span>
+      <!-- ====== TABLA DE FACTURAS OPTIMIZADA ====== -->
+      <div class="invoice-table-container bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+        <!-- Header compacto con filtros integrados -->
+        <div class="filters-container modern-filters-card">
+          <!-- Header de filtros -->
+          <div class="filters-header">
+            <div class="filters-title-section">
+              <h3 class="filters-title">
+                <ion-icon name="list-outline" class="title-icon"></ion-icon>
+                Lista de Facturas
+              </h3>
+              <div class="filters-stats">
+                <span class="results-count">{{ getFacturasFiltradas().length }}</span>
+                <span class="results-label">facturas</span>
+              </div>
             </div>
-          </div>
-          <button *ngIf="categoriaSeleccionada || filtroBusqueda || filtroFechaFin" 
-                  (click)="limpiarTodosFiltros()"
-                  class="clear-all-btn">
-            <ion-icon name="refresh-outline" class="mr-1"></ion-icon>
-            Limpiar Todo
-          </button>
-        </div>
-
-        <!-- Filtros rápidos por estado -->
-        <div class="quick-filters-section">
-          <div class="quick-filters-label">
-            <ion-icon name="speedometer-outline" class="mr-1"></ion-icon>
-            Filtros Rápidos
-          </div>
-          <div class="quick-filters-grid">
-            <button *ngFor="let categoria of categoriasResumen"
-                    class="quick-filter-chip"
-                    [class.active]="categoriaSeleccionada === categoria.estado"
-                    [attr.data-status]="normalizarEstado(categoria.estado)"
-                    (click)="seleccionarCategoria(categoria.estado)">
-              <div class="chip-icon">
-                <!-- Usar icono explícito de la categoría si existe, sino fallback a la función getIconoEstado -->
-                <ion-icon [name]="categoria.icono || getIconoEstado(categoria.estado || '')"></ion-icon>
-              </div>
-              <div class="chip-content">
-                <span class="chip-label">{{ categoria.nombre }}</span>
-                <span class="chip-count">{{ getResumenCount(categoria.estado) }}</span>
-              </div>
+            <button *ngIf="categoriaSeleccionada || filtroBusqueda || filtroFechaFin" 
+                    (click)="limpiarTodosFiltros()"
+                    class="clear-all-btn">
+              <ion-icon name="refresh-outline" class="mr-1"></ion-icon>
+              Limpiar Todo
             </button>
           </div>
-        </div>
 
-        <!-- Búsqueda avanzada -->
-        <div class="advanced-search-section">
-          <div class="search-row">
-            <!-- Campo de búsqueda principal -->
-            <div class="search-field-container">
-              <div class="search-input-wrapper">
-                <div class="search-icon">
-                  <ion-icon name="search-outline"></ion-icon>
+          <!-- Filtros rápidos por estado -->
+          <div class="quick-filters-section">
+            <div class="quick-filters-grid">
+              <button *ngFor="let categoria of categoriasResumen"
+                      class="quick-filter-chip"
+                      [class.active]="categoriaSeleccionada === categoria.estado"
+                      [attr.data-status]="normalizarEstado(categoria.estado)"
+                      (click)="seleccionarCategoria(categoria.estado)">
+                <div class="chip-icon">
+                  <ion-icon [name]="categoria.icono || getIconoEstado(categoria.estado || '')"></ion-icon>
                 </div>
-                <input [(ngModel)]="filtroBusqueda" 
-                       (ngModelChange)="onBuscarFactura()"
-                       placeholder="Buscar por folio, RUT emisor, proveedor..."
-                       class="search-input"
-                       autocomplete="off" />
-                <div class="search-actions">
-                  <div *ngIf="buscandoFacturas" class="search-spinner">
-                    <ion-spinner name="dots"></ion-spinner>
+                <div class="chip-content">
+                  <span class="chip-label">{{ categoria.nombre }}</span>
+                  <span class="chip-count">{{ getResumenCount(categoria.estado) }}</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Búsqueda avanzada -->
+          <div class="advanced-search-section">
+            <div class="search-row">
+              <!-- Campo de búsqueda principal -->
+              <div class="search-field-container">
+                <div class="search-input-wrapper">
+                  <div class="search-icon">
+                    <ion-icon name="search-outline"></ion-icon>
                   </div>
-                  <button *ngIf="filtroBusqueda && !buscandoFacturas" 
-                          (click)="filtroBusqueda=''; onBuscarFactura();"
-                          class="clear-search-btn">
-                    <ion-icon name="close-circle"></ion-icon>
+                  <input [(ngModel)]="filtroBusqueda" 
+                         (ngModelChange)="onBuscarFactura()"
+                         placeholder="Buscar por folio, RUT emisor, proveedor..."
+                         class="search-input"
+                         autocomplete="off" />
+                  <div class="search-actions">
+                    <div *ngIf="buscandoFacturas" class="search-spinner">
+                      <ion-spinner name="dots"></ion-spinner>
+                    </div>
+                    <button *ngIf="filtroBusqueda && !buscandoFacturas" 
+                            (click)="filtroBusqueda=''; onBuscarFactura();"
+                            class="clear-search-btn">
+                      <ion-icon name="close-circle"></ion-icon>
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Sugerencias mejoradas -->
+                <div *ngIf="sugerenciasBusqueda.length > 0 && filtroBusqueda && !buscandoFacturas"
+                     class="search-suggestions">
+                  <div class="suggestions-header">
+                    <ion-icon name="bulb-outline" class="mr-1"></ion-icon>
+                    Sugerencias
+                  </div>
+                  <button *ngFor="let sugerencia of sugerenciasBusqueda; let i = index"
+                          (click)="seleccionarSugerencia(sugerencia)"
+                          class="suggestion-item"
+                          [class.highlighted]="i === 0">
+                    <ion-icon name="search-outline" class="suggestion-icon"></ion-icon>
+                    <span class="suggestion-text">{{ sugerencia }}</span>
+                    <ion-icon name="arrow-forward-outline" class="suggestion-arrow"></ion-icon>
                   </button>
                 </div>
               </div>
-              
-              <!-- Sugerencias mejoradas -->
-              <div *ngIf="sugerenciasBusqueda.length > 0 && filtroBusqueda && !buscandoFacturas"
-                   class="search-suggestions">
-                <div class="suggestions-header">
-                  <ion-icon name="bulb-outline" class="mr-1"></ion-icon>
-                  Sugerencias
+
+              <!-- Selector de campo de búsqueda -->
+              <div class="search-scope-container">
+                <label class="field-label">Buscar en</label>
+                <select [(ngModel)]="campoBusqueda" 
+                        class="search-scope-select">
+                  <option value="todos">Todos los campos</option>
+                  <option value="folio">Solo Folio</option>
+                  <option value="rut">Solo RUT Emisor</option>
+                  <option value="proveedor">Solo Proveedor</option>
+                  <option value="responsable">Solo Responsable</option>
+                </select>
+              </div>
+
+              <!-- Filtro de fecha de vencimiento -->
+              <div class="date-filter-container">
+                <label class="field-label">
+                  <ion-icon name="calendar-outline" class="mr-1"></ion-icon>
+                  Vencen el día
+                </label>
+                <input type="date" 
+                       [(ngModel)]="filtroFechaFin" 
+                       class="date-input" />
+              </div>
+            </div>
+
+            <!-- Filtros avanzados expandibles -->
+            <div class="advanced-filters-toggle">
+              <button (click)="mostrarFiltrosAvanzados = !mostrarFiltrosAvanzados"
+                      class="toggle-advanced-btn">
+                <ion-icon name="options-outline" class="mr-2"></ion-icon>
+                Filtros Avanzados
+                <ion-icon [name]="mostrarFiltrosAvanzados ? 'chevron-up-outline' : 'chevron-down-outline'" 
+                          class="ml-2 toggle-icon"></ion-icon>
+              </button>
+            </div>
+
+            <!-- Panel de filtros avanzados -->
+            <div *ngIf="mostrarFiltrosAvanzados" class="advanced-filters-panel">
+              <div class="advanced-filters-grid">
+                <!-- Rango de fechas -->
+                <div class="filter-group">
+                  <label class="filter-group-label">
+                    <ion-icon name="calendar-number-outline" class="mr-1"></ion-icon>
+                    Rango de Fechas de Recepción
+                  </label>
+                  <div class="date-range-inputs">
+                    <input type="date" 
+                           [(ngModel)]="filtroFechaInicio" 
+                           placeholder="Desde"
+                           class="date-range-input" />
+                    <span class="date-range-separator">hasta</span>
+                    <input type="date" 
+                           [(ngModel)]="filtroFechaFin" 
+                           placeholder="Hasta"
+                           class="date-range-input" />
+                  </div>
                 </div>
-                <button *ngFor="let sugerencia of sugerenciasBusqueda; let i = index"
-                        (click)="seleccionarSugerencia(sugerencia)"
-                        class="suggestion-item"
-                        [class.highlighted]="i === 0">
-                  <ion-icon name="search-outline" class="suggestion-icon"></ion-icon>
-                  <span class="suggestion-text">{{ sugerencia }}</span>
-                  <ion-icon name="arrow-forward-outline" class="suggestion-arrow"></ion-icon>
+
+                <!-- Rango de montos -->
+                <div class="filter-group">
+                  <label class="filter-group-label">
+                    <ion-icon name="cash-outline" class="mr-1"></ion-icon>
+                    Rango de Montos
+                  </label>
+                  <div class="amount-range-inputs">
+                    <input type="number" 
+                           [(ngModel)]="filtroMontoMin" 
+                           placeholder="Monto mínimo"
+                           class="amount-input" />
+                    <span class="amount-separator">a</span>
+                    <input type="number" 
+                           [(ngModel)]="filtroMontoMax" 
+                           placeholder="Monto máximo"
+                           class="amount-input" />
+                  </div>
+                </div>
+
+                <!-- Estados múltiples -->
+                <div class="filter-group">
+                  <label class="filter-group-label">
+                    <ion-icon name="flag-outline" class="mr-1"></ion-icon>
+                    Estados (selección múltiple)
+                  </label>
+                  <div class="multi-select-chips">
+                    <label *ngFor="let categoria of categoriasResumen" 
+                           class="multi-select-chip">
+                      <input type="checkbox" 
+                             [value]="categoria.estado"
+                             [(ngModel)]="categoria.selected"
+                             (change)="syncFiltroEstados()"
+                             class="chip-checkbox" />
+                      <span class="chip-checkmark">
+                        <ion-icon [name]="categoria.icono || getIconoEstado(categoria.estado)" class="mr-1"></ion-icon>
+                        {{ categoria.nombre }}
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Acciones de filtros avanzados -->
+              <div class="advanced-filters-actions">
+                <button (click)="aplicarFiltrosAvanzados()" 
+                        class="apply-filters-btn">
+                  <ion-icon name="checkmark-outline" class="mr-1"></ion-icon>
+                  Aplicar Filtros
+                </button>
+                <button (click)="limpiarFiltrosAvanzados()" 
+                        class="clear-filters-btn">
+                  <ion-icon name="close-outline" class="mr-1"></ion-icon>
+                  Limpiar
                 </button>
               </div>
             </div>
-
-            <!-- Selector de campo de búsqueda -->
-            <div class="search-scope-container">
-              <label class="field-label">Buscar en</label>
-              <select [(ngModel)]="campoBusqueda" 
-                      class="search-scope-select">
-                <option value="todos">Todos los campos</option>
-                <option value="folio">Solo Folio</option>
-                <option value="rut">Solo RUT Emisor</option>
-                <option value="proveedor">Solo Proveedor</option>
-                <option value="responsable">Solo Responsable</option>
-              </select>
-            </div>
-
-            <!-- Filtro de fecha de vencimiento -->
-            <div class="date-filter-container">
-              <label class="field-label">
-                <ion-icon name="calendar-outline" class="mr-1"></ion-icon>
-                Vencen el día
-              </label>
-              <input type="date" 
-                     [(ngModel)]="filtroFechaFin" 
-                     class="date-input" />
-            </div>
           </div>
 
-          <!-- Filtros avanzados expandibles -->
-          <div class="advanced-filters-toggle">
-            <button (click)="mostrarFiltrosAvanzados = !mostrarFiltrosAvanzados"
-                    class="toggle-advanced-btn">
-              <ion-icon name="options-outline" class="mr-2"></ion-icon>
-              Filtros Avanzados
-              <ion-icon [name]="mostrarFiltrosAvanzados ? 'chevron-up-outline' : 'chevron-down-outline'" 
-                        class="ml-2 toggle-icon"></ion-icon>
-            </button>
-          </div>
-
-          <!-- Panel de filtros avanzados -->
-          <div *ngIf="mostrarFiltrosAvanzados" class="advanced-filters-panel">
-            <div class="advanced-filters-grid">
-              <!-- Rango de fechas -->
-              <div class="filter-group">
-                <label class="filter-group-label">
-                  <ion-icon name="calendar-number-outline" class="mr-1"></ion-icon>
-                  Rango de Fechas de Recepción
-                </label>
-                <div class="date-range-inputs">
-                  <input type="date" 
-                         [(ngModel)]="filtroFechaInicio" 
-                         placeholder="Desde"
-                         class="date-range-input" />
-                  <span class="date-range-separator">hasta</span>
-                  <input type="date" 
-                         [(ngModel)]="filtroFechaFin" 
-                         placeholder="Hasta"
-                         class="date-range-input" />
-                </div>
-              </div>
-
-              <!-- Rango de montos -->
-              <div class="filter-group">
-                <label class="filter-group-label">
-                  <ion-icon name="cash-outline" class="mr-1"></ion-icon>
-                  Rango de Montos
-                </label>
-                <div class="amount-range-inputs">
-                  <input type="number" 
-                         [(ngModel)]="filtroMontoMin" 
-                         placeholder="Monto mínimo"
-                         class="amount-input" />
-                  <span class="amount-separator">a</span>
-                  <input type="number" 
-                         [(ngModel)]="filtroMontoMax" 
-                         placeholder="Monto máximo"
-                         class="amount-input" />
-                </div>
-              </div>
-
-              <!-- Estados múltiples -->
-              <div class="filter-group">
-                <label class="filter-group-label">
-                  <ion-icon name="flag-outline" class="mr-1"></ion-icon>
-                  Estados (selección múltiple)
-                </label>
-                      <div class="multi-select-chips">
-                        <label *ngFor="let categoria of categoriasResumen" 
-                          class="multi-select-chip">
-                          <input type="checkbox" 
-                            [value]="categoria.estado"
-                            [(ngModel)]="categoria.selected"
-                            (change)="syncFiltroEstados()"
-                            class="chip-checkbox" />
-                            <span class="chip-checkmark">
-                              <!-- Igual que en los chips rápidos: priorizar icono declarado en la categoría -->
-                              <ion-icon [name]="categoria.icono || getIconoEstado(categoria.estado)" class="mr-1"></ion-icon>
-                              {{ categoria.nombre }}
-                            </span>
-                        </label>
-                      </div>
-              </div>
+          <!-- Filtros activos -->
+          <div *ngIf="tienesFiltrosActivos()" class="active-filters-section">
+            <div class="active-filters-label">
+              <ion-icon name="funnel" class="mr-1"></ion-icon>
+              Filtros Activos
             </div>
-
-            <!-- Acciones de filtros avanzados -->
-            <div class="advanced-filters-actions">
-              <button (click)="aplicarFiltrosAvanzados()" 
-                      class="apply-filters-btn">
-                <ion-icon name="checkmark-outline" class="mr-1"></ion-icon>
-                Aplicar Filtros
-              </button>
-              <button (click)="limpiarFiltrosAvanzados()" 
-                      class="clear-filters-btn">
-                <ion-icon name="close-outline" class="mr-1"></ion-icon>
-                Limpiar
-              </button>
+            <div class="active-filters-list">
+              <div *ngIf="categoriaSeleccionada" class="active-filter-tag">
+                <span>Estado: {{ categoriaSeleccionada }}</span>
+                <button (click)="categoriaSeleccionada = null" class="remove-filter">
+                  <ion-icon name="close"></ion-icon>
+                </button>
+              </div>
+              <div *ngIf="filtroBusqueda" class="active-filter-tag">
+                <span>Búsqueda: "{{ filtroBusqueda }}"</span>
+                <button (click)="filtroBusqueda = ''; onBuscarFactura()" class="remove-filter">
+                  <ion-icon name="close"></ion-icon>
+                </button>
+              </div>
+              <div *ngIf="filtroFechaInicio" class="active-filter-tag">
+                <span>Fecha desde: {{ filtroFechaInicio }}</span>
+                <button (click)="filtroFechaInicio = ''" class="remove-filter">
+                  <ion-icon name="close"></ion-icon>
+                </button>
+              </div>
+              <div *ngIf="filtroFechaFin" class="active-filter-tag">
+                <span>Fecha hasta: {{ filtroFechaFin }}</span>
+                <button (click)="filtroFechaFin = ''" class="remove-filter">
+                  <ion-icon name="close"></ion-icon>
+                </button>
+              </div>
+              <div *ngIf="filtroMontoMin !== null" class="active-filter-tag">
+                <span>Monto mín: {{ filtroMontoMin | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+                <button (click)="filtroMontoMin = null" class="remove-filter">
+                  <ion-icon name="close"></ion-icon>
+                </button>
+              </div>
+              <div *ngIf="filtroMontoMax !== null" class="active-filter-tag">
+                <span>Monto máx: {{ filtroMontoMax | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+                <button (click)="filtroMontoMax = null" class="remove-filter">
+                  <ion-icon name="close"></ion-icon>
+                </button>
+              </div>
+              <div *ngFor="let estado of filtroEstados" class="active-filter-tag">
+                <span>Estado múltiple: {{ estado }}</span>
+                <button (click)="removerEstadoMultiple(estado)" class="remove-filter">
+                  <ion-icon name="close"></ion-icon>
+                </button>
+              </div>
+              <div *ngIf="mostrarPorVencer" class="active-filter-tag">
+                <span>Mostrando: Por Vencer</span>
+                <button (click)="mostrarPorVencer = false" class="remove-filter">
+                  <ion-icon name="close"></ion-icon>
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Filtros activos -->
-        <div *ngIf="tienesFiltrosActivos()" class="active-filters-section">
-          <div class="active-filters-label">
-            <ion-icon name="funnel" class="mr-1"></ion-icon>
-            Filtros Activos
-          </div>
-          <div class="active-filters-list">
-            <div *ngIf="categoriaSeleccionada" class="active-filter-tag">
-              <span>Estado: {{ categoriaSeleccionada }}</span>
-              <button (click)="categoriaSeleccionada = null" class="remove-filter">
-                <ion-icon name="close"></ion-icon>
-              </button>
-            </div>
-            <div *ngIf="filtroBusqueda" class="active-filter-tag">
-              <span>Búsqueda: "{{ filtroBusqueda }}"</span>
-              <button (click)="filtroBusqueda = ''; onBuscarFactura()" class="remove-filter">
-                <ion-icon name="close"></ion-icon>
-              </button>
-            </div>
-            <div *ngIf="filtroFechaFin" class="active-filter-tag">
-              <span>Vencimiento: {{ filtroFechaFin }}</span>
-              <button (click)="filtroFechaFin = ''" class="remove-filter">
-                <ion-icon name="close"></ion-icon>
-              </button>
-            </div>
-            <div *ngIf="mostrarPorVencer" class="active-filter-tag">
-              <span>Mostrando: Por Vencer</span>
-              <button (click)="mostrarPorVencer = false" class="remove-filter">
-                <ion-icon name="close"></ion-icon>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ====== TABLA DE FACTURAS OPTIMIZADA ====== -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div class="p-4 lg:p-6">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
-            <h3 class="text-base lg:text-lg font-semibold text-gray-900">
-              Lista de Facturas
-              <span class="ml-2 text-sm font-normal text-gray-500">
-                ({{ getFacturasFiltradas().length }} encontradas)
-              </span>
-            </h3>
-          </div>
-          
-          <!-- Tabla mejorada para escritorio - Compacta -->
-          <div class="invoice-table-container bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-            <!-- Header de la tabla con stats -->
-            <div class="table-header px-4 lg:px-6 py-3 lg:py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                <div class="flex items-center space-x-3 lg:space-x-4">
-                  <h3 class="text-base lg:text-lg font-semibold text-gray-900">Lista de Facturas</h3>
-                  <span class="px-2 lg:px-3 py-1 bg-blue-100 text-blue-800 text-xs lg:text-sm font-medium rounded-full">
-                    {{ getFacturasFiltradas().length }} facturas
-                  </span>
-                </div>
-                <div class="flex flex-wrap gap-2 lg:space-x-3">
-                  <span class="text-xs lg:text-sm text-gray-600">
-                    <ion-icon name="time-outline" class="mr-1"></ion-icon>
-                    Última actualización: {{ getCurrentDateTime() }}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Tabla principal -->
-            <div class="table-wrapper overflow-x-auto">
-              <table class="min-w-full modern-table">
+        <!-- Tabla principal -->
+        <div class="table-wrapper overflow-x-auto">
+          <table class="min-w-full modern-table">
                 <thead class="table-head">
                   <tr>
                     <!-- Columnas principales optimizadas -->
@@ -643,7 +631,7 @@
             </div>
             
             <!-- ====== PAGINACIÓN ====== -->
-            <div class="pagination-container flex flex-col sm:flex-row items-center justify-between gap-4 p-4 lg:p-6 border-t border-gray-200 bg-gray-50">
+            <div class="pagination-container flex flex-col sm:flex-row items-center justify-between gap-4 p-4 lg:p-6 border-t border-gray-200 bg-white">
               <!-- Información de paginación -->
               <div class="pagination-info text-sm text-gray-600">
                 <span class="font-medium">
@@ -659,7 +647,7 @@
                   <label class="text-sm text-gray-600">Mostrar:</label>
                   <select [(ngModel)]="elementosPorPagina" 
                           (ngModelChange)="cambiarElementosPorPagina()"
-                          class="border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                          class="bg-white border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="20">20</option>
                     <option value="30">30</option>
                     <option value="50">50</option>
@@ -670,14 +658,14 @@
                 <!-- Botones de navegación -->
                 <button (click)="irAPrimeraPagina()" 
                         [disabled]="paginaActual === 1"
-                        class="pagination-btn text-sm px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
-                  <ion-icon name="chevron-back-outline" class="mr-1"></ion-icon>
+                        class="pagination-btn flex items-center text-sm px-3 py-1.5 rounded-md border-0 bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                  <ion-icon name="chevron-back-outline" class="mr-1.5"></ion-icon>
                   Primera
                 </button>
                 
                 <button (click)="irAPaginaAnterior()" 
                         [disabled]="paginaActual === 1"
-                        class="pagination-btn text-sm px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="pagination-btn flex items-center justify-center text-sm px-2.5 py-1.5 rounded-md border-0 bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
                   <ion-icon name="chevron-back-outline"></ion-icon>
                 </button>
                 
@@ -686,32 +674,28 @@
                   <button *ngFor="let page of getPaginasVisibles()" 
                           (click)="irAPagina(page)"
                           [class.active]="page === paginaActual"
-                          class="page-number-btn w-8 h-8 text-sm rounded-md border border-gray-300 hover:bg-gray-50"
-                          [class.bg-blue-500]="page === paginaActual"
-                          [class.text-white]="page === paginaActual"
-                          [class.border-blue-500]="page === paginaActual">
+                          class="page-number-btn min-w-[2rem] px-2.5 py-1.5 text-sm font-medium rounded-md border-0 bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+                          [class.!bg-blue-500]="page === paginaActual"
+                          [class.!text-white]="page === paginaActual">
                     {{ page }}
                   </button>
                 </div>
                 
                 <button (click)="irAPaginaSiguiente()" 
                         [disabled]="paginaActual >= getTotalPaginas()"
-                        class="pagination-btn text-sm px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="pagination-btn flex items-center justify-center text-sm px-2.5 py-1.5 rounded-md border-0 bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
                   <ion-icon name="chevron-forward-outline"></ion-icon>
                 </button>
                 
                 <button (click)="irAUltimaPagina()" 
                         [disabled]="paginaActual >= getTotalPaginas()"
-                        class="pagination-btn text-sm px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="pagination-btn flex items-center text-sm px-3 py-1.5 rounded-md border-0 bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
                   Última
-                  <ion-icon name="chevron-forward-outline" class="ml-1"></ion-icon>
+                  <ion-icon name="chevron-forward-outline" class="ml-1.5"></ion-icon>
                 </button>
               </div>
             </div>
-          </div>
-        </div>
       </div>
-
     </div>
   </div>
 </ion-content>

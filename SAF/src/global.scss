@@ -87,6 +87,65 @@ ion-spinner {
 }
 
 /* Custom styles for better Tailwind + Ionic integration */
+
+// Forzar scrollbar en modo claro (ignorar el modo oscuro del sistema)
+ion-content {
+  // Forzar esquema de color claro para la scrollbar
+  color-scheme: light !important;
+  
+  .inner-scroll {
+    // Forzar scrollbar visible en modo claro
+    color-scheme: light !important;
+    
+    &::-webkit-scrollbar {
+      width: 15px;
+      background-color: #f5f5f5;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f5f5f5;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+      border: 3px solid #f5f5f5;
+      
+      &:hover {
+        background: #a8a8a8;
+      }
+      
+      &:active {
+        background: #909090;
+      }
+    }
+  }
+}
+
+// Forzar scrollbar clara también en el body/html
+html, body {
+  color-scheme: light !important;
+  
+  &::-webkit-scrollbar {
+    width: 15px;
+    background-color: #f5f5f5;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f5f5f5;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+    border: 3px solid #f5f5f5;
+    
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+}
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;

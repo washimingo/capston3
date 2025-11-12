@@ -187,6 +187,8 @@ export class InvoicesPage implements OnInit {
     this.filtroMontoMin = null;
     this.filtroMontoMax = null;
     this.filtroEstados = [];
+    // Limpiar los checkboxes de estados
+    this.categoriasResumen.forEach(cat => cat.selected = false);
   }
   getGoogleDocsViewerUrl(fileUrl: string | SafeResourceUrl | null): string | null {
     let urlString = '';
@@ -650,6 +652,19 @@ export class InvoicesPage implements OnInit {
     this.paginaActual = 1;
   }
 
+  // Remover un estado individual de los filtros múltiples
+  removerEstadoMultiple(estado: string) {
+    // Remover del array de estados
+    this.filtroEstados = this.filtroEstados.filter(e => e !== estado);
+    // Desmarcar el checkbox correspondiente
+    const categoria = this.categoriasResumen.find(c => c.estado === estado);
+    if (categoria) {
+      categoria.selected = false;
+    }
+    // resetear paginación
+    this.paginaActual = 1;
+  }
+
   getResumenCount(estado: string): number {
     if (estado === 'Por Vencer') {
       const hoy = new Date();
@@ -844,6 +859,8 @@ export class InvoicesPage implements OnInit {
     this.filtroMontoMax = null;
     this.filtroEstados = [];
     this.mostrarPorVencer = false;
+    // Limpiar los checkboxes de estados
+    this.categoriasResumen.forEach(cat => cat.selected = false);
     this.onBuscarFactura();
   }
 
