@@ -98,7 +98,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
     { nombre: 'Pendientes', estado: 'Pendiente', color: 'warning', selected: false },
     { nombre: 'Por Vencer', estado: 'Por Vencer', color: 'medium', selected: false },
     { nombre: 'Acuse Recibo', estado: 'Acuse Recibo', color: 'success', selected: false },
-    { nombre: 'Reclamado', estado: 'Reclamado', color: 'warning', selected: false },
+    { nombre: 'Reclamado', estado: 'Reclamado', color: 'danger', selected: false },
     { nombre: 'Cedidas', estado: 'Cedida', color: 'dark', selected: false },
   ];
 
@@ -351,6 +351,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
         case 'warning': return '#ffc409';
         case 'medium': return '#3dc2ff';
         case 'success': return '#2dd36f';
+        case 'danger': return '#eb445a';
         case 'dark': return '#334155';
         case 'primary': return '#3b82f6';
         default: return '#9CA3AF';
