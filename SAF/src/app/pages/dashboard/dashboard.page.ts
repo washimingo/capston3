@@ -10,7 +10,7 @@ import { HeaderComponent } from 'src/app/components/header/header.component';
 import { Factura } from 'src/app/models/factura.model';
 import { Chart, registerables } from 'chart.js';
 import { Db } from 'src/app/services/Database/db';
-import * as XLSX from 'xlsx';
+import * as ExcelJS from 'exceljs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -879,20 +879,56 @@ export class DashboardPage implements OnInit, AfterViewInit {
     return '';
   }
 
-  exportarExcel() {
+  async exportarExcel() {
     const facturasFiltradas = this.getFacturasFiltradas();
     if (!facturasFiltradas || facturasFiltradas.length === 0) return;
     const fechaHoy = new Date();
     const fechaStr = fechaHoy.toISOString().slice(0, 10);
     const nombreArchivo = `facturas_filtradas_${fechaStr}.xlsx`;
-    const encabezado = [[`Exportado: ${fechaStr} - Archivo: ${nombreArchivo}`], this.csvHeaders];
-    const data = facturasFiltradas.map(f => this.csvHeaders.map(h => this.getValorFactura(f, h)));
-    const ws = XLSX.utils.aoa_to_sheet([]);
-    XLSX.utils.sheet_add_aoa(ws, encabezado, { origin: 'A1' });
-    XLSX.utils.sheet_add_aoa(ws, data, { origin: `A${encabezado.length + 1}` });
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Facturas');
-    XLSX.writeFile(wb, nombreArchivo);
+    
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Facturas');
+    
+    // Agregar título
+    worksheet.addRow([`Exportado: ${fechaStr} - Archivo: ${nombreArchivo}`]);
+    worksheet.addRow([]);
+    
+    // Agregar encabezados
+    worksheet.addRow(this.csvHeaders);
+    
+    // Agregar datos
+    facturasFiltradas.forEach(f => {
+      const row = this.csvHeaders.map(h => this.getValorFactura(f, h));
+      worksheet.addRow(row);
+    });
+    
+    // Estilo para la primera fila (título)
+    worksheet.getRow(1).font = { bold: true };
+    
+    // Estilo para los encabezados
+    worksheet.getRow(3).font = { bold: true };
+    worksheet.getRow(3).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFD3D3D3' }
+    };
+    
+    // Autoajustar columnas
+    worksheet.columns.forEach((column: Partial<ExcelJS.Column>) => {
+      if (column) {
+        column.width = 15;
+      }
+    });
+    
+    // Descargar el archivo
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nombreArchivo;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 
   exportarPDF() {

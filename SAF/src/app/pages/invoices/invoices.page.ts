@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonContent, IonIcon, IonRefresher, IonRefresherContent, IonSpinner, IonBadge, AlertController } from '@ionic/angular/standalone';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Factura } from 'src/app/models/factura.model';
-import * as XLSX from 'xlsx';
+import * as ExcelJS from 'exceljs';
 import { ActivatedRoute } from '@angular/router';
 import { Db } from 'src/app/services/Database/db';
 import { ToastController } from '@ionic/angular';
@@ -709,7 +709,7 @@ export class InvoicesPage implements OnInit {
           base64 = base64.split(',')[1];
         }
         const binary = atob(base64);
-        // Mitigación: tamaño máximo para vista previa (evita ReDoS al parsear)
+        // Mitigación: tamaño máximo para vista previa
         if (binary.length > 5 * 1024 * 1024) {
           this.excelPreviewError = 'El Excel es demasiado grande para la vista previa (máx. 5 MB). Descárguelo para verlo completo.';
           return;
@@ -718,11 +718,27 @@ export class InvoicesPage implements OnInit {
         for (let i = 0; i < binary.length; i++) {
           bytes[i] = binary.charCodeAt(i);
         }
-        // Mitigación: desactivar fórmulas y limitar filas para reducir superficie
-        const workbook = XLSX.read(bytes, { type: 'array', dense: true, cellFormula: false, sheetRows: 1000 });
-        const firstSheet = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[firstSheet];
-        const data: any[][] = XLSX.utils.sheet_to_json(sheet, { header: 1, blankrows: false, defval: '' });
+        
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(bytes.buffer);
+        const firstSheet = workbook.worksheets[0];
+        if (!firstSheet) {
+          this.excelPreviewError = 'El archivo Excel no contiene hojas.';
+          return;
+        }
+        
+        const data: any[][] = [];
+        let rowCount = 0;
+        firstSheet.eachRow((row, rowNumber) => {
+          if (rowCount >= 1000) return; // Limitar a 1000 filas
+          const rowData: any[] = [];
+          row.eachCell({ includeEmpty: true }, (cell) => {
+            rowData.push(cell.value);
+          });
+          data.push(rowData);
+          rowCount++;
+        });
+        
         this.excelPreviewData = data;
       } catch (e) {
         this.excelPreviewError = 'No se pudo mostrar la vista previa del Excel.';
