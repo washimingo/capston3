@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
+
 
 export interface HeaderButton {
   icon: string;
@@ -16,9 +16,8 @@ export interface HeaderButton {
   styleUrls: ['./header.component.scss'],
   standalone: true,
   imports: [
-    IonicModule,
-    CommonModule
-  ]
+    IonicModule
+]
 })
 export class HeaderComponent {
   @Input() title: string = '';

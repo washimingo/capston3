@@ -2,7 +2,7 @@ import { Component, ViewChild, AfterViewInit, inject, HostListener } from '@angu
 import { RouterModule, Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { IonApp, IonRouterOutlet, IonMenu, IonContent, IonItem, IonIcon, IonSplitPane, IonButton, IonMenuToggle } from '@ionic/angular/standalone';
 import { MenuController, AlertController } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
+
 import { filter } from 'rxjs/operators';
 import { IconsComponent } from './components/icons/icons.component';
 import { Firedb } from './services/Firebase/firedb';
@@ -26,9 +26,8 @@ import { LoadingService } from './services/loading/loading.service';
     IonButton,
     IonMenuToggle,
     IconsComponent,
-    CommonModule,
     PageSkeletonComponent
-  ],
+],
 })
 export class AppComponent implements AfterViewInit {
   @ViewChild(IonMenu) menu?: IonMenu;
@@ -113,7 +112,7 @@ export class AppComponent implements AfterViewInit {
     this.menuCtrl.close('main-menu');
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize() {
     this.setMenuType();
   }

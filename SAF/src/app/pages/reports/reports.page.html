@@ -1,25 +1,31 @@
 <!-- Modal de gráfico expandido -->
-<div *ngIf="graficoExpandido" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-  <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-3xl relative">
-    <ion-button fill="clear" color="medium" class="absolute top-2 right-2" (click)="contraerGrafico()">
-      <ion-icon icon="contract-outline"></ion-icon>
-    </ion-button>
-    <div *ngIf="graficoExpandido === 'estado'">
-      <h2 class="text-lg font-bold mb-4">Facturas por Estado</h2>
-      <div class="chart-container" style="height: 400px;">
-        <canvas #barChartCanvas></canvas>
-      </div>
-    </div>
-    <div *ngIf="graficoExpandido === 'dia'">
-      <h2 class="text-lg font-bold mb-4">Tendencia Diaria</h2>
-      <div class="chart-container" style="height: 400px;">
-        <canvas id="barChartPorDia"></canvas>
-      </div>
+@if (graficoExpandido) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+    <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-3xl relative">
+      <ion-button fill="clear" color="medium" class="absolute top-2 right-2" (click)="contraerGrafico()">
+        <ion-icon icon="contract-outline"></ion-icon>
+      </ion-button>
+      @if (graficoExpandido === 'estado') {
+        <div>
+          <h2 class="text-lg font-bold mb-4">Facturas por Estado</h2>
+          <div class="chart-container" style="height: 400px;">
+            <canvas #barChartCanvas></canvas>
+          </div>
+        </div>
+      }
+      @if (graficoExpandido === 'dia') {
+        <div>
+          <h2 class="text-lg font-bold mb-4">Tendencia Diaria</h2>
+          <div class="chart-container" style="height: 400px;">
+            <canvas id="barChartPorDia"></canvas>
+          </div>
+        </div>
+      }
     </div>
   </div>
-</div>
-<app-header 
-  title="Reportes" 
+}
+<app-header
+  title="Reportes"
   [endButtons]="[{icon: 'refresh-outline', action: 'refresh', iconOnly: true}]"
   (buttonClick)="onHeaderButtonClick($event)" titleIcon="bar-chart-outline">
 </app-header>
@@ -27,7 +33,7 @@
 <ion-content>
   <!-- Hero Section -->
   <div class="hero-section text-white py-8 px-6"
-       style="background: linear-gradient(135deg, #19417C 0%, #2563eb 50%, #1e40af 100%);">
+    style="background: linear-gradient(135deg, #19417C 0%, #2563eb 50%, #1e40af 100%);">
     <div class="max-w-7xl mx-auto">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
         <!-- Título y descripción -->
@@ -42,20 +48,20 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Acciones rápidas -->
         <div class="flex flex-wrap gap-3 justify-end">
-          <ion-button 
-            fill="outline" 
-            color="light" 
+          <ion-button
+            fill="outline"
+            color="light"
             class="text-white border-white hover:bg-dark hover:text-indigo-600 transition-all duration-200"
             (click)="exportarExcel()">
             <ion-icon icon="download-outline" slot="start"></ion-icon>
             Excel
           </ion-button>
-          <ion-button 
-            fill="outline" 
-            color="light" 
+          <ion-button
+            fill="outline"
+            color="light"
             class="text-white border-white hover:bg-dark hover:text-indigo-600 transition-all duration-200"
             (click)="exportarPDF()">
             <ion-icon icon="document-outline" slot="start"></ion-icon>
@@ -68,7 +74,7 @@
 
   <!-- Contenido principal -->
   <div class="max-w-7xl mx-auto px-6 py-8">
-    
+
     <!-- Filtros (copiados de Invoices) -->
     <div class="mb-4 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
@@ -89,10 +95,12 @@
 
       <!-- Estados (selección múltiple) -->
       <div class="mt-3 grid grid-cols-2 sm:grid-cols-5 gap-2">
-        <label *ngFor="let categoria of categoriasResumen" class="flex items-center space-x-2">
-          <input type="checkbox" [(ngModel)]="categoria.selected" (change)="syncFiltroEstados()" />
-          <span class="text-xs">{{ categoria.nombre }}</span>
-        </label>
+        @for (categoria of categoriasResumen; track categoria) {
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" [(ngModel)]="categoria.selected" (change)="syncFiltroEstados()" />
+            <span class="text-xs">{{ categoria.nombre }}</span>
+          </label>
+        }
       </div>
     </div>
 
@@ -100,7 +108,7 @@
 
     <!-- Gráficos -->
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
-      
+
       <!-- Gráfico de barras por estado -->
       <ion-card class="chart-card rounded-xl shadow-sm border-0">
         <ion-card-header>
@@ -197,39 +205,40 @@
               </tr>
             </thead>
             <tbody>
-              <tr 
-                *ngFor="let item of resumenEstados" 
-                class="hover:bg-gray-50 transition-colors duration-150">
-                <td class="px-6 py-4">
-                  <div class="flex items-center space-x-3">
-                    <div class="w-3 h-3 rounded-full"
+              @for (item of resumenEstados; track item) {
+                <tr
+                  class="hover:bg-gray-50 transition-colors duration-150">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-3 h-3 rounded-full"
                          [ngClass]="{
                            'bg-yellow-400': item.estado === 'Pendiente',
                            'bg-green-400': item.estado === 'Aceptada',
                            'bg-red-400': item.estado === 'Rechazada',
                            'bg-gray-400': item.estado === 'Vencida'
                          }">
+                      </div>
+                      <span class="font-medium">{{ item.estado }}</span>
                     </div>
-                    <span class="font-medium">{{ item.estado }}</span>
-                  </div>
-                </td>
-                <td class="px-6 py-4 text-center">
-                  <span class="text-lg font-semibold">{{ item.cantidad }}</span>
-                </td>
-                <td class="px-6 py-4 text-center">
-                  <span class="text-sm">
-                    {{ getPercentage(item.cantidad) }}%
-                  </span>
-                </td>
-                <td class="px-6 py-4 text-center">
-                  <ion-button fill="clear" size="small" color="primary">
-                    <ion-icon icon="eye-outline" slot="icon-only"></ion-icon>
-                  </ion-button>
-                  <ion-button fill="clear" size="small" color="medium">
-                    <ion-icon icon="share-outline" slot="icon-only"></ion-icon>
-                  </ion-button>
-                </td>
-              </tr>
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <span class="text-lg font-semibold">{{ item.cantidad }}</span>
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <span class="text-sm">
+                      {{ getPercentage(item.cantidad) }}%
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <ion-button fill="clear" size="small" color="primary">
+                      <ion-icon icon="eye-outline" slot="icon-only"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="clear" size="small" color="medium">
+                      <ion-icon icon="share-outline" slot="icon-only"></ion-icon>
+                    </ion-button>
+                  </td>
+                </tr>
+              }
             </tbody>
           </table>
         </div>

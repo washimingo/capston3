@@ -6,21 +6,25 @@ import * as pdfjsLib from 'pdfjs-dist';
 @Component({
   selector: 'app-pdf',
   template: `
-    <div *ngIf="pdfSrc">
-      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-        <button (click)="prevPage()" [disabled]="pageNum <= 1">Anterior</button>
-        <span>Página {{ pageNum }} / {{ totalPages }}</span>
-        <button (click)="nextPage()" [disabled]="pageNum >= totalPages">Siguiente</button>
-        <button (click)="zoomOut()">-</button>
-        <span>Zoom: {{ (zoom * 100) | number:'1.0-0' }}%</span>
-        <button (click)="zoomIn()">+</button>
+    @if (pdfSrc) {
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+          <button (click)="prevPage()" [disabled]="pageNum <= 1">Anterior</button>
+          <span>Página {{ pageNum }} / {{ totalPages }}</span>
+          <button (click)="nextPage()" [disabled]="pageNum >= totalPages">Siguiente</button>
+          <button (click)="zoomOut()">-</button>
+          <span>Zoom: {{ (zoom * 100) | number:'1.0-0' }}%</span>
+          <button (click)="zoomIn()">+</button>
+        </div>
+        <canvas #pdfCanvas style="border:1px solid #ccc; width:100%; max-width:100%;"></canvas>
       </div>
-      <canvas #pdfCanvas style="border:1px solid #ccc; width:100%; max-width:100%;"></canvas>
-    </div>
-    <div *ngIf="!pdfSrc">
-      <span>No hay PDF para mostrar.</span>
-    </div>
-  `,
+    }
+    @if (!pdfSrc) {
+      <div>
+        <span>No hay PDF para mostrar.</span>
+      </div>
+    }
+    `,
   styles: [':host { display: block; width: 100%; }'],
   standalone: true,
   imports: [CommonModule, DecimalPipe],

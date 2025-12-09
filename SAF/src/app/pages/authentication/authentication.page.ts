@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { 
@@ -25,14 +25,13 @@ import { Firedb } from '../../services/Firebase/firedb';
     IonCard,
     IonCardHeader,
     IonCardTitle,
-    IonCardContent, 
-    IonInput, 
-    IonButton, 
+    IonCardContent,
+    IonInput,
+    IonButton,
     IonSpinner,
     IonText,
-    CommonModule, 
     FormsModule
-  ]
+]
 })
 export class AuthenticationPage {
   private firedb = inject(Firedb);

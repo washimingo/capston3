@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonContent, IonIcon, IonButton, IonInput, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
@@ -17,10 +17,9 @@ import { HeaderComponent } from 'src/app/components/header/header.component';
     IonInput,
     IonSelect,
     IonSelectOption,
-    CommonModule,
     FormsModule,
     HeaderComponent
-  ]
+]
 })
 export class UserPage {
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IonSpinner } from '@ionic/angular/standalone';
 
 @Component({
@@ -8,9 +8,8 @@ import { IonSpinner } from '@ionic/angular/standalone';
   styleUrls: ['./page-skeleton.component.scss'],
   standalone: true,
   imports: [
-    CommonModule,
     IonSpinner
-  ]
+]
 })
 export class PageSkeletonComponent {
 }
