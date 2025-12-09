@@ -668,6 +668,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
               },
               label: function(context) {
                 const value = context.parsed.x;
+                if (value === null) return '';
                 const dataValues = context.dataset.data as number[];
                 const total = dataValues.reduce((a: number, b: number) => a + b, 0);
                 const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
