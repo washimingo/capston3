@@ -6,41 +6,32 @@ import {
   arrowForwardOutline,
   chevronBackOutline,
   chevronForwardOutline,
-  chevronDown,
-  homeOutline,
-  menuOutline,
+  chevronDownOutline,
+  chevronUpOutline,
   closeOutline,
   close,
   closeCircle,
   closeCircleOutline,
-  expandOutline,
   contractOutline,
-  swapVerticalOutline,
+  expandOutline,
+  swapHorizontalOutline,
   
   // Iconos de documentos y archivos
   documentTextOutline,
   documentOutline,
-  documentText,
-  receiptOutline,
   cloudUploadOutline,
-  cloudDownloadOutline,
   downloadOutline,
-  download,
   
   // Iconos de tiempo y fechas
   timeOutline,
-  time,
   calendarOutline,
-  calendar,
   calendarNumberOutline,
-  alarmOutline,
   hourglassOutline,
+  alarmOutline,
   
   // Iconos de estados y acciones
   checkmarkOutline,
   checkmarkCircleOutline,
-  checkmarkCircle,
-  checkmarkDoneOutline,
   alertCircleOutline,
   warningOutline,
   
@@ -48,96 +39,57 @@ import {
   analyticsOutline,
   barChartOutline,
   pieChartOutline,
-  statsChartOutline,
   trendingUpOutline,
-  gridOutline,
+  trophyOutline,
   eyeOutline,
   
   // Iconos de configuración
   settingsOutline,
-  settings,
   cogOutline,
   optionsOutline,
-  constructOutline,
   filterOutline,
-  funnelOutline,
   funnel,
   
   // Iconos de personas y negocio
   peopleOutline,
   personOutline,
-  person,
   personCircleOutline,
   businessOutline,
-  business,
   briefcaseOutline,
   
   // Iconos de comunicación
   mailOutline,
-  mail,
   callOutline,
-  call,
   notificationsOutline,
-  notifications,
   phonePortraitOutline,
   
   // Iconos de acciones generales
   createOutline,
-  create,
-  trashOutline,
-  addCircleOutline,
   listOutline,
   searchOutline,
   refreshOutline,
   saveOutline,
-  printOutline,
-  shareOutline,
   
   // Iconos de información y ayuda
-  helpCircleOutline,
-  helpCircle,
   informationCircleOutline,
+  helpCircleOutline,
   bulbOutline,
-  schoolOutline,
   libraryOutline,
-  bookmarkOutline,
-  
-  // Iconos de seguridad
-  shieldCheckmarkOutline,
-  shieldCheckmark,
-  shieldOutline,
   
   // Iconos especiales
-  flashOutline,
-  sparklesOutline,
-  trophyOutline,
-  cubeOutline,
+  speedometerOutline,
   cashOutline,
   flagOutline,
-  speedometerOutline,
   cardOutline,
-  cameraOutline,
   camera,
+  logOutOutline,
   
   // Iconos de medios
-  playCircleOutline,
   playOutline,
   volumeHighOutline,
   volumeMediumOutline,
   volumeLowOutline,
-  musicalNotesOutline,
-  
-  // Iconos de diseño
-  moonOutline,
-  colorPaletteOutline,
-  languageOutline,
-  starOutline,
-  rocketOutline,
-  
-  // Iconos de acciones de usuario
-  logOut,
-  logOutOutline,
-  codeOutline
+  musicalNotesOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -148,48 +100,39 @@ import {
 })
 export class IconsComponent {
   constructor() {
-    // Registrar todos los iconos del proyecto de una sola vez
+    // Registrar todos los iconos utilizados en el proyecto
     addIcons({
       // Navegación y UI básica
       arrowBackOutline,
       arrowForwardOutline,
       chevronBackOutline,
       chevronForwardOutline,
-      chevronDown,
-      homeOutline,
-      menuOutline,
+      chevronDownOutline,
+      chevronUpOutline,
       closeOutline,
       close,
       closeCircle,
       closeCircleOutline,
-      expandOutline,
       contractOutline,
-      swapVerticalOutline,
+      expandOutline,
+      swapHorizontalOutline,
       
       // Documentos y archivos
       documentTextOutline,
       documentOutline,
-      documentText,
-      receiptOutline,
       cloudUploadOutline,
-      cloudDownloadOutline,
       downloadOutline,
-      download,
       
       // Tiempo y fechas
       timeOutline,
-      time,
       calendarOutline,
-      calendar,
       calendarNumberOutline,
-      alarmOutline,
       hourglassOutline,
+      alarmOutline,
       
       // Estados y acciones
       checkmarkOutline,
       checkmarkCircleOutline,
-      checkmarkCircle,
-      checkmarkDoneOutline,
       alertCircleOutline,
       warningOutline,
       
@@ -197,96 +140,57 @@ export class IconsComponent {
       analyticsOutline,
       barChartOutline,
       pieChartOutline,
-      statsChartOutline,
       trendingUpOutline,
-      gridOutline,
+      trophyOutline,
       eyeOutline,
       
       // Configuración
       settingsOutline,
-      settings,
       cogOutline,
       optionsOutline,
-      constructOutline,
       filterOutline,
-      funnelOutline,
       funnel,
       
       // Personas y negocio
       peopleOutline,
       personOutline,
-      person,
       personCircleOutline,
       businessOutline,
-      business,
       briefcaseOutline,
       
       // Comunicación
       mailOutline,
-      mail,
       callOutline,
-      call,
       notificationsOutline,
-      notifications,
       phonePortraitOutline,
       
       // Acciones generales
       createOutline,
-      create,
-      trashOutline,
-      addCircleOutline,
       listOutline,
       searchOutline,
       refreshOutline,
       saveOutline,
-      printOutline,
-      shareOutline,
       
       // Información y ayuda
-      helpCircleOutline,
-      helpCircle,
       informationCircleOutline,
+      helpCircleOutline,
       bulbOutline,
-      schoolOutline,
       libraryOutline,
-      bookmarkOutline,
-      
-      // Seguridad
-      shieldCheckmarkOutline,
-      shieldCheckmark,
-      shieldOutline,
       
       // Especiales
-      flashOutline,
-      sparklesOutline,
-      trophyOutline,
-      cubeOutline,
+      speedometerOutline,
       cashOutline,
       flagOutline,
-      speedometerOutline,
       cardOutline,
-      cameraOutline,
       camera,
+      logOutOutline,
       
       // Medios
-      playCircleOutline,
       playOutline,
       volumeHighOutline,
       volumeMediumOutline,
       volumeLowOutline,
-      musicalNotesOutline,
-      
-      // Diseño
-      moonOutline,
-      colorPaletteOutline,
-      languageOutline,
-      starOutline,
-      rocketOutline,
-      
-      // Acciones de usuario
-      logOut,
-      logOutOutline,
-      codeOutline
+      musicalNotesOutline
     });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -28,8 +28,14 @@ Chart.register(...registerables);
     IonCardContent, IonButton, IonIcon, HeaderComponent
   ]
 })
-export class DashboardPage implements OnInit, AfterViewInit {
+export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   graficoExpandido: 'estados' | 'mensual' | 'montos' | null = null;
+
+  private readonly router = inject(Router);
+  private dbInstance: Db = new Db();
+  private chartInstances: Chart[] = [];
+  private intervalIds: number[] = [];
+  private isDestroyed = false;
 
   // Navegación a invoices con filtros
   irAInvoicesPorVencerHoy() {
@@ -146,6 +152,22 @@ export class DashboardPage implements OnInit, AfterViewInit {
     this.mostrarPorVencer = false;
     this.categoriasResumen.forEach(c => c.selected = false);
     this.aplicarFiltrosAvanzados();
+  }
+
+  ngOnDestroy(): void {
+    this.isDestroyed = true;
+    
+    // Destruir todas las instancias de charts
+    this.chartInstances.forEach(chart => {
+      if (chart && typeof chart.destroy === 'function') {
+        chart.destroy();
+      }
+    });
+    this.chartInstances = [];
+    
+    // Limpiar intervalos
+    this.intervalIds.forEach(id => clearTimeout(id));
+    this.intervalIds = [];
   }
 
   aplicarFiltrosAvanzados() {
@@ -286,18 +308,35 @@ export class DashboardPage implements OnInit, AfterViewInit {
     });
   }
 
-  dbService = inject(Db);
-  router = inject(Router);
-
   async ngOnInit() {
-    const facturasGuardadas = localStorage.getItem('facturasCSV');
-    if (facturasGuardadas) {
-      this.facturas = JSON.parse(facturasGuardadas);
-      this.archivoCSV = localStorage.getItem('archivoCSV') || '';
-      this.contenidoCSV = localStorage.getItem('contenidoCSV') || '';
-    } else {
-      this.facturas = await this.dbService.getFacturas();
+    if (this.isDestroyed) return;
+    
+    try {
+      await this.loadData();
+      this.calcularEstadisticas();
+    } catch (error) {
+      console.error('Error inicializando dashboard:', error);
     }
+  }
+  
+  private async loadData(): Promise<void> {
+    try {
+      const facturasGuardadas = localStorage.getItem('facturasCSV');
+      if (facturasGuardadas) {
+        this.facturas = JSON.parse(facturasGuardadas);
+        this.archivoCSV = localStorage.getItem('archivoCSV') || '';
+        this.contenidoCSV = localStorage.getItem('contenidoCSV') || '';
+      } else {
+        this.facturas = await this.dbInstance.getFacturas() || [];
+      }
+    } catch (error) {
+      console.error('Error cargando datos:', error);
+      this.facturas = [];
+    }
+  }
+  
+  private calcularEstadisticas(): void {
+    if (this.isDestroyed) return;
     
     this.calcularMontosPorProveedor();
     this.calcularEvolucionMensual();
@@ -305,37 +344,51 @@ export class DashboardPage implements OnInit, AfterViewInit {
     this.calcularResumenPorDia();
   }
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      if (this.proveedores.length > 0 && this.montosPorProveedor.length > 0) {
-        this.generarGraficoTorta();
-        this.generarGraficoEstados();
-        this.generarGraficoMensual();
-        this.generarGraficoMontos();
-      } else {
-        this.cargarDatosYGenerarGrafico();
+  ngAfterViewInit(): void {
+    if (this.isDestroyed) return;
+    
+    const timeoutId = window.setTimeout(() => {
+      if (!this.isDestroyed) {
+        if (this.proveedores.length > 0 && this.montosPorProveedor.length > 0) {
+          this.initializeCharts();
+        } else {
+          this.cargarDatosYGenerarGrafico();
+        }
       }
     }, 500);
+    
+    this.intervalIds.push(timeoutId);
   }
-
-  async cargarDatosYGenerarGrafico() {
-    if (this.facturas.length === 0) {
-      const facturasGuardadas = localStorage.getItem('facturasCSV');
-      if (facturasGuardadas) {
-        this.facturas = JSON.parse(facturasGuardadas);
-      } else {
-        this.facturas = await this.dbService.getFacturas();
-      }
-    }
-    if (this.facturas.length > 0) {
-      this.calcularMontosPorProveedor();
-      this.calcularEvolucionMensual();
-      setTimeout(() => {
+  
+  private initializeCharts(): void {
+    if (this.isDestroyed) return;
+    
+    const timeoutId = window.setTimeout(() => {
+      if (!this.isDestroyed) {
         this.generarGraficoTorta();
         this.generarGraficoEstados();
         this.generarGraficoMensual();
         this.generarGraficoMontos();
-      }, 100);
+      }
+    }, 100);
+    
+    this.intervalIds.push(timeoutId);
+  }
+
+  async cargarDatosYGenerarGrafico(): Promise<void> {
+    if (this.isDestroyed) return;
+    
+    try {
+      if (this.facturas.length === 0) {
+        await this.loadData();
+      }
+      
+      if (!this.isDestroyed && this.facturas.length > 0) {
+        this.calcularEstadisticas();
+        this.initializeCharts();
+      }
+    } catch (error) {
+      console.error('Error cargando datos y generando gráficos:', error);
     }
   }
 
@@ -956,10 +1009,29 @@ export class DashboardPage implements OnInit, AfterViewInit {
   onHeaderButtonClick(action: string): void {
     switch(action) {
       case 'refresh':
-        this.ngOnInit();
+        this.refreshDashboard();
         break;
       default:
-        console.log('Acción de botón no reconocida:', action);
+        // Acción no reconocida - podría implementarse logging en producción
+        break;
+    }
+  }
+  
+  private async refreshDashboard(): Promise<void> {
+    try {
+      // Limpiar datos anteriores
+      this.facturas = [];
+      
+      // Recargar datos
+      await this.loadData();
+      this.calcularEstadisticas();
+      
+      // Regenerar gráficos
+      if (!this.isDestroyed) {
+        this.initializeCharts();
+      }
+    } catch (error) {
+      console.error('Error actualizando dashboard:', error);
     }
   }
 
@@ -976,110 +1048,29 @@ export class DashboardPage implements OnInit, AfterViewInit {
     this.ordenActual = campo;
   }
 
-  exportarProveedores(): void {
-    const proveedores = this.getProveedoresDetallados();
-    const csvContent = [
-      'Proveedor,RUT,Cantidad Facturas,Monto Total',
-      ...proveedores.map(p => `"${p.nombre}","${p.rut}","${p.cantidad}","${p.monto}"`)
-    ].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'proveedores_detalle.csv');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-
-  filtrarProveedores(): void {
-    console.log('Abrir modal de filtros');
-  }
-
-  verDetalleProveedor(proveedor: any): void {
-    console.log('Ver detalle de proveedor:', proveedor);
-  }
-
-  filtrarPorProveedor(proveedor: any): void {
-    console.log('Filtrar por proveedor:', proveedor);
-  }
-
   getFacturasPorVencerHoy(): any[] {
     const hoy = new Date();
-    const hoyStr = hoy.toISOString().slice(0, 10);
     return this.facturas.filter(f => {
-      const fechaRecepcion = (f.fechaRecepcion || f.fecha || '').slice(0, 10);
-      if (!fechaRecepcion) return false;
-      const fechaVencimiento = new Date(fechaRecepcion);
-      fechaVencimiento.setDate(fechaVencimiento.getDate() + 8);
-      return fechaVencimiento.toISOString().slice(0, 10) === hoyStr;
+      if ((f.estado || '').toLowerCase() !== 'pendiente') return false;
+      
+      const fechaEmision = f.fechaRecepcion || f.fecha || '';
+      if (!fechaEmision) return false;
+      
+      const diffMs = hoy.getTime() - new Date(fechaEmision).getTime();
+      const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const diasRestantes = 8 - diffDias;
+      
+      return diasRestantes === 0; // Exactamente hoy
     });
-  }
-
-  getMontoPorVencerHoy(): number {
-    return this.getFacturasPorVencerHoy().reduce((acc, f) => acc + (f['Monto Total'] || f.monto || 0), 0);
-  }
-
-  getRankingProveedoresPorVencerHoy(): { proveedor: string, cantidad: number }[] {
-    const porVencer = this.getFacturasPorVencerHoy();
-    const resumen: { [proveedor: string]: number } = {};
-    porVencer.forEach(f => {
-      const proveedor = f.proveedor || 'Sin proveedor';
-      resumen[proveedor] = (resumen[proveedor] || 0) + 1;
-    });
-    return Object.entries(resumen)
-      .map(([proveedor, cantidad]) => ({ proveedor, cantidad }))
-      .sort((a, b) => b.cantidad - a.cantidad);
-  }
-
-  getAlertaPorVencerHoy(): string {
-    const cantidad = this.getFacturasPorVencerHoy().length;
-    if (cantidad === 0) return 'No tienes facturas por vencer hoy.';
-    if (cantidad === 1) return '¡Tienes 1 factura que vence hoy!';
-    return `¡Tienes ${cantidad} facturas que vencen hoy!`;
-  }
-
-  getFacturasPorVencerManianaNoRevisadas(): any[] {
-    const hoy = new Date();
-    const manana = new Date(hoy);
-    manana.setDate(hoy.getDate() + 1);
-    const mananaStr = manana.toISOString().slice(0, 10);
-    return this.facturas.filter(f => {
-      const fechaRecepcion = (f.fechaRecepcion || f.fecha || '').slice(0, 10);
-      if (!fechaRecepcion) return false;
-      const fechaVencimiento = new Date(fechaRecepcion);
-      fechaVencimiento.setDate(fechaVencimiento.getDate() + 8);
-      const venceManiana = fechaVencimiento.toISOString().slice(0, 10) === mananaStr;
-      const noRevisada = !f.revisada && (f.estado !== 'Revisada');
-      return venceManiana && noRevisada;
-    });
-  }
-
-  getMontoTotalFacturacion(): number {
-    return this.montosPorProveedor.reduce((acc, monto) => acc + monto, 0);
-  }
-
-  getFacturasPorVencerCount(): number {
-    return this.facturas.filter(f => this.esPorVencer(f['Fecha Docto.'] || f.fechaEmision || '')).length;
-  }
-
-  esPorVencer(fechaDocto: string): boolean {
-    if (!fechaDocto) return false;
-    const partes = fechaDocto.split('-');
-    if (partes.length !== 3) return false;
-    const dia = parseInt(partes[0], 10);
-    const mes = parseInt(partes[1], 10) - 1;
-    const anio = parseInt(partes[2], 10);
-    const fechaFactura = new Date(anio, mes, dia);
-    const hoy = new Date();
-    const diferencia = (fechaFactura.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24);
-    return diferencia >= 0 && diferencia <= 7;
   }
 
   getPercentage(cantidad: number): string {
     const total = this.resumenEstados.reduce((sum, item) => sum + item.cantidad, 0);
     return total > 0 ? ((cantidad / total) * 100).toFixed(1) : '0';
+  }
+
+  getMontoTotalFacturacion(): number {
+    return this.montosPorProveedor.reduce((acc, monto) => acc + monto, 0);
   }
 
   getProveedorPorcentaje(monto: number): string {

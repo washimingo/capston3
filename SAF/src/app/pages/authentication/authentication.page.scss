@@ -1,35 +1,42 @@
-// Fondo
-.authentication-bg {
-  --background: #f3f4f6;
+:host {
+  --auth-primary: #3b82f6;
+  --auth-primary-hover: #2563eb;
+  --auth-primary-active: #1d4ed8;
+  --auth-border: #d1d5db;
+  --auth-border-focus: #3b82f6;
+  --auth-background: #f3f4f6;
+  --auth-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --auth-border-radius: 6px;
 }
 
-// Tarjeta de login
+.authentication-bg {
+  --background: var(--auth-background);
+}
+
 .login-card {
   margin: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  border: 1px solid #e5e7eb; /* gray-200 */
-  border-top: 4px solid #2563eb; /* primary blue accent */
+  box-shadow: var(--auth-card-shadow);
+  border-radius: var(--auth-border-radius);
+  border: 1px solid #e5e7eb;
+  border-top: 4px solid var(--auth-primary);
 }
 
-// Inputs
 .custom-input {
-  --border-radius: 6px;
-  --border-color: #d1d5db;
+  --border-radius: var(--auth-border-radius);
+  --border-color: var(--auth-border);
   --border-width: 1px;
   --background: #ffffff;
   
   &:focus-within {
-    --border-color: #3b82f6;
+    --border-color: var(--auth-border-focus);
   }
 }
 
-// Botón de login
 .login-btn {
-  --background: #3b82f6;
-  --background-hover: #2563eb;
-  --background-activated: #1d4ed8;
-  --border-radius: 6px;
+  --background: var(--auth-primary);
+  --background-hover: var(--auth-primary-hover);
+  --background-activated: var(--auth-primary-active);
+  --border-radius: var(--auth-border-radius);
   font-weight: 600;
   text-transform: none;
 }

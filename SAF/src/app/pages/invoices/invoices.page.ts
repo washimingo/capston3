@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonIcon, IonRefresher, IonRefresherContent, IonSpinner, IonBadge, AlertController } from '@ionic/angular/standalone';
@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Db } from 'src/app/services/Database/db';
 import { ToastController } from '@ionic/angular';
 import { HeaderComponent } from 'src/app/components/header/header.component';
+import { EmpresaService } from 'src/app/services/empresa.service';
 
 @Component({
   selector: 'app-invoices',
@@ -26,14 +27,28 @@ import { HeaderComponent } from 'src/app/components/header/header.component';
     HeaderComponent
   ]
 })
-export class InvoicesPage implements OnInit {
+export class InvoicesPage implements OnInit, OnDestroy {
+  
+  private readonly route = inject(ActivatedRoute);
+  private readonly dbService = inject(Db);
+  private readonly sanitizer = inject(DomSanitizer);
+  private readonly toastController = inject(ToastController);
+  private readonly alertController = inject(AlertController);
+  private readonly empresaService = inject(EmpresaService);
+  
+  private isDestroyed = false;
+  private timeoutIds: number[] = [];
+
   // Normaliza el estado para usarlo como data-status en el HTML
   normalizarEstado(estado: string): string {
     return (estado || '').toLowerCase().split(' ').join('-');
   }
+  
   onHeaderButtonClick(action: any): void {
-    // Puedes personalizar la acción aquí si lo necesitas
-    console.log('Acción de botón en header:', action);
+    // Acción personalizable según necesidades
+    if (action === 'refresh') {
+      this.cargarFacturas();
+    }
   }
   // Método público para calcular la fecha de vencimiento
   calcularFechaVencimiento(factura: Factura | null): string | null {
@@ -65,12 +80,6 @@ export class InvoicesPage implements OnInit {
   trackByFolio(index: number, factura: Factura): any {
     return factura.folio || factura.id || index;
   }
-
-  route = inject(ActivatedRoute);
-  dbService = inject(Db);
-  sanitizer = inject(DomSanitizer);
-  toastController = inject(ToastController);
-  alertController = inject(AlertController);
 
   getNombreArchivo(): string {
     if (!this.archivoSeleccionado) return '';
@@ -122,19 +131,25 @@ export class InvoicesPage implements OnInit {
     this.cargarFacturas();
   }
   getValorFactura(factura: any, header: string): any {
-    // Log para depuración
-    if (factura && header) {
-      console.log('Renderizando celda:', { header, factura });
-    }
     if (!factura || !header) return '';
+    
     // Prueba con el header original
-    if (factura[header] !== undefined && factura[header] !== null && factura[header] !== '') return factura[header];
+    if (factura[header] !== undefined && factura[header] !== null && factura[header] !== '') {
+      return factura[header];
+    }
+    
     // Prueba con minúsculas
     const lower = header.toLowerCase();
-    if (factura[lower] !== undefined && factura[lower] !== null && factura[lower] !== '') return factura[lower];
+    if (factura[lower] !== undefined && factura[lower] !== null && factura[lower] !== '') {
+      return factura[lower];
+    }
+    
     // Prueba sin espacios
     const noSpaces = header.replace(/\s+/g, '');
-    if (factura[noSpaces] !== undefined && factura[noSpaces] !== null && factura[noSpaces] !== '') return factura[noSpaces];
+    if (factura[noSpaces] !== undefined && factura[noSpaces] !== null && factura[noSpaces] !== '') {
+      return factura[noSpaces];
+    }
+    
     return '';
   }
   /**
@@ -229,18 +244,15 @@ export class InvoicesPage implements OnInit {
               .replace(/_/g, '');
 
             const csvRealHeaders = lines[0].split(delimiter).map((h: string) => h.replace(/^"|"$/g, '').trim());
-            // Mostrar encabezados reales del CSV en consola
-            console.log('Encabezados reales del CSV:', csvRealHeaders);
+            
             // Crear un mapa entre header normalizado y su índice en el CSV
             const headerMap: { [key: string]: number } = {};
-            // Mostrar el mapeo normalizado en consola
-            console.log('HeaderMap (normalizado):', headerMap);
             csvRealHeaders.forEach((h: string, idx: number) => {
               headerMap[normalize(h)] = idx;
             });
 
             // Mapear los datos a las columnas fijas
-            const facturasCSV = [];
+            const facturasCSV: Factura[] = [];
             for (let i = 1; i < lines.length; i++) {
               let row = lines[i].trim();
               if (!row) continue; // Ignorar filas vacías
@@ -262,12 +274,12 @@ export class InvoicesPage implements OnInit {
                   factura[header] = realIdx !== undefined && values[realIdx] !== undefined ? values[realIdx] : '';
                 });
                 // Asignar el folio correctamente si existe en el CSV
-                factura.folio = factura['Folio'] || factura['Nro.'] || '';
+                factura['folio'] = factura['Folio'] || factura['Nro.'] || '';
                 // Asignar el estado exactamente como viene en el CSV (sin forzar 'Pendiente')
                 // Asignar el estado con el valor de 'Evento Receptor' del CSV
-                factura.estado = factura['Evento Receptor'] || factura['evento receptor'] || factura['estado'] || factura['Estado'] || 'Pendiente';
+                factura['estado'] = factura['Evento Receptor'] || factura['evento receptor'] || factura['estado'] || factura['Estado'] || 'Pendiente';
                 // Mapear fechas para visualización y alertas
-                factura.fechaEmision = factura['Fecha Docto.'] || '';
+                factura['fechaEmision'] = factura['Fecha Docto.'] || '';
                 // Normalizar fecha de recepción al formato ISO yyyy-MM-dd
                 if (factura['Fecha Recep.']) {
                   const partes = factura['Fecha Recep.'].split(/[\/\-]/);
@@ -276,15 +288,15 @@ export class InvoicesPage implements OnInit {
                     const dia = partes[0].padStart(2, '0');
                     const mes = partes[1].padStart(2, '0');
                     const anio = partes[2].length === 2 ? '20' + partes[2] : partes[2];
-                    factura.fechaRecepcion = `${anio}-${mes}-${dia}`;
+                    factura['fechaRecepcion'] = `${anio}-${mes}-${dia}`;
                   } else {
-                    factura.fechaRecepcion = factura['Fecha Recep.'];
+                    factura['fechaRecepcion'] = factura['Fecha Recep.'];
                   }
                 } else {
-                  factura.fechaRecepcion = '';
+                  factura['fechaRecepcion'] = '';
                 }
                 // Guardar también la fecha de vencimiento para alertas
-                factura._porVencer = this.esPorVencer(factura['Fecha Docto.']);
+                factura['_porVencer'] = this.esPorVencer(factura['Fecha Docto.']);
                 // Intentar detectar si existe una columna relacionada con cesión/cedida y marcar el estado
                 try {
                   // normalizar keys del headerMap para buscar coincidencias como 'cedida' o 'cesion'
@@ -292,24 +304,50 @@ export class InvoicesPage implements OnInit {
                   if (cedKeys.length > 0) {
                     const cedVal = values[headerMap[cedKeys[0]]];
                     if (cedVal && /^(si|sí|true|1|cedida|cedido|cesion)$/i.test(String(cedVal).trim())) {
-                      factura.estado = 'Cedida';
+                      factura['estado'] = 'Cedida';
                     } else if (cedVal && String(cedVal).trim() !== '') {
-                      factura.cedida = String(cedVal).trim();
+                      factura['cedida'] = String(cedVal).trim();
                     }
                   }
                 } catch (err) {
                   console.warn('Error detectando columna cedida:', err);
                 }
                 if (i < 6) {
-                  console.log('Factura generada:', factura);
+                  // Log limitado para primeras facturas en desarrollo
                 }
                 facturasCSV.push(factura);
               }
             }
-            this.facturas = facturasCSV;
-            // Guardar facturas y archivo en localStorage
-            localStorage.setItem('facturasCSV', JSON.stringify(this.facturas));
-            localStorage.setItem('archivoCSV', file.name);
+            
+            // Enriquecer facturas con nombres de empresas desde la API
+            this.empresaService.enriquecerFacturasConNombres(facturasCSV).subscribe({
+              next: (facturasEnriquecidas) => {
+                this.facturas = facturasEnriquecidas;
+                // Guardar facturas y archivo en localStorage
+                localStorage.setItem('facturasCSV', JSON.stringify(this.facturas));
+                localStorage.setItem('archivoCSV', file.name);
+                
+                // Calcular estadísticas de enriquecimiento
+                const facturasConNombre = facturasEnriquecidas.filter(f => f.nombreEmpresa && f.nombreEmpresa.trim() !== '').length;
+                const total = facturasEnriquecidas.length;
+                const porcentaje = Math.round((facturasConNombre / total) * 100);
+                
+                // Mostrar mensaje de éxito con estadísticas
+                this.mostrarToast(
+                  `✅ Facturas cargadas: ${facturasConNombre} de ${total} con nombres de empresas (${porcentaje}%)`, 
+                  'success'
+                );
+              },
+              error: (error) => {
+                console.warn('Error al enriquecer facturas con nombres, usando facturas sin nombres:', error);
+                // Si falla la API, usar las facturas sin nombres
+                this.facturas = facturasCSV;
+                localStorage.setItem('facturasCSV', JSON.stringify(this.facturas));
+                localStorage.setItem('archivoCSV', file.name);
+                
+                this.mostrarToast('Facturas cargadas (sin nombres de empresas - API no disponible)', 'warning');
+              }
+            });
           }
         };
         reader.readAsText(file);
@@ -519,19 +557,27 @@ export class InvoicesPage implements OnInit {
       if (this.campoBusqueda === 'folio') {
         facturasFiltradas = facturasFiltradas.filter(f => f.folio && regex.test(f.folio));
       } else if (this.campoBusqueda === 'proveedor') {
-        facturasFiltradas = facturasFiltradas.filter(f => f.proveedor && regex.test(f.proveedor));
+        facturasFiltradas = facturasFiltradas.filter(f => 
+          (f.proveedor && regex.test(f.proveedor)) ||
+          (f['nombreEmpresa'] && regex.test(f['nombreEmpresa'])) ||
+          // Permitir buscar facturas sin nombre de empresa
+          (!f['nombreEmpresa'] && (texto.includes('no encontrado') || texto.includes('bd') || texto.includes('verificar')))
+        );
       } else if (this.campoBusqueda === 'responsable') {
         facturasFiltradas = facturasFiltradas.filter(f => f.responsable && regex.test(f.responsable));
       } else if (this.campoBusqueda === 'rut') {
         // Comparación exacta para RUT
         facturasFiltradas = facturasFiltradas.filter(f => f['RUT Emisor'] && f['RUT Emisor'].toLowerCase() === texto);
       } else {
-        // 'todos': buscar por folio, RUT Emisor, proveedor y responsable
+        // 'todos': buscar por folio, RUT Emisor, proveedor, nombre de empresa, responsable y estado de empresa
         facturasFiltradas = facturasFiltradas.filter(f =>
           (f.folio && regex.test(f.folio)) ||
           (f['RUT Emisor'] && regex.test(f['RUT Emisor'])) ||
           (f.proveedor && regex.test(f.proveedor)) ||
-          (f.responsable && regex.test(f.responsable))
+          (f['nombreEmpresa'] && regex.test(f['nombreEmpresa'])) ||
+          (f.responsable && regex.test(f.responsable)) ||
+          // Permitir buscar facturas sin nombre de empresa con palabras clave
+          (!f['nombreEmpresa'] && (texto.includes('no encontrado') || texto.includes('bd') || texto.includes('verificar')))
         );
       }
     }
@@ -846,16 +892,6 @@ export class InvoicesPage implements OnInit {
       this.facturas = [];
     }
   }
-  async mostrarFacturasGuardadas() {
-    try {
-      const facturas = await this.dbService.getFacturas();
-      console.log('Facturas guardadas en SQLite:', facturas);
-      alert('Revisa la consola para ver las facturas guardadas.');
-    } catch (e) {
-      alert('Error al obtener facturas de la base de datos.');
-    }
-  }
-
   // Getter para facturas filtradas (para el template)
   get facturasFiltradas() {
     return this.getFacturasFiltradas();
@@ -1013,5 +1049,22 @@ export class InvoicesPage implements OnInit {
     }
   }
 
-  // ...existing code...
+  // Método para mostrar mensajes toast
+  async mostrarToast(mensaje: string, color: 'success' | 'warning' | 'danger' = 'success') {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 3000,
+      position: 'bottom',
+      color: color
+    });
+    await toast.present();
+  }
+
+  ngOnDestroy(): void {
+    this.isDestroyed = true;
+    
+    // Limpiar timeouts
+    this.timeoutIds.forEach(id => clearTimeout(id));
+    this.timeoutIds = [];
+  }
 }

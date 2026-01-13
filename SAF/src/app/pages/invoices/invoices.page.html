@@ -70,13 +70,35 @@
           Información Básica
         </h3>
         <div class="info-grid space-y-3">
-          @for (header of csvHeaders; track header) {
+          <!-- Empresa (mostrar con preferencia el nombre enriquecido) -->
+          @if (facturaSeleccionada['nombreEmpresa'] || getValorFactura(facturaSeleccionada, 'RUT Emisor')) {
             <div class="info-item flex justify-between py-3 border-b border-gray-100 hover:bg-gray-50 px-3 rounded-lg transition-colors">
-              <span class="info-label font-medium text-gray-700 capitalize">{{ header }}:</span>
-              <span class="info-value text-gray-900 font-medium text-right max-w-[60%] break-words">
-                {{ getValorFactura(facturaSeleccionada, header) || 'N/A' }}
-              </span>
+              <span class="info-label font-medium text-gray-700 capitalize">Empresa:</span>
+              <div class="info-value text-gray-900 font-medium text-right max-w-[60%] break-words">
+                @if (facturaSeleccionada['nombreEmpresa']) {
+                  <div class="flex flex-col items-end">
+                    <span class="font-semibold">{{ facturaSeleccionada['nombreEmpresa'] }}</span>
+                    <span class="text-sm text-gray-500 font-mono">{{ getValorFactura(facturaSeleccionada, 'RUT Emisor') }}</span>
+                  </div>
+                } @else {
+                  <div class="flex flex-col items-end">
+                    <span class="text-sm text-amber-600 italic">RUT no encontrado en la base de datos</span>
+                    <span class="text-xs text-gray-500">Por favor verificar nombre de la empresa</span>
+                    <span class="text-sm text-gray-500 font-mono mt-1">{{ getValorFactura(facturaSeleccionada, 'RUT Emisor') || 'N/A' }}</span>
+                  </div>
+                }
+              </div>
             </div>
+          }
+          @for (header of csvHeaders; track header) {
+            @if (header !== 'RUT Emisor') {
+              <div class="info-item flex justify-between py-3 border-b border-gray-100 hover:bg-gray-50 px-3 rounded-lg transition-colors">
+                <span class="info-label font-medium text-gray-700 capitalize">{{ header }}:</span>
+                <span class="info-value text-gray-900 font-medium text-right max-w-[60%] break-words">
+                  {{ getValorFactura(facturaSeleccionada, header) || 'N/A' }}
+                </span>
+              </div>
+            }
           }
         </div>
       </div>
@@ -276,7 +298,7 @@
                     </div>
                     <input [(ngModel)]="filtroBusqueda"
                       (ngModelChange)="onBuscarFactura()"
-                      placeholder="Buscar por folio, RUT emisor, proveedor..."
+                      placeholder="Buscar por folio, empresa, RUT emisor, proveedor..."
                       class="search-input"
                       autocomplete="off" />
                       <div class="search-actions">
@@ -325,7 +347,7 @@
                       <option value="todos">Todos los campos</option>
                       <option value="folio">Solo Folio</option>
                       <option value="rut">Solo RUT Emisor</option>
-                      <option value="proveedor">Solo Proveedor</option>
+                      <option value="proveedor">Solo Empresa/Proveedor</option>
                       <option value="responsable">Solo Responsable</option>
                     </select>
                   </div>
@@ -526,7 +548,7 @@
                                 <th class="table-th">
                                   <div class="th-content">
                                     <ion-icon name="business-outline" class="mr-1"></ion-icon>
-                                    RUT Emisor
+                                    Empresa
                                   </div>
                                 </th>
                                 <th class="table-th">
@@ -587,11 +609,25 @@
                                       </span>
                                     </div>
                                   </td>
-                                  <!-- RUT Emisor -->
+                                  <!-- RUT Emisor / Empresa -->
                                   <td class="table-td">
-                                    <span class="text-gray-700 font-mono text-sm">
-                                      {{ getValorFactura(factura, 'RUT Emisor') || 'N/A' }}
-                                    </span>
+                                    <div class="flex flex-col">
+                                      @if (factura['nombreEmpresa']) {
+                                        <span class="text-gray-900 font-medium text-sm">
+                                          {{ factura['nombreEmpresa'] }}
+                                        </span>
+                                        <span class="text-gray-500 font-mono text-xs">
+                                          {{ getValorFactura(factura, 'RUT Emisor') }}
+                                        </span>
+                                      } @else {
+                                        <span class="text-amber-600 text-xs italic">
+                                          RUT no encontrado en BD
+                                        </span>
+                                        <span class="text-gray-500 font-mono text-xs">
+                                          {{ getValorFactura(factura, 'RUT Emisor') || 'N/A' }}
+                                        </span>
+                                      }
+                                    </div>
                                   </td>
                                   <!-- Fecha Documento -->
                                   <td class="table-td">

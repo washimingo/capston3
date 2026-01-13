@@ -22,13 +22,13 @@
   }
 }
 
-// ====== FILTROS RÁPIDOS COLORES PERSONALIZADOS ======
+// Filtros rápidos - colores optimizados
 .quick-filter-chip {
   background: #f1f5f9;
   border: 2px solid #e2e8f0;
   color: #334155;
   padding: 0.65rem !important;
-  // transición eliminada
+  
   .chip-icon {
     width: 2rem;
     height: 2rem;
@@ -359,7 +359,7 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
   }
 }
 
-// ====== ESTADO VACÍO ======
+// Estado vacío optimizado
 .empty-state {
   padding: 4rem 2rem;
   text-align: center;
@@ -374,24 +374,22 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
     
     ion-icon {
       font-size: 4rem;
-      color: $gray-300;
+      color: #d1d5db;
     }
   }
   
   .empty-state-title {
     font-size: 1.125rem;
     font-weight: 600;
-    color: $gray-900;
+    color: #111827;
     margin-bottom: 0.5rem;
   }
   
   .empty-state-description {
-    color: $gray-500;
+    color: #6b7280;
     font-size: 0.875rem;
   }
 }
-
-// (animaciones eliminadas)
 
 // ====== RESPONSIVIDAD ======
 @media (max-width: 1024px) {

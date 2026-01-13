@@ -3,11 +3,11 @@
   --background: #f8fafc;
 }
 
-// Hero section enhancements
+// Hero section simplificado
 .hero-section {
   position: relative;
   
-  // Gradient overlay
+  // Gradient overlay ligero
   &::before {
     content: '';
     position: absolute;
@@ -15,21 +15,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
-    pointer-events: none;
-  }
-  
-  // Optimized animated background pattern - removed for performance
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-      radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
     pointer-events: none;
   }
 }
@@ -119,8 +105,6 @@
     }
     
     tbody tr {
-      // transición eliminada
-      
       &:hover {
         background-color: rgba(59, 130, 246, 0.05);
         transform: scale(1.01);
@@ -142,12 +126,6 @@
 .alert-card {
   background: linear-gradient(135deg, #fef2f2 0%, #fff7ed 100%);
   border: 1px solid rgba(239, 68, 68, 0.2);
-  
-  ion-card-content {
-    .w-12.h-12 {
-      // animación eliminada
-    }
-  }
 }
 
 // Main content area

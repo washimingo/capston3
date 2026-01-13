@@ -1,6 +1,6 @@
 // Reports Page SCSS - Complementing Tailwind CSS
 
-// Hero section enhancements
+// Hero section optimizado
 .hero-section {
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%);
   position: relative;
@@ -18,22 +18,17 @@
   }
 }
 
-// Stats cards animations
+// Stats cards optimizadas
 .stats-card {
-  // transición eliminada
-  
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 
                 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
-  
 }
 
-// Chart cards enhancements
+// Chart cards optimizadas  
 .chart-card {
-  // transición eliminada
-  
   &:hover {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 
                 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -115,7 +110,6 @@ ion-button {
     right: 0;
     bottom: 0;
     background: linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.1) 50%, transparent 52%);
-  // animación eliminada
     pointer-events: none;
     opacity: 0;
   }
@@ -124,8 +118,6 @@ ion-button {
     opacity: 1;
   }
 }
-
-// shimmer eliminado
 
 // Dark mode support
 :root.ion-palette-dark {

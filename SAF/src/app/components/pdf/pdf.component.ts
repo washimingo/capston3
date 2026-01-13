@@ -1,5 +1,5 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, OnChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, OnChanges, OnDestroy, ViewChild } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import * as pdfjsLib from 'pdfjs-dist';
 
@@ -29,7 +29,7 @@ import * as pdfjsLib from 'pdfjs-dist';
   standalone: true,
   imports: [CommonModule, DecimalPipe],
 })
-export class PdfComponent implements OnInit, OnChanges {
+export class PdfComponent implements OnInit, OnChanges, OnDestroy {
   @Input() pdfSrc: string | SafeResourceUrl | null = null;
   @ViewChild('pdfCanvas', { static: true }) pdfCanvas!: ElementRef<HTMLCanvasElement>;
 
@@ -50,28 +50,47 @@ export class PdfComponent implements OnInit, OnChanges {
     }
   }
 
+  ngOnDestroy() {
+    this.cleanup();
+  }
+
+  private cleanup() {
+    if (this.pdfDoc) {
+      this.pdfDoc = null;
+    }
+  }
+
   async loadPdf(src: string | SafeResourceUrl) {
-    (pdfjsLib as any).GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${(pdfjsLib as any).version}/pdf.worker.min.js`;
-    const loadingTask = pdfjsLib.getDocument(typeof src === 'string' ? src : (src as any).changingThisBreaksApplicationSecurity);
-    this.pdfDoc = await loadingTask.promise;
-    this.totalPages = this.pdfDoc.numPages;
-    this.pageNum = 1;
-    this.renderPage();
+    try {
+      (pdfjsLib as any).GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${(pdfjsLib as any).version}/pdf.worker.min.js`;
+      const loadingTask = pdfjsLib.getDocument(typeof src === 'string' ? src : (src as any).changingThisBreaksApplicationSecurity);
+      this.pdfDoc = await loadingTask.promise;
+      this.totalPages = this.pdfDoc.numPages;
+      this.pageNum = 1;
+      await this.renderPage();
+    } catch (error) {
+      console.error('Error al cargar PDF:', error);
+    }
   }
 
   async renderPage() {
     if (!this.pdfDoc) return;
-    const page = await this.pdfDoc.getPage(this.pageNum);
-    const canvas = this.pdfCanvas.nativeElement;
-    const context = canvas.getContext('2d')!;
-    const viewport = page.getViewport({ scale: this.zoom });
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
-    const renderContext = {
-      canvasContext: context,
-      viewport: viewport
-    };
-    await page.render(renderContext).promise;
+    
+    try {
+      const page = await this.pdfDoc.getPage(this.pageNum);
+      const canvas = this.pdfCanvas.nativeElement;
+      const context = canvas.getContext('2d')!;
+      const viewport = page.getViewport({ scale: this.zoom });
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+      await page.render(renderContext).promise;
+    } catch (error) {
+      console.error('Error al renderizar página:', error);
+    }
   }
 
   nextPage() {

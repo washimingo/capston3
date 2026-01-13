@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, AfterViewInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon } from '@ionic/angular/standalone';
@@ -19,23 +19,37 @@ import { HeaderComponent } from 'src/app/components/header/header.component';
   standalone: true,
   imports: [IonContent, CommonModule, FormsModule, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon, HeaderComponent]
 })
-export class ReportsPage implements OnInit, AfterViewInit {
+export class ReportsPage implements OnInit, OnDestroy, AfterViewInit {
+
+  private readonly dbService = inject(Db);
+  private readonly router = inject(Router);
+  
+  private isDestroyed = false;
+  private chartInstances: Chart[] = [];
+  private timeoutIds: number[] = [];
+
   graficoExpandido: 'estado' | 'dia' | null = null;
 
   expandirGrafico(tipo: 'estado' | 'dia') {
     this.graficoExpandido = tipo;
-    setTimeout(() => {
-      if (tipo === 'estado') this.generarGrafico();
-      if (tipo === 'dia') this.generarGraficoPorDia();
+    const timeoutId = window.setTimeout(() => {
+      if (!this.isDestroyed) {
+        if (tipo === 'estado') this.generarGrafico();
+        if (tipo === 'dia') this.generarGraficoPorDia();
+      }
     }, 100);
+    this.timeoutIds.push(timeoutId);
   }
 
   contraerGrafico() {
     this.graficoExpandido = null;
-    setTimeout(() => {
-      this.generarGrafico();
-      this.generarGraficoPorDia();
+    const timeoutId = window.setTimeout(() => {
+      if (!this.isDestroyed) {
+        this.generarGrafico();
+        this.generarGraficoPorDia();
+      }
     }, 100);
+    this.timeoutIds.push(timeoutId);
   }
   // Importar los headers y función de invoices
   csvHeaders: string[] = [
@@ -56,11 +70,21 @@ export class ReportsPage implements OnInit, AfterViewInit {
 
   getValorFactura(factura: any, header: string): any {
     if (!factura || !header) return '';
-    if (factura[header] !== undefined && factura[header] !== null && factura[header] !== '') return factura[header];
+    
+    if (factura[header] !== undefined && factura[header] !== null && factura[header] !== '') {
+      return factura[header];
+    }
+    
     const lower = header.toLowerCase();
-    if (factura[lower] !== undefined && factura[lower] !== null && factura[lower] !== '') return factura[lower];
+    if (factura[lower] !== undefined && factura[lower] !== null && factura[lower] !== '') {
+      return factura[lower];
+    }
+    
     const noSpaces = header.replace(/\s+/g, '');
-    if (factura[noSpaces] !== undefined && factura[noSpaces] !== null && factura[noSpaces] !== '') return factura[noSpaces];
+    if (factura[noSpaces] !== undefined && factura[noSpaces] !== null && factura[noSpaces] !== '') {
+      return factura[noSpaces];
+    }
+    
     return '';
   }
   // Devuelve las facturas filtradas (por ahora todas, pero aquí puedes aplicar filtros activos)
@@ -246,10 +270,13 @@ export class ReportsPage implements OnInit, AfterViewInit {
     this.resumenPorDia = Object.entries(agrupado).map(([fecha, cantidad]) => ({ fecha, cantidad })).sort((a, b) => a.fecha.localeCompare(b.fecha));
 
     // Regenerar gráficos
-    setTimeout(() => {
-      this.generarGrafico();
-      this.generarGraficoPorDia();
+    const timeoutId = window.setTimeout(() => {
+      if (!this.isDestroyed) {
+        this.generarGrafico();
+        this.generarGraficoPorDia();
+      }
     }, 50);
+    this.timeoutIds.push(timeoutId);
   }
 
   getPercentage(cantidad: number): string {
@@ -259,43 +286,49 @@ export class ReportsPage implements OnInit, AfterViewInit {
   async ngOnInit() {
     await this.cargarDatos();
   }
+  
   @ViewChild('barChartCanvas', { static: false }) barChartCanvas!: ElementRef;
   chart: any;
   resumenEstados: { estado: string, cantidad: number }[] = [];
   facturas: any[] = [];
   resumenPorDia: { fecha: string, cantidad: number }[] = [];
 
-  db = inject(Db);
-  router = inject(Router);
-
-  // Registrar componentes de Chart.js a nivel de módulo (si no está ya registrado en otro lugar)
-  // Chart.register(...registerables) ya se ha ejecutado en otros módulos donde aplica
-
   async ngAfterViewInit() {
+    if (this.isDestroyed) return;
+    
     await this.cargarDatos();
     // Pequeño delay para asegurar que el DOM esté completamente renderizado
-    setTimeout(() => {
-      this.generarGrafico();
-      this.generarGraficoPorDia();
+    const timeoutId = window.setTimeout(() => {
+      if (!this.isDestroyed) {
+        this.generarGrafico();
+        this.generarGraficoPorDia();
+      }
     }, 100);
+    this.timeoutIds.push(timeoutId);
   }
 
   async cargarDatos() {
-    // Leer primero desde localStorage (facturas importadas por CSV)
-    const facturasGuardadas = localStorage.getItem('facturasCSV');
-    if (facturasGuardadas) {
-      this.facturas = JSON.parse(facturasGuardadas);
-    } else {
-      this.facturas = await this.db.getFacturas();
+    try {
+      // Leer primero desde localStorage (facturas importadas por CSV)
+      const facturasGuardadas = localStorage.getItem('facturasCSV');
+      if (facturasGuardadas) {
+        this.facturas = JSON.parse(facturasGuardadas);
+      } else {
+        this.facturas = await this.dbService.getFacturas() || [];
+      }
+      
+      // Inicializar resúmenes y gráficos usando los filtros por defecto
+      this.aplicarFiltrosAvanzados();
+    } catch (error) {
+      console.error('Error cargando datos:', error);
+      this.facturas = [];
     }
-    
-    console.log('Facturas cargadas:', this.facturas.length);
-    
-    // Inicializar resúmenes y gráficos usando los filtros por defecto
-    this.aplicarFiltrosAvanzados();
   }
   graficoPorDia: any;
+  
   generarGraficoPorDia() {
+    if (this.isDestroyed) return;
+    
     try {
       if (this.graficoPorDia) {
         this.graficoPorDia.destroy();
@@ -303,19 +336,16 @@ export class ReportsPage implements OnInit, AfterViewInit {
       
       const ctx = document.getElementById('barChartPorDia') as HTMLCanvasElement;
       if (!ctx) {
-        console.error('Canvas element con ID "barChartPorDia" no encontrado');
         return;
       }
       
       const labels = this.resumenPorDia.map(e => e.fecha);
       const data = this.resumenPorDia.map(e => e.cantidad);
       
-      console.log('Generando gráfico de líneas con datos:', { labels, data });
-      
       this.graficoPorDia = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels,
+        type: 'line',
+        data: {
+          labels,
         datasets: [{
           label: 'Facturas ingresadas por día',
           data,
@@ -352,6 +382,8 @@ export class ReportsPage implements OnInit, AfterViewInit {
   }
 
   generarGrafico() {
+    if (this.isDestroyed) return;
+    
     try {
       if (this.chart) {
         this.chart.destroy();
@@ -359,14 +391,11 @@ export class ReportsPage implements OnInit, AfterViewInit {
       
       // Verificar que el elemento esté disponible
       if (!this.barChartCanvas || !this.barChartCanvas.nativeElement) {
-        console.error('Canvas element no está disponible para el gráfico de barras');
         return;
       }
       
       const labels = this.resumenEstados.map(e => e.estado);
       const data = this.resumenEstados.map(e => e.cantidad);
-      
-      console.log('Generando gráfico de barras con datos:', { labels, data });
       
       this.chart = new Chart(this.barChartCanvas.nativeElement, {
         type: 'bar',
@@ -480,10 +509,35 @@ export class ReportsPage implements OnInit, AfterViewInit {
   onHeaderButtonClick(action: string): void {
     switch(action) {
       case 'refresh':
-        this.ngOnInit();
+        this.cargarDatos();
         break;
       default:
-        console.log('Acción de botón no reconocida:', action);
+        // Acción no reconocida - podría implementarse logging en producción
+        break;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.isDestroyed = true;
+    
+    // Destruir todas las instancias de charts
+    this.chartInstances.forEach(chart => {
+      if (chart && typeof chart.destroy === 'function') {
+        chart.destroy();
+      }
+    });
+    this.chartInstances = [];
+    
+    // Destruir charts específicos
+    if (this.chart && typeof this.chart.destroy === 'function') {
+      this.chart.destroy();
+    }
+    if (this.graficoPorDia && typeof this.graficoPorDia.destroy === 'function') {
+      this.graficoPorDia.destroy();
+    }
+    
+    // Limpiar timeouts
+    this.timeoutIds.forEach(id => clearTimeout(id));
+    this.timeoutIds = [];
   }
 }
